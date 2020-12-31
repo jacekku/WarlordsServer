@@ -1,53 +1,50 @@
-const WebSocket = require('ws');
+const express = require('express')
+const app = express()
+const expressWs = require('express-ws')(app)
+const bodyParser = require('body-parser')
 const port = process.env.PORT || 8080
-const wss = new WebSocket.Server({ port });
 
-let PLAYERS = []
+const endpointService = require('./endpointService')
+const websocketsService = require('./websocketsService')
 
-console.log('working on port ' + port)
-wss.on('connection', function connection(ws, req) {
+app.use(bodyParser.json())
 
-  ws.onmessage = (message) => {
-    const messageJson = JSON.parse(message.data)
-    const result = handleMessage(messageJson, ws)
-    if (!result) { ws.send("ERROR"); return }
-    if (result == "CONNECTED") ws.send("CONNECTED")
-    wss.clients.forEach(ws => ws.send(getPositionsString()))
-  }
-  ws.onclose = (event) => {
-    const disconnectedPlayer = event.target.player
-    PLAYERS = PLAYERS.filter(player => player.name != disconnectedPlayer)
-    wss.clients.forEach(ws => ws.send(getPositionsString()))
+app.get('/map', (req, res) => {
+	res.send(endpointService.getWholeMap())
+})
 
-  }
-});
+app.get('/players/:playerName', async (req, res) => {
+	res.send(await endpointService.getPlayer(req.params.playerName))
+})
 
-function handleMessage(messageJson, ws) {
-  if (!messageJson || !messageJson.type) {
-    return
-  }
+app.post('/map/generate/:width-:height-:chunkSize', (req,res) => {
+	res.send(endpointService.generateMap(req.params))
+})
 
-  if (messageJson.type == 'connect') {
-    const playerIndex = findPlayer(PLAYERS, messageJson.name)
-    if (playerIndex == -1) {
-      PLAYERS.push({ name: messageJson.name, position: messageJson.position })
-    }
-    ws.player = messageJson.name
-    return "CONNECTED"
-  }
-  if (messageJson.type == 'move') {
-    const playerIndex = findPlayer(PLAYERS, messageJson.name)
-    PLAYERS[playerIndex].position = messageJson.position
-    return "MOVED"
-  }
-}
+app.post('/map/save', (req,res) => {
+	if(!req.body){
+		res.sendStatus(400)
+		return
+	}
+	endpointService.saveMap(req.body)
+})
 
-function findPlayer(array, name) {
-  return array.findIndex(item => item.name == name)
-}
+app.post('/map/generateAndSave/:width-:height-:chunkSize', (req,res) => {
+	endpointService.saveMap(endpointService.generateMap(req.params))
+	res.sendStatus(200)
+})
 
-function getPositionsString() {
-  return JSON.stringify(PLAYERS)
-}
+app.post('/map/reload/:mapId', (req,res) => {
+	endpointService.reloadMapFromId(req.params.mapId)
+	res.sendStatus(200)
+})
 
+app.ws('/ws', (ws, req) => {
+	ws.on('message', (msg) => {
+		console.log(msg)
+	})
+})
 
+app.listen(port, () => {
+	console.log('express listening on port: ' + port)
+})
