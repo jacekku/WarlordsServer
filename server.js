@@ -53,5 +53,3 @@ app.ws('/ws', (ws, req) => {
 app.listen(port, () => {
 	console.log('express listening on port: ' + port)
 })
-
-endpointService.loadFromFile()
