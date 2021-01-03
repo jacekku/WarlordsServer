@@ -10,17 +10,34 @@ const players = db.collection('players')
 const map = db.collection('map')
 
 
-async function getPlayer(player) {
+async function getPlayer(playerName) {
     const mold = []
-    if (player === 'all') {
+    if (playerName === 'all') {
         const snapshot = await players.get()
         snapshot.forEach(doc => mold.push(doc.data()))
         return mold
     }
-    return (await players.where('name', '==', player).get()).docs[0].data()
+    const result = (await players.where('name', '==', playerName).get()).docs[0]
+    if(result) {
+        return result
+    }
+    return
+}
+
+async function registerPlayer(player) {
+    await players.add(player)
 }
 
 async function savePlayer(player) {
+    const pl = await this.getPlayer(player.name)
+    if(pl && pl.id) {
+        players.doc(pl.id).set(Object.assign({},player))
+        return true
+    }
+    else {
+        players.add(Object.assign({},player))
+        return true
+    }
     
 }
 
@@ -38,7 +55,8 @@ async function getMap(mapId) {
 
 module.exports = {
     getPlayer,
-    savePlayer, 
+    registerPlayer, 
+    savePlayer,
     getMostRecentMap,
     saveMap,
     getMap

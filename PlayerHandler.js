@@ -1,3 +1,5 @@
+const firebaseService = require('./firebaseService')
+
 class PlayerHandler {
     players
 
@@ -5,18 +7,55 @@ class PlayerHandler {
         this.players = []
     }
 
-    registerPlayer(player) {
-        this.players.push(new Player(player.name, 1, 1))
+    async registerPlayer(player) {
+        const newPlayer = new Player(player.name, 10, 10)
+        this.players.push(newPlayer)
+        await firebaseService.savePlayer(newPlayer)
+    }
+
+    async getPlayerFromDB(player) {
+        return await firebaseService.getPlayer(player.name)
     }
 
     getPlayer(player) {
-        return this.players.find(pl => pl.name === player.name)
+        return this.players.find(pl => pl.name == player.name)
     }
 
-    movePlayer(player, x,y) {
-        const pl = this.getPlayer(player) 
+    async playerConnected(player) {
+        const connectedPlayer = await this.getPlayerFromDB(player)
+        if (connectedPlayer) {
+            this.players.push(connectedPlayer.data())
+        } else {
+            await this.registerPlayer(player)
+        }
+        const aPlayer = this.getPlayer(player)
+        aPlayer.active = true
+    }
+
+    playerDisconnected(player) {
+        const disconnectedPlayer = this.getPlayer(player)
+        disconnectedPlayer.active = false
+        this.players = this.players.filter(pl => pl.name != player.name)
+        firebaseService.savePlayer(disconnectedPlayer)
+    }
+
+    movePlayer(player, x, y) {
+        const pl = this.getPlayer(player)
         pl.x = x
         pl.y = y
+        return pl
+    }
+
+    updatePlayer(newPlayer) {
+        const player = this.getPlayer(newPlayer)
+        return Object.assign(player, newPlayer)
+    }
+
+    getNeighbouringPlayers(player) {
+        const playerChunk = player.playerChunk
+        const neighbours = [
+
+        ]
     }
 }
 
@@ -34,5 +73,5 @@ class Player {
 
 
 module.exports = {
-    PlayerHandler, Player
+    PlayerHandler: new PlayerHandler()
 }

@@ -6,6 +6,7 @@ const port = process.env.PORT || 8080
 
 const endpointService = require('./endpointService')
 const websocketsService = require('./websocketsService')
+const {terrainWrapper} = require('./TerrainHandler')
 
 app.use(bodyParser.json())
 
@@ -41,10 +42,16 @@ app.post('/map/reload/:mapId', (req,res) => {
 
 app.ws('/ws', (ws, req) => {
 	ws.on('message', (msg) => {
-		console.log(msg)
+		websocketsService.onmessage(msg, ws, expressWs.getWss('/ws'))
+	})
+
+	ws.on('close', (msg) => {
+		websocketsService.onclose(msg, ws, expressWs.getWss('/ws'))
 	})
 })
 
 app.listen(port, () => {
 	console.log('express listening on port: ' + port)
 })
+
+endpointService.loadFromFile()

@@ -8,6 +8,11 @@ function stringifyMap(terrain) {
     })
 }
 
+function clampNumber(num, min, max) {
+    return Math.min(Math.max(num, min), max);
+}
+
 module.exports = {
-    stringifyMap
+    stringifyMap,
+    clampNumber
 }

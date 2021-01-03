@@ -12,8 +12,13 @@ class Quad {
         this.height = height
     }
 
-    pointInQuad(pointX,pointY) {
-        return pointX >= this.x && pointY >= this.y && pointX < this.x + this.width && pointY < this.y + this.height
+    static pointInQuad(quad,pointX,pointY) {
+        let {x,y,width,height} = quad
+        x = Number(x)
+        y = Number(y)
+        width = Number(width)
+        height = Number(height)
+        return pointX >= x && pointY >= y && pointX < x + width && pointY < y + height
     }
 }
 
@@ -63,11 +68,16 @@ class TerrainHandler extends Quad {
             [-1,0],     [0,0],  [1,0],
             [-1,1],     [0,1],  [1,1],
         ]
-        return nMap.map(coords => this.getChunk(playerX+coords[0]*this.chunkSize,playerY+coords[1]*this.chunkSize))
+        return {
+            width: this.width,
+            height: this.height,
+            playerChunk: this.getChunk(playerX,playerY).id,
+            chunks:nMap.map(coords => this.getChunk(playerX+coords[0]*this.chunkSize,playerY+coords[1]*this.chunkSize)).filter(Boolean)
+        }
     }
 
     getChunk(X, Y) {
-        return this.chunks.find(chunk => chunk.pointInQuad(X,Y))
+        return this.chunks.find(chunk => Quad.pointInQuad(chunk,X,Y))
     }
 
 }
@@ -94,7 +104,7 @@ class Chunk extends Quad {
 
 }
 
-class Block extends Quad{
+class Block extends Quad {
     constructor(id, type, items, chunk) {
         const x = getXY(id, chunk.width).x + chunk.x
         const y = getXY(id, chunk.height).y + chunk.y
