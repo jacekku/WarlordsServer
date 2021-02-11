@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const serviceAccount = require('./travians-b1782447db48.json');
+const serviceAccount = JSON.parse(Buffer.from(process.env.GOOGLE_CONFIG_BASE64, 'base64').toString('ascii'))
 const FieldValue = admin.firestore.FieldValue;
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)

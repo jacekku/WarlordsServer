@@ -12,6 +12,7 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "compress-json": "^1.0.1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
     "firebase-admin": "^9.4.2",
