@@ -5,10 +5,9 @@ const expressWs = require('express-ws')(app)
 const bodyParser = require('body-parser')
 const cors = require('cors');
 const port = process.env.PORT || 8080
-const checkAccess = require('./accessChecker')
 const endpointService = require('./endpointService')
 const websocketsService = require('./websocketsService')
-const {terrainWrapper} = require('./TerrainHandler')
+const accessChecker = require('./accessChecker')
 
 app.use(cors({
 	origin: 'https://jacekku.github.io/TraviansClient/',
@@ -17,7 +16,6 @@ app.use(cors({
 app.use(bodyParser.json())
 
 app.get('/map', accessChecker, (req, res) => {
-	console.log(req.headers)
 	res.send(endpointService.getWholeMap())
 })
 
@@ -29,11 +27,7 @@ app.post('/map/generate/:width-:height-:chunkSize', accessChecker, (req,res) => 
 	res.send(endpointService.generateMap(req.params))
 })
 
-app.post('/map/save', (req,res) => {
-	if(!checkAccess(req)) {
-		res.sendStatus(403)
-		return
-	}
+app.post('/map/save', accessChecker, (req,res) => {
 	if(!req.body){
 		res.sendStatus(400)
 		return
