@@ -1,4 +1,3 @@
-
 const {terrainWrapper} = require('./TerrainHandler')
 const {stringifyMap} = require('./utils')
 const fs = require('fs');

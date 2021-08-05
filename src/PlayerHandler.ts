@@ -1,77 +1,75 @@
+import { Player } from "./model/Player"
+import { UPlayer } from "./model/Types";
+
 const firebaseService = require('./firebaseService')
 
-class PlayerHandler {
-    players
+export class PlayerHandler {
+    players: Player[]
+    private static instance: PlayerHandler;
 
     constructor() {
         this.players = []
     }
 
-    async registerPlayer(player) {
+    public static getInstance(): PlayerHandler {
+        if (!PlayerHandler.instance) {
+            PlayerHandler.instance = new PlayerHandler();
+        }
+
+        return PlayerHandler.instance;
+    }
+
+    async registerPlayer(player: Player) {
         const newPlayer = new Player(player.name, 10, 10)
         this.players.push(newPlayer)
         await firebaseService.savePlayer(newPlayer)
     }
 
-    async getPlayerFromDB(player) {
+    async getPlayerFromDB(player: Player) {
         return await firebaseService.getPlayer(player.name)
     }
 
-    getPlayer(player) {
+    getPlayer(player: Player): Player | undefined {
         return this.players.find(pl => pl.name == player.name)
     }
 
-    async playerConnected(player) {
+    async playerConnected(player: Player) {
         const connectedPlayer = await this.getPlayerFromDB(player)
         if (connectedPlayer) {
             this.players.push(connectedPlayer.data())
         } else {
             await this.registerPlayer(player)
         }
-        const aPlayer = this.getPlayer(player)
+        const aPlayer: Player | undefined = this.getPlayer(player)
+        if(aPlayer === undefined) return 
         aPlayer.active = true
     }
 
-    playerDisconnected(player) {
-        const disconnectedPlayer = this.getPlayer(player)
+    playerDisconnected(player: Player) {
+        const disconnectedPlayer: Player | undefined = this.getPlayer(player)
+        if(disconnectedPlayer === undefined) return 
         disconnectedPlayer.active = false
         this.players = this.players.filter(pl => pl.name != player.name)
         firebaseService.savePlayer(disconnectedPlayer)
     }
 
-    movePlayer(player, x, y) {
-        const pl = this.getPlayer(player)
+    movePlayer(player: Player, x: number, y:number): UPlayer {
+        const pl: Player | undefined = this.getPlayer(player)
+        if(pl === undefined) return 
         pl.x = x
         pl.y = y
         return pl
     }
 
-    updatePlayer(newPlayer) {
+    updatePlayer(newPlayer: Player) {
         const player = this.getPlayer(newPlayer)
         return Object.assign(player, newPlayer)
     }
 
-    getNeighbouringPlayers(player) {
+    getNeighbouringPlayers(player: Player) {
         const playerChunk = player.playerChunk
         const neighbours = [
 
         ]
     }
-}
-
-
-class Player {
-    name
-    x
-    y
-    constructor(name, x, y) {
-        this.name = name
-        this.x = x
-        this.y = y
-    }
-}
-
-
-module.exports = {
-    PlayerHandler: new PlayerHandler()
 }

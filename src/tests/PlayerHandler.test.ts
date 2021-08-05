@@ -1,5 +1,5 @@
-const {PlayerHandler, Player} = require('../PlayerHandler');
-require('../TerrainHandler');
+import { Player } from "../model/Player"
+import { PlayerHandler } from "../PlayerHandler"
 
 test('test player moving', ()=> {
     const ph = new PlayerHandler()
