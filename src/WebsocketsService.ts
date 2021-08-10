@@ -5,8 +5,8 @@ import {
     CustomWebsocket
 } from "./model/CustomWebsocket"
 import {
-    PlayerHandler
-} from "./PlayerHandler"
+    PlayerService
+} from "./PlayerService"
 import {
     TerrainWrapper
 } from "./TerrainHandler"
@@ -19,47 +19,58 @@ import {
 
 
 export class WebsocketsService {
+    playerHandler: PlayerService
+    terrainWrapper: TerrainWrapper
 
-    PlayerHandlerInstance: PlayerHandler = PlayerHandler.getInstance();
-    TerrainWrapperInstance: TerrainWrapper = TerrainWrapper.getInstance();
+    constructor(playerHandler: PlayerService, terrainWrapper: TerrainWrapper) {
+        this.playerHandler = playerHandler;
+        this.terrainWrapper = terrainWrapper;
+    }
 
     async onmessage(msg: string, ws: CustomWebsocket, wss: Server) {
         const message = JSON.parse(msg)
         let currentPlayer: UPlayer
         if (message.type == "CONNECT") {
-            await this.PlayerHandlerInstance.playerConnected(message.player)
-            ws.player = this.PlayerHandlerInstance.getPlayer(message.player)
+            await this.playerHandler.playerConnected(message.player)
+            ws.player = this.playerHandler.getPlayer(message.player)
             ws.send("CONNECTED")
         }
         if (message.type == "MOVE") {
-            const x = Utilities.clampNumber(message.move.x, 0, this.TerrainWrapperInstance.handler.width)
-            const y = Utilities.clampNumber(message.move.y, 0, this.TerrainWrapperInstance.handler.height)
-            currentPlayer = this.PlayerHandlerInstance.movePlayer(ws.player, x, y)
+            const x = Utilities.clampNumber(message.move.x, 0, this.terrainWrapper.terrain.width)
+            const y = Utilities.clampNumber(message.move.y, 0, this.terrainWrapper.terrain.height)
+            currentPlayer = this.playerHandler.movePlayer(ws.player, x, y)
             ws.player = currentPlayer
         }
-        const newChunks = this.TerrainWrapperInstance.handler.getChunkNeighbourhood(ws.player.x, ws.player.y)
-        if (ws.playerChunk != newChunks.playerChunk) {
-            ws.send(JSON.stringify({
-                type: "TERRAIN",
-                data: newChunks
-            }))
-            ws.player.playerChunk = newChunks.playerChunk
+        if (message.type == "CONNECT_DASHBOARD") {
+            console.log("dashboard connected")
         }
+        if (ws.player) {
+            const newChunks = this.terrainWrapper.terrain.getChunkNeighbourhood(ws.player.x, ws.player.y)
+            if (ws.playerChunk != newChunks.playerChunk) {
+                ws.send(JSON.stringify({
+                    type: "TERRAIN",
+                    data: newChunks
+                }))
+                ws.player.playerChunk = newChunks.playerChunk
+            }
+        }
+        //todo only send visible players - all for dashboard
         wss.clients.forEach(ws => {
             ws.send(JSON.stringify({
                 type: "PLAYERS",
-                data: this.PlayerHandlerInstance.players
+                data: this.playerHandler.players
             }))
         })
     }
 
     onclose(msg: string, ws: CustomWebsocket, wss: Server) {
         console.log('connection closed', ws.player)
-        this.PlayerHandlerInstance.playerDisconnected(ws.player)
+        if(!ws.player) return
+        this.playerHandler.playerDisconnected(ws.player)
         wss.clients.forEach(ws => {
             ws.send(JSON.stringify({
                 type: "PLAYERS",
-                data: this.PlayerHandlerInstance.players
+                data: this.playerHandler.players
             }))
         })
     }

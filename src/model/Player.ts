@@ -4,6 +4,7 @@ export class Player {
     y: number
     playerChunk: any
     active: boolean
+    id: string
     constructor(name: string, x: number, y: number) {
         this.name = name
         this.x = x

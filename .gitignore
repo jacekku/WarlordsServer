@@ -3,3 +3,4 @@ maps/
 .env
 env-config.json
 build/
+saves/

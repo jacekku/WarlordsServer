@@ -1,32 +1,28 @@
 import { Player } from "./model/Player"
 import { UPlayer } from "./model/Types";
+import { PermanentStorage } from "./storage/PermanentStorage";
+import { TerrainWrapper } from "./TerrainHandler";
 
-const firebaseService = require('./firebaseService')
 
-export class PlayerHandler {
+export class PlayerService {
     players: Player[]
-    private static instance: PlayerHandler;
+    private permanentStorage: PermanentStorage;
+    private terrainWrapper: TerrainWrapper;
 
-    constructor() {
+    constructor(permanentStorage: PermanentStorage, terrainWrapper: TerrainWrapper) {
         this.players = []
-    }
-
-    public static getInstance(): PlayerHandler {
-        if (!PlayerHandler.instance) {
-            PlayerHandler.instance = new PlayerHandler();
-        }
-
-        return PlayerHandler.instance;
+        this.permanentStorage = permanentStorage;
+        this.terrainWrapper = terrainWrapper
     }
 
     async registerPlayer(player: Player) {
         const newPlayer = new Player(player.name, 10, 10)
         this.players.push(newPlayer)
-        await firebaseService.savePlayer(newPlayer)
+        await this.permanentStorage.savePlayer(this.terrainWrapper.terrain.mapId, newPlayer)
     }
 
     async getPlayerFromDB(player: Player) {
-        return await firebaseService.getPlayer(player.name)
+        return await this.permanentStorage.getPlayer(this.terrainWrapper.terrain.mapId, player.name)
     }
 
     getPlayer(player: Player): Player | undefined {
@@ -36,7 +32,7 @@ export class PlayerHandler {
     async playerConnected(player: Player) {
         const connectedPlayer = await this.getPlayerFromDB(player)
         if (connectedPlayer) {
-            this.players.push(connectedPlayer.data())
+            this.players.push(connectedPlayer)
         } else {
             await this.registerPlayer(player)
         }
@@ -50,7 +46,7 @@ export class PlayerHandler {
         if(disconnectedPlayer === undefined) return 
         disconnectedPlayer.active = false
         this.players = this.players.filter(pl => pl.name != player.name)
-        firebaseService.savePlayer(disconnectedPlayer)
+        this.permanentStorage.savePlayer(this.terrainWrapper.terrain.mapId, disconnectedPlayer)
     }
 
     movePlayer(player: Player, x: number, y:number): UPlayer {
