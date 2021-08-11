@@ -1,23 +1,25 @@
 import { BIOMES } from "./model/enums/Biomes"
 import { Terrain } from "./model/Terrain"
 var Simplex = require('perlin-simplex')
+const simplex = new Simplex();
 import { Utilities } from "./Utilities"
 export class TerrainUtilities {
-    static mapToBiome(value: number) {
-        if (value < 80) return BIOMES.MOUNTAIN
-        if (value < 170) return BIOMES.PLAIN
-        return BIOMES.WATER
-    }
 
-    static generateValue(x: number, y: number, size: number = 5, weights: number[] = [1, 2, 4, 8, 16]) {
-        const simplex: any = new Simplex();
-        const value = weights.map(n => simplex.noise(x / size * n, y / size * n) * 1 / n).reduce((a, b) => a + b)
-        return Math.floor(Utilities.map(value, -1, 1, 0, 255))
+    static mapToBiome(value: number) {
+        if(value < 10) return BIOMES.WATER
+        if(value < 20) return BIOMES.BEACH
+        if(value < 80) return BIOMES.PLAIN
+        return BIOMES.MOUNTAIN
+    }
+    //todo fix map generation to actually look decent
+    static generateValue(x: number, y: number, size: number = 20) {
+        const value = [1,2,4,8].map(n => simplex.noise(x/(size*n), y/(size*n)) * (1/n)).reduce((val, sum) => val+sum)
+        return Math.floor(Utilities.map(value, -1, 1, 0, 100)) 
     }
     static generateItems(x: number, y: number) {
-        const moisture = TerrainUtilities.generateValue(x, y, 40)
-        const materialRichness = TerrainUtilities.generateValue(x, y, 3)
-        const animals = TerrainUtilities.generateValue(x, y, 3)
+        const moisture = TerrainUtilities.generateValue(x, y, 10)
+        const materialRichness = TerrainUtilities.generateValue(x, y, 5)
+        const animals = TerrainUtilities.generateValue(x, y, 2)
         return {
             moisture,
             materialRichness,

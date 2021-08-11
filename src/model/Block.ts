@@ -32,9 +32,9 @@ export class Block extends Quad {
     moistureMapper(value: number): MOISTURE {
         if (this.type != BIOMES.PLAIN)
             return MOISTURE.NONE;
-        if (value < 50)
+        if (value < 5)
             return MOISTURE.DESERT;
-        if (value < 150)
+        if (value < 50)
             return MOISTURE.FIELD;
         return MOISTURE.FOREST;
     }
@@ -42,19 +42,19 @@ export class Block extends Quad {
     materialRichnessMapper(value: number): MATERIAL_RICHNESS {
         if (this.type != BIOMES.MOUNTAIN)
             return MATERIAL_RICHNESS.NOTHING;
-        if (value < 50)
+        if (value < 5)
             return MATERIAL_RICHNESS.GOLD;
-        if (value < 75)
+        if (value < 20)
             return MATERIAL_RICHNESS.IRON;
-        if (value < 100)
+        if (value < 35)
             return MATERIAL_RICHNESS.COPPER;
         return MATERIAL_RICHNESS.NOTHING;
     }
 
     animalsMapper(value: number): ANIMALS {
-        if (value < 75 && this.type == BIOMES.WATER)
+        if (value < 35 && this.type == BIOMES.WATER)
             return ANIMALS.FISH;
-        if (value < 40 && this.type == BIOMES.PLAIN)
+        if (value < 25 && this.type == BIOMES.PLAIN && this.moisture == MOISTURE.FOREST)
             return ANIMALS.DEER;
         return ANIMALS.NO_ANIMAL;
     }
