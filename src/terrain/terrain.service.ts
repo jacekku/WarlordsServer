@@ -1,14 +1,27 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Chunk } from 'src/model/terrain/chunk.model';
 import { Terrain } from 'src/model/terrain/terrain.model';
 import { TerrainFileService } from 'src/persistence/terrain/terrain-persistence.service';
 
 @Injectable()
 export class TerrainService {
+  private logger = new Logger(TerrainService.name);
   public terrain: Terrain;
-  constructor(private readonly terrainPersistentStorage: TerrainFileService) {}
+  constructor(
+    private readonly terrainPersistentStorage: TerrainFileService,
+    private readonly configService: ConfigService,
+  ) {
+    this.loadDefaultMap();
+  }
 
-  getWholeMap() {
+  loadDefaultMap() {
+    const mapId = this.configService.get<string>('DEFAULT_TERRAIN');
+    this.logger.debug(mapId);
+    this.reloadMapFromId(mapId);
+  }
+
+  getMapInfo() {
     if (!this.terrain) {
       throw new BadRequestException('No map loaded!');
     }
@@ -29,11 +42,8 @@ export class TerrainService {
   //     return true
   // }
 
-  getChunk(chunkId: string): Chunk {
-    return this.terrainPersistentStorage.getChunk(
-      this.terrain.mapId,
-      Number(chunkId),
-    );
+  getChunk(chunkId: number): Chunk {
+    return this.terrainPersistentStorage.getChunk(this.terrain.mapId, chunkId);
   }
 
   async reloadMapFromId(mapId: string) {
@@ -42,6 +52,7 @@ export class TerrainService {
     // }
     const map = await this.terrainPersistentStorage.getMap(mapId);
     this.loadMap(map);
+    this.logger.debug('map loaded: ' + map.mapId);
     return true;
   }
 

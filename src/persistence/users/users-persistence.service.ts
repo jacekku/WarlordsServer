@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Terrain } from 'src/model/terrain/terrain.model';
 import { IUsersPersistence } from './interfaces/users-persistence-interface.service';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
@@ -11,19 +10,36 @@ export class UsersFileService implements IUsersPersistence {
     'SAVE_FOLDER',
   )}/mapId/players`;
 
-  savePlayers(terrain: Terrain) {
-    fs.mkdirSync(this.getPlayersPath(terrain.mapId, '_'), {
+  createFolder(player: Player, mapId: string) {
+    fs.mkdirSync(this.getPlayersPath(mapId, player.name), {
       recursive: true,
     });
   }
 
-  getPlayer(playerName: string): Player {
-    return;
+  savePlayer(newPlayer: Player, mapId: string) {
+    fs.writeFileSync(
+      this.getPlayerFilePath(mapId, newPlayer.name),
+      JSON.stringify(newPlayer),
+    );
+  }
+
+  registerPlayer(newPlayer: Player, mapId: string): Player {
+    this.createFolder(newPlayer, mapId);
+    this.savePlayer(newPlayer, mapId);
+    return this.getPlayer(newPlayer.name, mapId);
+  }
+
+  getPlayer(playerName: string, mapId: string): Player {
+    if (!fs.existsSync(this.getPlayerFilePath(mapId, playerName))) return;
+    const data = fs.readFileSync(this.getPlayerFilePath(mapId, playerName));
+    return JSON.parse(data.toString());
   }
 
   private getPlayersPath(mapId: string, playerName: string): string {
-    return (
-      this.PLAYER_FOLDER.replace('mapId', mapId) + '/' + playerName + '.json'
-    );
+    return this.PLAYER_FOLDER.replace('mapId', mapId) + '/' + playerName;
+  }
+
+  private getPlayerFilePath(mapId: string, playerName: string) {
+    return this.getPlayersPath(mapId, playerName) + '/player.json';
   }
 }
