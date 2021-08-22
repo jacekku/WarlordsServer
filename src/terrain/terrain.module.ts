@@ -8,5 +8,6 @@ import { TerrainService } from './terrain.service';
   imports: [PersistenceModule],
   controllers: [TerrainController],
   providers: [TerrainService, TerrainWebsocketGateway],
+  exports: [TerrainService],
 })
 export class TerrainModule {}

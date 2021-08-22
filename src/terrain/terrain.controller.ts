@@ -8,8 +8,8 @@ export class TerrainController {
   constructor(private readonly terrainService: TerrainService) {}
 
   @Get()
-  getWholeMap() {
-    return this.terrainService.getWholeMap();
+  getMapInfo() {
+    return this.terrainService.getMapInfo();
   }
 
   @Post('generate/:width-:height-:chunkSize')
@@ -42,7 +42,7 @@ export class TerrainController {
   }
 
   @Get('chunk/:chunkId')
-  getChunk(@Param('chunkId') chunkId: string) {
+  getChunk(@Param('chunkId') chunkId: number) {
     return this.terrainService.getChunk(chunkId);
   }
 }

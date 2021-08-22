@@ -6,7 +6,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
   @Get(':playerName')
-  getHello(@Param('playerName') playerName: string): Player {
+  getPlayer(@Param('playerName') playerName: string): Player {
     return this.userService.getPlayer(playerName);
   }
 }
