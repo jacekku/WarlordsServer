@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { IUsersPersistence } from './interfaces/users-persistence-interface.service';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
-import { Player } from 'src/model/player.model';
+import { Player } from 'src/model/users/player.model';
+import { map } from 'lodash';
 @Injectable()
 export class UsersFileService implements IUsersPersistence {
   constructor(private configService: ConfigService) {}
@@ -17,6 +18,9 @@ export class UsersFileService implements IUsersPersistence {
   }
 
   savePlayer(newPlayer: Player, mapId: string) {
+    if (!this.folderExists(mapId, newPlayer.name)) {
+      this.registerPlayer(newPlayer, mapId);
+    }
     fs.writeFileSync(
       this.getPlayerFilePath(mapId, newPlayer.name),
       JSON.stringify(newPlayer),
@@ -30,7 +34,7 @@ export class UsersFileService implements IUsersPersistence {
   }
 
   getPlayer(playerName: string, mapId: string): Player {
-    if (!fs.existsSync(this.getPlayerFilePath(mapId, playerName))) return;
+    if (!this.folderExists(mapId, playerName)) return;
     const data = fs.readFileSync(this.getPlayerFilePath(mapId, playerName));
     return JSON.parse(data.toString());
   }
@@ -41,5 +45,9 @@ export class UsersFileService implements IUsersPersistence {
 
   private getPlayerFilePath(mapId: string, playerName: string) {
     return this.getPlayersPath(mapId, playerName) + '/player.json';
+  }
+
+  private folderExists(mapId: string, playerName: string) {
+    return fs.existsSync(this.getPlayerFilePath(mapId, playerName));
   }
 }

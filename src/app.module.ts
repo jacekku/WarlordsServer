@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { StateModule } from './state/state.module';
 import { TerrainModule } from './terrain/terrain.module';
 import { UsersModule } from './users/users.module';
 
@@ -10,6 +11,7 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({ isGlobal: true }),
     TerrainModule,
     UsersModule,
+    StateModule,
   ],
   controllers: [AppController],
   providers: [AppService],
