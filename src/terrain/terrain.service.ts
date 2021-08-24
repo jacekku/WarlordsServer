@@ -22,7 +22,11 @@ export class TerrainService {
 
   loadDefaultMap() {
     const mapId = this.configService.get<string>('DEFAULT_TERRAIN');
-    this.reloadMapFromId(mapId);
+    if (mapId && mapId !== 'none') {
+      this.reloadMapFromId(mapId);
+    } else {
+      this.logger.warn('no map loaded; no DEFAULT_TERRAIN specified in .env');
+    }
   }
 
   getMapInfo() {
