@@ -16,10 +16,10 @@ export class UsersFileService implements IUsersPersistence {
       recursive: true,
     });
   }
-
+  //TODO: Add tests to mitigate the future recursive black holes
   savePlayer(newPlayer: Player, mapId: string) {
     if (!this.folderExists(mapId, newPlayer.name)) {
-      this.registerPlayer(newPlayer, mapId);
+      this.createFolder(newPlayer, mapId);
     }
     fs.writeFileSync(
       this.getPlayerFilePath(mapId, newPlayer.name),
