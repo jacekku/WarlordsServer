@@ -9,7 +9,7 @@ import {
 import { Logger } from '@nestjs/common';
 import { Server } from 'socket.io';
 import { UsersService } from './users.service';
-import { Player } from 'src/model/player.model';
+import { Player } from 'src/model/users/player.model';
 
 @WebSocketGateway({ cors: true })
 export class UsersWebsocketGateway implements OnGatewayDisconnect {
@@ -22,37 +22,42 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
 
   @SubscribeMessage('players:all')
   getAllPlayers(@MessageBody() data: any): WsResponse<any> {
-    this.logger.debug(data, this.getAllPlayers.name);
     return this.buildResponse(
       'players:all',
       this.userService.getAllConnectedPlayers(),
     );
   }
 
-  @SubscribeMessage('players:move')
-  movePlayer(@MessageBody() data: any): WsResponse<any> {
-    this.logger.debug(this.movePlayer.name, data);
-    const { player, move } = data;
+  @SubscribeMessage('players:requestUpdate')
+  getUpdatedPlayers(@MessageBody('player') player: Player): WsResponse<any> {
+    const connectedPlayer = this.userService.findConnectedPlayer(player);
     return this.buildResponse(
-      'players:move',
-      this.userService.movePlayer(player, move),
+      'players:requestUpdate',
+      this.userService.findVisiblePlayers(connectedPlayer),
     );
+  }
+
+  @SubscribeMessage('players:move')
+  movePlayer(@MessageBody() data: any) {
+    const { player, move } = data;
+    this.userService.movePlayer(player, move);
+    this.emitToAllPlayers('players:update');
   }
 
   @SubscribeMessage('players:connect')
-  playerConnected(client: any, payload: any): WsResponse<any> {
+  playerConnected(client: any, payload: any) {
     const player = payload.player as Player;
     this.pushPlayerNameToSocketClient(client, player);
-    this.logger.debug(this.playerConnected.name, player);
-    return this.buildResponse(
-      'players:connect',
-      this.userService.playerConnected(player),
-    );
+    this.logger.log('player connected: ' + client.player);
+    this.userService.playerConnected(player);
+    client.emit('players:connect');
+    this.emitToAllPlayers('players:update');
   }
 
   handleDisconnect(client: any) {
-    this.logger.debug(this.handleDisconnect.name, client.player);
+    this.logger.log('player disconnected: ' + client.player);
     this.userService.playerDisconnected(client.player);
+    this.emitToAllPlayers('players:update');
   }
 
   buildResponse(event: string, data: any): WsResponse<any> {
@@ -61,5 +66,9 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
 
   pushPlayerNameToSocketClient(client: any, player: Player) {
     client.player = player.name;
+  }
+
+  emitToAllPlayers(event: string) {
+    this.server.emit(event);
   }
 }

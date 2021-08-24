@@ -24,6 +24,7 @@ export class Terrain extends Quad {
   }
 
   static generateMap(width: number, height: number, chunkSize: number) {
+    chunkSize = Number(chunkSize);
     const chunks: Chunk[] = [];
     const terrain = new Terrain(
       width,

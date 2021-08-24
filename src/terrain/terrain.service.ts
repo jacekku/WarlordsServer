@@ -1,8 +1,12 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Player } from 'src/model/users/player.model';
 import { Chunk } from 'src/model/terrain/chunk.model';
+import { Quad } from 'src/model/terrain/quad.model';
 import { Terrain } from 'src/model/terrain/terrain.model';
 import { TerrainFileService } from 'src/persistence/terrain/terrain-persistence.service';
+import { StateService } from 'src/state/state.service';
+import { Utilities } from './utilities/utilities.service';
 
 @Injectable()
 export class TerrainService {
@@ -10,6 +14,7 @@ export class TerrainService {
   public terrain: Terrain;
   constructor(
     private readonly terrainPersistentStorage: TerrainFileService,
+    private readonly stateService: StateService,
     private readonly configService: ConfigService,
   ) {
     this.loadDefaultMap();
@@ -17,7 +22,6 @@ export class TerrainService {
 
   loadDefaultMap() {
     const mapId = this.configService.get<string>('DEFAULT_TERRAIN');
-    this.logger.debug(mapId);
     this.reloadMapFromId(mapId);
   }
 
@@ -28,31 +32,26 @@ export class TerrainService {
     return this.terrain;
   }
 
-  // loadFromFile() {
-  //     const terrain = fs.readFileSync('maps/map-100x100x10-1609325555649.json')
-  //     this.terrainWrapper.loadMap(JSON.parse(terrain))
-  //     console.log('loaded map from file')
-  //     return true
-  // }
-
-  // async reloadRecentMap() {
-  //     const map = await this.permanentStorage.getMostRecentMap()
-  //     this.terrainWrapper.loadMap(map)
-  //     console.log('loaded recent map')
-  //     return true
-  // }
+  returnChunksVisibleToPlayer(player: Player): any {
+    const playerFrustum = Utilities.calculatePlayerFrustum(
+      this.stateService.findConnectedPlayer(player),
+      this.terrain,
+      this.configService.get<number>('FRUSTUM_SIZE'),
+    );
+    const visibleChunks = this.terrain.chunks.filter((chunk) =>
+      Quad.quadsOverlapping(chunk, playerFrustum),
+    );
+    return visibleChunks;
+  }
 
   getChunk(chunkId: number): Chunk {
     return this.terrainPersistentStorage.getChunk(this.terrain.mapId, chunkId);
   }
 
   async reloadMapFromId(mapId: string) {
-    // if (mapId == "recent") {
-    //     return await this.reloadRecentMap()
-    // }
     const map = await this.terrainPersistentStorage.getMap(mapId);
     this.loadMap(map);
-    this.logger.debug('map loaded: ' + map.mapId);
+    this.logger.log('map loaded: ' + map.mapId);
     return true;
   }
 
@@ -61,7 +60,7 @@ export class TerrainService {
     return this.terrainPersistentStorage.getMap(terrain.mapId);
   }
 
-  generateMap(width, height, chunkSize): Terrain {
+  generateMap(width: number, height: number, chunkSize: number): Terrain {
     const terrain = Terrain.generateMap(width, height, chunkSize);
     return terrain;
   }
@@ -75,6 +74,7 @@ export class TerrainService {
       terrain.mapId,
       terrain.chunkNumber,
     );
+    this.stateService.terrain = this.terrain;
     return this.terrain;
   }
 }

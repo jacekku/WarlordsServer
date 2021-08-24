@@ -8,6 +8,7 @@ import {
 import { Logger } from '@nestjs/common';
 import { Server } from 'socket.io';
 import { TerrainService } from './terrain.service';
+import { Player } from 'src/model/users/player.model';
 
 @WebSocketGateway({ cors: true })
 export class TerrainWebsocketGateway {
@@ -20,16 +21,14 @@ export class TerrainWebsocketGateway {
 
   @SubscribeMessage('terrain:info')
   getTerrainInfo(@MessageBody() data): WsResponse<any> {
-    this.logger.debug(data, this.getTerrainInfo.name);
     return { event: 'terrain:info', data: this.terrainService.getMapInfo() };
   }
 
   @SubscribeMessage('terrain:chunk')
-  getChunk(@MessageBody('chunkId') chunkId: number): WsResponse<any> {
-    this.logger.debug(chunkId, this.getChunk.name);
+  getChunk(@MessageBody('player') player: Player): WsResponse<any> {
     return {
-      event: 'terrain:info',
-      data: this.terrainService.getChunk(chunkId),
+      event: 'terrain:chunk',
+      data: this.terrainService.returnChunksVisibleToPlayer(player),
     };
   }
 }
