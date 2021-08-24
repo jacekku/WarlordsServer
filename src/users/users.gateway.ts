@@ -21,7 +21,7 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
   constructor(private readonly userService: UsersService) {}
 
   @SubscribeMessage('players:all')
-  getAllPlayers(@MessageBody() data: any): WsResponse<any> {
+  getAllPlayers(): WsResponse<any> {
     return this.buildResponse(
       'players:all',
       this.userService.getAllConnectedPlayers(),

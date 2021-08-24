@@ -3,7 +3,7 @@ import { IUsersPersistence } from './interfaces/users-persistence-interface.serv
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { Player } from 'src/model/users/player.model';
-import { map } from 'lodash';
+
 @Injectable()
 export class UsersFileService implements IUsersPersistence {
   constructor(private configService: ConfigService) {}
