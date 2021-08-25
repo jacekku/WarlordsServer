@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  travians-server:
+    container_name: travians-server
+    image: jacekku/travians-server:latest
+    command: npm run start:prod
+    networks:
+      - nestjs-network
+    volumes:
+      - .:/usr/travians-server/
+    ports:
+      - 3000:3000
+      - 9229:9229
+    environment:
+      SAVE_FOLDER: '/usr/travians-server/saves'
+      DEFAULT_TERRAIN:
+      FRUSTUM_SIZE: 13
+networks:
+  nestjs-network:
