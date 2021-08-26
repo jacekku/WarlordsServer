@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/jacekku/TraviansServer/compare/v0.1.4...v0.1.5) (2021-08-26)
+
+
+### Features
+
+* Adding docker compose ([e179c21](https://github.com/jacekku/TraviansServer/commit/e179c211fc0b487e2ae78abdb4f4420b16323b9a))
+
+
+### Bug Fixes
+
+* **docker:** fixing docker-compose version ([1f18edd](https://github.com/jacekku/TraviansServer/commit/1f18edd1a3c3b8ef584d7fa64aea812f0acc2e5b))
+
 ### [0.1.4](https://github.com/jacekku/TraviansServer/compare/v0.1.3...v0.1.4) (2021-08-25)
 
 
