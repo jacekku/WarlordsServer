@@ -26,4 +26,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: jacekku/travians-server:${{ steps.get_version.outputs.VERSION }}
+          tags: jacekku/warlords-online:${{ steps.get_version.outputs.VERSION }}
