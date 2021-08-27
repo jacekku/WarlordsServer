@@ -1,8 +1,8 @@
 {
-  "name": "travian-server",
+  "name": "warlords-server",
   "private": true,
   "version": "0.1.5",
-  "description": "Server for yet unnamed game",
+  "description": "Server for Warlords Online",
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",

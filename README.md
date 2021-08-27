@@ -1,1 +1,1 @@
-Unnamed Game Server
+Warlords Online Server
