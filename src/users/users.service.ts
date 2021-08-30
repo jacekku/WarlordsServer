@@ -5,7 +5,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Socket } from 'socket.io';
 import { Quad } from 'src/model/terrain/quad.model';
 import { UsersFileService } from 'src/persistence/users/users-persistence.service';
 import { StateService } from 'src/state/state.service';
