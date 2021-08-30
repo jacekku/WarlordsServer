@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/jacekku/TraviansServer/compare/v0.1.5...v0.1.6) (2021-08-30)
+
+
+### Features
+
+* renaming game to Warlords Online ([05ba206](https://github.com/jacekku/TraviansServer/commit/05ba206ffa850da4d3a48220b6d785f7421ecadc))
+
+
+### Bug Fixes
+
+* fixing https handling ([4f594dc](https://github.com/jacekku/TraviansServer/commit/4f594dc2e12ff3d7a694aa69911a8bc68fa50f60))
+* fixing names and adding https handling ([f973f8b](https://github.com/jacekku/TraviansServer/commit/f973f8b70a3a21e390688ee9ff0490d394623f55))
+* Removed an issue where a disconnecting player would crash the server if there was another websocket connected with the same name that already disconnected ([71c4ec7](https://github.com/jacekku/TraviansServer/commit/71c4ec7c13f4d0f7a859c9647adffa621ce6570a))
+
 ### [0.1.5](https://github.com/jacekku/TraviansServer/compare/v0.1.4...v0.1.5) (2021-08-26)
 
 
