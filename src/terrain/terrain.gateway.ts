@@ -22,10 +22,13 @@ export class TerrainWebsocketGateway {
   }
 
   @SubscribeMessage('terrain:chunk')
-  getChunk(@MessageBody('player') player: Player): WsResponse<any> {
+  getChunk(
+    @MessageBody('player') player: Player,
+    @MessageBody('chunks') chunks: number[],
+  ): WsResponse<any> {
     return {
       event: 'terrain:chunk',
-      data: this.terrainService.returnChunksVisibleToPlayer(player),
+      data: this.terrainService.returnChunksVisibleToPlayer(player, chunks),
     };
   }
 }

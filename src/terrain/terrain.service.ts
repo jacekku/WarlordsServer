@@ -36,7 +36,7 @@ export class TerrainService {
     return this.terrain;
   }
 
-  returnChunksVisibleToPlayer(player: Player): any {
+  returnChunksVisibleToPlayer(player: Player, chunks: number[] = []): any {
     const playerFrustum = Utilities.calculatePlayerFrustum(
       this.stateService.findConnectedPlayer(player),
       this.terrain,
@@ -45,7 +45,7 @@ export class TerrainService {
     const visibleChunks = this.terrain.chunks.filter((chunk) =>
       Quad.quadsOverlapping(chunk, playerFrustum),
     );
-    return visibleChunks;
+    return visibleChunks.filter((chunk: Chunk) => !chunks.includes(chunk.id));
   }
 
   getChunk(chunkId: number): Chunk {
