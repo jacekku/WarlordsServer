@@ -5,6 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Socket } from 'socket.io';
 import { Quad } from 'src/model/terrain/quad.model';
 import { UsersFileService } from 'src/persistence/users/users-persistence.service';
 import { StateService } from 'src/state/state.service';
@@ -46,12 +47,15 @@ export class UsersService implements BeforeApplicationShutdown {
     return player;
   }
 
-  playerConnected(newPlayer: Player): Player {
+  checkIfPlayerAlreadyConnected(newPlayer: Player) {
     if (this.findConnectedPlayer(newPlayer)) {
       throw new BadRequestException(
         'player already connected: ' + newPlayer.name,
       );
     }
+  }
+
+  playerConnected(newPlayer: Player): Player {
     const player =
       this.getPlayer(newPlayer.name) || this.registerPlayer(newPlayer);
     this.stateService.players.push(player);
@@ -60,6 +64,11 @@ export class UsersService implements BeforeApplicationShutdown {
 
   playerDisconnected(playerName: string) {
     const disconnectedPlayer = this.findConnectedPlayerByName(playerName);
+    if (!disconnectedPlayer) {
+      this.logger.error(
+        "tried to disconnect a player but couldn't find them: " + playerName,
+      );
+    }
     this.stateService.players = this.stateService.players.filter(
       (player) => player.name != disconnectedPlayer.name,
     );

@@ -7,7 +7,7 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { UsersService } from './users.service';
 import { Player } from 'src/model/users/player.model';
 
@@ -47,6 +47,7 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
   @SubscribeMessage('players:connect')
   playerConnected(client: any, payload: any) {
     const player = payload.player as Player;
+    this.userService.checkIfPlayerAlreadyConnected(player);
     this.pushPlayerNameToSocketClient(client, player);
     this.logger.log('player connected: ' + client.player);
     this.userService.playerConnected(player);
@@ -56,6 +57,7 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
 
   handleDisconnect(client: any) {
     this.logger.log('player disconnected: ' + client.player);
+    if (!client.player) return;
     this.userService.playerDisconnected(client.player);
     this.emitToAllPlayers('players:update');
   }
