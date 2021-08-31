@@ -68,6 +68,7 @@ export class UsersService implements BeforeApplicationShutdown {
       this.logger.error(
         "tried to disconnect a player but couldn't find them: " + playerName,
       );
+      return;
     }
     this.stateService.players = this.stateService.players.filter(
       (player) => player.name != disconnectedPlayer.name,
