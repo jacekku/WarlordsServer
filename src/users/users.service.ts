@@ -3,6 +3,7 @@ import {
   Injectable,
   BeforeApplicationShutdown,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Quad } from 'src/model/terrain/quad.model';
@@ -64,10 +65,9 @@ export class UsersService implements BeforeApplicationShutdown {
   playerDisconnected(playerName: string) {
     const disconnectedPlayer = this.findConnectedPlayerByName(playerName);
     if (!disconnectedPlayer) {
-      this.logger.error(
+      throw new NotFoundException(
         "tried to disconnect a player but couldn't find them: " + playerName,
       );
-      return;
     }
     this.stateService.players = this.stateService.players.filter(
       (player) => player.name != disconnectedPlayer.name,
