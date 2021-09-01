@@ -4,11 +4,11 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 import * as fs from 'fs';
 
 async function bootstrap() {
-  const httpsOptions = {
-    key: fs.readFileSync('/usr/warlords/privkey.pem'),
-    cert: fs.readFileSync('/usr/warlords/fullchain.pem'),
-  };
-  const app = await NestFactory.create(AppModule, { httpsOptions });
+  // const httpsOptions = {
+  //   key: fs.readFileSync('/usr/warlords/privkey.pem'),
+  //   cert: fs.readFileSync('/usr/warlords/fullchain.pem'),
+  // };
+  const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.useWebSocketAdapter(new IoAdapter(app));
   app.enableShutdownHooks();

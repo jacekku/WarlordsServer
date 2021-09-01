@@ -14,4 +14,13 @@ export class StateService {
   findConnectedPlayer(playerToFind: Player) {
     return this.players.find((player) => player.name === playerToFind.name);
   }
+
+  updatePlayer(player: Player) {
+    const playerIndex = this.players.findIndex((p) => player.name === p.name);
+    if (playerIndex < 0) {
+      return;
+    }
+    const currentPlayer = this.players[playerIndex];
+    this.players[playerIndex] = Object.assign(currentPlayer, player);
+  }
 }
