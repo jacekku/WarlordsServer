@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { IoAdapter } from '@nestjs/platform-socket.io';
-import * as fs from 'fs';
+import { ItemParser } from './state/item-definitions/item-parser';
 
 async function bootstrap() {
   // const httpsOptions = {

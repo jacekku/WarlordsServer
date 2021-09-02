@@ -12,6 +12,7 @@ import { ItemsService } from './items.service';
 import { Item } from 'src/model/inventory/item.model';
 import { Block } from 'src/model/terrain/block.model';
 import { Inventory } from 'src/model/inventory/inventory.model';
+import { CraftableItem } from 'src/model/inventory/craftable.model';
 
 @WebSocketGateway({ cors: true })
 export class ItemsWebsocketGateway {
@@ -28,33 +29,33 @@ export class ItemsWebsocketGateway {
     @MessageBody('item') item: Item,
   ): WsResponse<any> {
     const newInventory = this.itemsService.addItem(player, item);
-    return {
-      event: 'items:update',
-      data: newInventory,
-    };
+    return this.buildWsResponse(newInventory);
   }
   @SubscribeMessage('items:remove')
   removeItemHandler(
     @MessageBody('player') player: Player,
     @MessageBody('item') item: Item,
-  ) {
-    this.itemsService.removeItem(player, item);
+  ): WsResponse<any> {
+    const inventory: Inventory = this.itemsService.removeItem(player, item);
+    return this.buildWsResponse(inventory);
   }
   @SubscribeMessage('items:transfer')
   transferItemHandler(
     @MessageBody('source') source: Player,
     @MessageBody('source') recipient: Player,
     @MessageBody('item') item: Item,
-  ) {
+  ): WsResponse<any> {
     this.itemsService.transferItem(source, recipient, item);
+    return this.buildWsResponse(null);
   }
   @SubscribeMessage('items:drop')
   dropItemHandler(
     @MessageBody('player') player: Player,
     @MessageBody('block') block: Block,
     @MessageBody('item') item: Item,
-  ) {
+  ): WsResponse<any> {
     this.itemsService.dropItem(player, block, item);
+    return this.buildWsResponse(null);
   }
 
   @SubscribeMessage('items:update')
@@ -62,9 +63,22 @@ export class ItemsWebsocketGateway {
     @MessageBody('player') player: Player,
   ): WsResponse<Inventory> {
     const inventory = this.itemsService.getInventory(player);
+    return this.buildWsResponse(inventory);
+  }
+
+  @SubscribeMessage('items:craft')
+  craftItemsHandler(
+    @MessageBody('player') player: Player,
+    @MessageBody('itemToCraft') itemToCraft: Item,
+  ): WsResponse<Inventory> {
+    const inventory = this.itemsService.craftItem(player, itemToCraft);
+    return this.buildWsResponse(inventory);
+  }
+
+  buildWsResponse(data: any, event = 'items:update'): WsResponse<any> {
     return {
-      event: 'items:update',
-      data: inventory,
+      event,
+      data,
     };
   }
 }
