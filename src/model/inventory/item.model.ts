@@ -1,11 +1,7 @@
-import { EquipmentType } from './equipment-type.model';
+import { ItemDefinition } from './item-definition.model';
 
-export class Item {
-  public id: number;
-  public equipmentType: EquipmentType;
-  public stackSize: number;
-  public uid: number;
-  public maxStackSize: number;
+export class Item extends ItemDefinition {
+  public stackSize = 0;
 
   public validateStackSize(newStackSize: number) {
     return newStackSize <= this.maxStackSize;

@@ -1,0 +1,54 @@
+[
+  {
+    "maxStackSize": 5,
+    "name": "wood"
+  },
+  {
+    "maxStackSize": 10,
+    "name": "meat"
+  },
+  {
+    "maxStackSize": 10,
+    "name": "copper_ore"
+  },
+  {
+    "maxStackSize": 10,
+    "name": "iron_ore"
+  },
+  {
+    "maxStackSize": 10,
+    "name": "gold_ore"
+  },
+  {
+    "maxStackSize": 10,
+    "name": "copper_bar",
+    "craftable": {
+      "sourceItems": ["copper_ore", "wood"],
+      "facility": ["inventory-craft"]
+    }
+  },
+  {
+    "maxStackSize": 10,
+    "name": "iron_bar",
+    "craftable": {
+      "sourceItems": ["iron_ore", "wood"],
+      "facility": ["inventory-craft"]
+    }
+  },
+  {
+    "maxStackSize": 10,
+    "name": "gold_bar",
+    "craftable": {
+      "sourceItems": ["gold_ore", "wood"],
+      "facility": ["inventory-craft"]
+    }
+  },
+  {
+    "maxStackSize": 10,
+    "name": "cooked_meat",
+    "craftable": {
+      "sourceItems": ["meat", "wood"],
+      "facility": ["inventory-craft"]
+    }
+  }
+]

@@ -1,16 +1,9 @@
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
-import { wrap } from 'lodash';
-import { Equiped } from 'src/model/inventory/equiped.model';
+import { Injectable, Logger } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 import { Inventory } from 'src/model/inventory/inventory.model';
 import { Item } from 'src/model/inventory/item.model';
 import { Block } from 'src/model/terrain/block.model';
 import { Player } from 'src/model/users/player.model';
-import { StateController } from 'src/state/state.controller';
 import { StateService } from 'src/state/state.service';
 
 @Injectable()
@@ -20,15 +13,20 @@ export class ItemsService {
   constructor(public readonly stateService: StateService) {}
 
   private playerHasItem(player: Player, item: Item): boolean {
-    if (!!player.inventory.items.find((invItem) => invItem.uid === item.uid)) {
-      return true;
+    if (
+      !player.inventory.items
+        .filter(Boolean)
+        .find((invItem) => Inventory.itemComparator(invItem, item))
+    ) {
+      throw new WsException(
+        `item: ${JSON.stringify(item)} not found on player: ${player.name}`,
+      );
     }
-    throw new NotFoundException(
-      `item: ${JSON.stringify(item)} not found on player: ${player.name}`,
-    );
+    return true;
   }
-  private playerInventoryIsFull(player: Player) {
-    return player.inventory.isFull();
+
+  private playerInventoryIsFull(player: Player, item: Item) {
+    return player.inventory.isFull(item);
   }
   private upsertPlayerInventory(player: Player) {
     if (!player.inventory) {
@@ -37,16 +35,33 @@ export class ItemsService {
     player.inventory = Inventory.wrapInventory(player.inventory);
   }
 
-  public equipItem(player: Player, item: Item) {
+  private itemExists(item: Item) {
+    if (
+      !this.stateService.itemDefinitions.find((i) =>
+        Inventory.itemComparator(i, item),
+      )
+    ) {
+      throw new WsException(`item: ${JSON.stringify(item)} does not exist!`);
+    }
+    return true;
+  }
+
+  private validate(player, item) {
     this.playerHasItem(player, item);
+    this.itemExists(item);
+  }
+
+  public equipItem(player: Player, item: Item) {
+    this.validate(player, item);
   }
 
   public addItem(player: Player, item: Item) {
     const currentPlayer = this.stateService.findConnectedPlayer(player);
     this.upsertPlayerInventory(currentPlayer);
-    if (this.playerInventoryIsFull(currentPlayer)) {
-      return false;
+    if (this.playerInventoryIsFull(currentPlayer, item)) {
+      throw new WsException('player inventory is full');
     }
+    item = this.stateService.getItemDefinition(item);
     currentPlayer.inventory.addItem(item);
     return currentPlayer.inventory;
   }
@@ -56,8 +71,10 @@ export class ItemsService {
 
     this.upsertPlayerInventory(currentPlayer);
 
-    this.playerHasItem(currentPlayer, item);
-    return currentPlayer.inventory.removeItem(item);
+    this.validate(currentPlayer, item);
+    const itemDefinition = this.stateService.getItemDefinition(item);
+    currentPlayer.inventory.removeItem(itemDefinition);
+    return currentPlayer.inventory;
   }
   // public removeItems(player: Player, items: Item[]) {}
 
@@ -67,15 +84,33 @@ export class ItemsService {
 
     this.upsertPlayerInventory(currentSource);
     this.upsertPlayerInventory(currentRecipient);
-    this.playerHasItem(currentSource, item);
-    currentRecipient.inventory.addItem(item);
-    this.playerHasItem(currentRecipient, item);
-    return currentSource.inventory.removeItem(item);
+    this.validate(currentSource, item);
+    this.addItem(currentRecipient, item);
+    this.validate(currentRecipient, item);
+    return this.removeItem(currentSource, item);
   }
   // public transferItems(source: Player, recipient: Player, items: Item[]) {}
 
   public dropItem(player: Player, block: Block, item: Item) {
     return;
+  }
+
+  craftItem(player: Player, itemToCraft: Item) {
+    const currentPlayer = this.stateService.findConnectedPlayer(player);
+    this.upsertPlayerInventory(currentPlayer);
+    this.itemExists(itemToCraft);
+    itemToCraft = this.stateService.getItemDefinition(itemToCraft);
+    if (!itemToCraft.craftable) {
+      throw new WsException(`${itemToCraft} is not craftable`);
+    }
+    const sourceItems = itemToCraft.craftable.sourceItems;
+    sourceItems.forEach((item) => this.validate(currentPlayer, item));
+    const playerItems = sourceItems.map((item) =>
+      currentPlayer.inventory.findItemByDefinition(item),
+    );
+    playerItems.forEach((item) => this.removeItem(currentPlayer, item));
+
+    return this.addItem(currentPlayer, itemToCraft);
   }
 
   public getInventory(player) {

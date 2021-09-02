@@ -9,4 +9,9 @@ export class StateController {
   getState() {
     return this.stateService.getState();
   }
+
+  @Get('definitions')
+  getDefinitions() {
+    return this.stateService.getDefinitions();
+  }
 }
