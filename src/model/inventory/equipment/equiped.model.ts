@@ -1,4 +1,4 @@
-import { Item } from './item.model';
+import { Item } from '../item.model';
 
 export class Equiped {
   public chest: Item;

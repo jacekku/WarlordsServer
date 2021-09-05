@@ -1,10 +1,10 @@
-import { CraftingFacility } from '../../model/inventory/crafting-facility.model';
+import { CraftingFacility } from '../../model/inventory/crafting/crafting-facility.model';
 import * as ITEMS_JSON from './items.json';
 import * as FACILITIES_JSON from './crafting-facilities.json';
-import { CraftableItem } from 'src/model/inventory/craftable.model';
+import { CraftableItem } from 'src/model/inventory/crafting/craftable.model';
 import { ItemDefinition } from 'src/model/inventory/item-definition.model';
-import { EquipmentType } from 'src/model/inventory/equipment-type.model';
-import { EquipableItem } from 'src/model/inventory/equipable-item.model';
+import { EquipableItem } from 'src/model/inventory/equipment/equipable-item.model';
+import { CraftingSourceItemDefinition } from 'src/model/inventory/crafting/crafting-source-item-definition.model';
 
 export class ItemParser {
   items: ItemDefinition[] = [];
@@ -29,9 +29,22 @@ export class ItemParser {
       newItem.name = readItem.name;
       if (readItem.craftable) {
         newItem.craftable = new CraftableItem();
+
         newItem.craftable.sourceItems = Array.from(
           readItem.craftable.sourceItems,
-        ).map((itemName) => this.findItemByName(itemName as string));
+        ).map((item) => {
+          if (typeof item === 'string') {
+            return CraftingSourceItemDefinition.fromItem(
+              this.findItemByName(item),
+            );
+          }
+          if (typeof item === 'object') {
+            return CraftingSourceItemDefinition.fromItem(
+              this.findItemByName((item as any).name),
+              (item as any).requiredAmount,
+            );
+          }
+        });
         newItem.craftable.facility = readItem.craftable.facility.map(
           (facilityName) => this.findFacility(facilityName),
         );

@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { Equiped } from './equiped.model';
+import { Equiped } from './equipment/equiped.model';
 import { ItemDefinition } from './item-definition.model';
 import { Item } from './item.model';
 

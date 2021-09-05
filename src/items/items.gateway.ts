@@ -12,7 +12,7 @@ import { ItemsService } from './items.service';
 import { Item } from 'src/model/inventory/item.model';
 import { Block } from 'src/model/terrain/block.model';
 import { Inventory } from 'src/model/inventory/inventory.model';
-import { CraftableItem } from 'src/model/inventory/craftable.model';
+import { CraftableItem } from 'src/model/inventory/crafting/craftable.model';
 
 @WebSocketGateway({ cors: true })
 export class ItemsWebsocketGateway {
