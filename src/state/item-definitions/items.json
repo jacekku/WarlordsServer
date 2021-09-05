@@ -50,5 +50,16 @@
       "sourceItems": ["meat", "wood"],
       "facility": ["inventory-craft"]
     }
+  },
+  {
+    "maxStackSize": 1,
+    "name": "copper_helmet",
+    "craftable": {
+      "sourceItems": ["copper_bar", "copper_bar", "copper_bar"],
+      "facility": ["inventory-craft"]
+    },
+    "equipable": {
+      "type": "HEAD"
+    }
   }
 ]
