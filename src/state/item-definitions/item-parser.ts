@@ -3,6 +3,8 @@ import * as ITEMS_JSON from './items.json';
 import * as FACILITIES_JSON from './crafting-facilities.json';
 import { CraftableItem } from 'src/model/inventory/craftable.model';
 import { ItemDefinition } from 'src/model/inventory/item-definition.model';
+import { EquipmentType } from 'src/model/inventory/equipment-type.model';
+import { EquipableItem } from 'src/model/inventory/equipable-item.model';
 
 export class ItemParser {
   items: ItemDefinition[] = [];
@@ -34,6 +36,10 @@ export class ItemParser {
           (facilityName) => this.findFacility(facilityName),
         );
         newItem.craftable.result = newItem.name;
+      }
+      if (readItem.equipable) {
+        newItem.equipable = new EquipableItem();
+        newItem.equipable.type = readItem.equipable.type;
       }
       this.items.push(newItem);
     }
