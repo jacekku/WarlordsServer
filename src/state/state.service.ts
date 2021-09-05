@@ -34,7 +34,7 @@ export class StateService {
     };
   }
 
-  getItemDefinition(item: Item) {
+  getItemDefinition(item: ItemDefinition) {
     const itemDefinition = this.itemDefinitions.find((i) =>
       Inventory.itemComparator(item, i),
     );

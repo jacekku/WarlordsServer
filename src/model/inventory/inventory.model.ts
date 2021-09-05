@@ -1,5 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 import { Equiped } from './equipment/equiped.model';
+import { EquipmentMap } from './equipment/equipment.map';
 import { ItemDefinition } from './item-definition.model';
 import { Item } from './item.model';
 
@@ -38,7 +40,7 @@ export class Inventory {
     this.items[index].stackSize += 1;
     return true;
   }
-  public removeItem(item: Item) {
+  public removeItem(item: ItemDefinition) {
     const index = this.findItemIndex(item);
     if (index < 0) {
       throw new BadRequestException(
@@ -50,11 +52,34 @@ export class Inventory {
     return true;
   }
 
+  equipItem(item: Item) {
+    const field = EquipmentMap.itemToEquipment(
+      item.equipable.type,
+      this.equiped,
+    );
+    if (field.name) {
+      throw new WsException(
+        'player has item already equiped on ' + field.equipable.type,
+      );
+    }
+    field.setItem(item);
+    return this;
+  }
+
+  unequipItem(item: Item) {
+    const field = EquipmentMap.itemToEquipment(
+      item.equipable.type,
+      this.equiped,
+    );
+    field.setItem(new Item());
+    return this;
+  }
+
   private countItems() {
     return this.items.filter(Boolean).length;
   }
 
-  private findSpaceInStack(itemToAdd: Item) {
+  private findSpaceInStack(itemToAdd: ItemDefinition) {
     return this.items
       .filter((item) => Inventory.itemComparator(item, itemToAdd))
       .filter((item) => item.stackSize < item.maxStackSize)[0];
@@ -70,7 +95,7 @@ export class Inventory {
       );
     return this.items.findIndex((item) => item === null);
   }
-  private findItemIndex(itemToFind: Item) {
+  private findItemIndex(itemToFind: ItemDefinition) {
     return this.items.findIndex((item) =>
       Inventory.itemComparator(item, itemToFind),
     );
@@ -82,11 +107,18 @@ export class Inventory {
     );
   }
 
+  public findEquipedItemByDefinition(itemToFind: ItemDefinition) {
+    return EquipmentMap.itemToEquipment(
+      itemToFind.equipable.type,
+      this.equiped,
+    );
+  }
+
   public static wrapInventory(inventory: Inventory) {
     const wrappedInventory = new Inventory();
     wrappedInventory.inventorySize = inventory.inventorySize;
     wrappedInventory.items = inventory.items;
-    wrappedInventory.equiped = inventory.equiped;
+    wrappedInventory.equiped.setEquiped(inventory.equiped);
     return wrappedInventory;
   }
 
