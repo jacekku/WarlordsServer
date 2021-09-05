@@ -2,7 +2,7 @@ import { Equiped } from './equiped.model';
 import { EquipmentType } from './equipment-type.model';
 
 export class EquipmentMap {
-  itemToEquipment(itemType: EquipmentType, equiped: Equiped) {
+  public static itemToEquipment(itemType: EquipmentType, equiped: Equiped) {
     const map = new Map([
       [EquipmentType.CHEST, equiped.chest],
       [EquipmentType.LEGS, equiped.legs],

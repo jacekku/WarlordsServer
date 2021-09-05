@@ -1,6 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
+import { CraftingSourceItemDefinition } from 'src/model/inventory/crafting/crafting-source-item-definition.model';
+import { Equiped } from 'src/model/inventory/equipment/equiped.model';
 import { Inventory } from 'src/model/inventory/inventory.model';
+import { ItemDefinition } from 'src/model/inventory/item-definition.model';
 import { Item } from 'src/model/inventory/item.model';
 import { Block } from 'src/model/terrain/block.model';
 import { Player } from 'src/model/users/player.model';
@@ -32,6 +35,9 @@ export class ItemsService {
     if (!player.inventory) {
       player.inventory = new Inventory();
     }
+    if (!player.inventory.equiped) {
+      player.inventory.equiped = new Equiped();
+    }
     player.inventory = Inventory.wrapInventory(player.inventory);
   }
 
@@ -52,7 +58,27 @@ export class ItemsService {
   }
 
   public equipItem(player: Player, item: Item) {
-    this.validate(player, item);
+    const currentPlayer = this.stateService.findConnectedPlayer(player);
+    this.upsertPlayerInventory(currentPlayer);
+    this.validate(currentPlayer, item);
+    const itemDefinition = this.stateService.getItemDefinition(item);
+    const itemToEquip =
+      currentPlayer.inventory.findItemByDefinition(itemDefinition);
+    currentPlayer.inventory.equipItem(itemToEquip);
+    return this.removeItem(currentPlayer, itemToEquip);
+  }
+
+  public unequipItem(player: Player, item: Item) {
+    const currentPlayer = this.stateService.findConnectedPlayer(player);
+    this.upsertPlayerInventory(currentPlayer);
+    this.itemExists(item);
+    const itemDefinition = this.stateService.getItemDefinition(item);
+    const itemToUnequip =
+      currentPlayer.inventory.findEquipedItemByDefinition(itemDefinition);
+    if (!itemToUnequip.name)
+      throw new WsException('no equiped on ' + item.equipable.type);
+    currentPlayer.inventory.unequipItem(itemToUnequip);
+    return this.addItem(player, itemDefinition as Item);
   }
 
   public addItem(player: Player, item: Item) {
@@ -61,19 +87,20 @@ export class ItemsService {
     if (this.playerInventoryIsFull(currentPlayer, item)) {
       throw new WsException('player inventory is full');
     }
-    item = this.stateService.getItemDefinition(item);
-    currentPlayer.inventory.addItem(item);
+    const itemDefinition = this.stateService.getItemDefinition(item);
+    currentPlayer.inventory.addItem(itemDefinition as Item);
     return currentPlayer.inventory;
   }
 
-  public removeItem(player: Player, item: Item) {
+  public removeItem(player: Player, item: ItemDefinition, amount = 1) {
     const currentPlayer = this.stateService.findConnectedPlayer(player);
-
     this.upsertPlayerInventory(currentPlayer);
 
     this.validate(currentPlayer, item);
     const itemDefinition = this.stateService.getItemDefinition(item);
-    currentPlayer.inventory.removeItem(itemDefinition);
+    for (let i = 0; i < amount; i++) {
+      currentPlayer.inventory.removeItem(itemDefinition);
+    }
     return currentPlayer.inventory;
   }
   // public removeItems(player: Player, items: Item[]) {}
@@ -99,16 +126,20 @@ export class ItemsService {
     const currentPlayer = this.stateService.findConnectedPlayer(player);
     this.upsertPlayerInventory(currentPlayer);
     this.itemExists(itemToCraft);
-    itemToCraft = this.stateService.getItemDefinition(itemToCraft);
-    if (!itemToCraft.craftable) {
-      throw new WsException(`${itemToCraft} is not craftable`);
+    const itemToCraftDefinition =
+      this.stateService.getItemDefinition(itemToCraft);
+    if (!itemToCraftDefinition.craftable) {
+      throw new WsException(`${itemToCraftDefinition} is not craftable`);
     }
-    const sourceItems = itemToCraft.craftable.sourceItems;
+    const sourceItems = itemToCraftDefinition.craftable.sourceItems;
     sourceItems.forEach((item) => this.validate(currentPlayer, item));
-    const playerItems = sourceItems.map((item) =>
-      currentPlayer.inventory.findItemByDefinition(item),
+    sourceItems.forEach((item) =>
+      this.removeItem(
+        currentPlayer,
+        item as ItemDefinition,
+        (item as CraftingSourceItemDefinition).requiredAmount,
+      ),
     );
-    playerItems.forEach((item) => this.removeItem(currentPlayer, item));
 
     return this.addItem(currentPlayer, itemToCraft);
   }

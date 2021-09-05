@@ -75,6 +75,24 @@ export class ItemsWebsocketGateway {
     return this.buildWsResponse(inventory);
   }
 
+  @SubscribeMessage('items:equip')
+  equipItemHandler(
+    @MessageBody('player') player: Player,
+    @MessageBody('itemToEquip') itemToEquip: Item,
+  ): WsResponse<any> {
+    const inventory = this.itemsService.equipItem(player, itemToEquip);
+    return this.buildWsResponse(inventory);
+  }
+
+  @SubscribeMessage('items:unequip')
+  unequipItemHandler(
+    @MessageBody('player') player: Player,
+    @MessageBody('itemToUnequip') itemToUnequip: Item,
+  ) {
+    const inventory = this.itemsService.unequipItem(player, itemToUnequip);
+    return this.buildWsResponse(inventory);
+  }
+
   buildWsResponse(data: any, event = 'items:update'): WsResponse<any> {
     return {
       event,
