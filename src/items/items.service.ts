@@ -62,6 +62,8 @@ export class ItemsService {
     this.upsertPlayerInventory(currentPlayer);
     this.validate(currentPlayer, item);
     const itemDefinition = this.stateService.getItemDefinition(item);
+    if (!itemDefinition.equipable)
+      throw new WsException(itemDefinition.name + ' is not equipable');
     const itemToEquip =
       currentPlayer.inventory.findItemByDefinition(itemDefinition);
     currentPlayer.inventory.equipItem(itemToEquip);
@@ -142,6 +144,13 @@ export class ItemsService {
     );
 
     return this.addItem(currentPlayer, itemToCraft);
+  }
+
+  public moveItems(player: Player, sourceIndex: number, targetIndex: number) {
+    const currentPlayer = this.stateService.findConnectedPlayer(player);
+    this.upsertPlayerInventory(currentPlayer);
+    currentPlayer.inventory.moveItems(sourceIndex, targetIndex);
+    return currentPlayer.inventory;
   }
 
   public getInventory(player) {

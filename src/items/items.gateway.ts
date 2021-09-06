@@ -93,6 +93,20 @@ export class ItemsWebsocketGateway {
     return this.buildWsResponse(inventory);
   }
 
+  @SubscribeMessage('items:move')
+  moveItemHandler(
+    @MessageBody('player') player: Player,
+    @MessageBody('sourceIndex') sourceIndex: number,
+    @MessageBody('targetIndex') targetIndex: number,
+  ) {
+    const inventory = this.itemsService.moveItems(
+      player,
+      sourceIndex,
+      targetIndex,
+    );
+    return this.buildWsResponse(inventory);
+  }
+
   buildWsResponse(data: any, event = 'items:update'): WsResponse<any> {
     return {
       event,
