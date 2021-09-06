@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/jacekku/TraviansServer/compare/v0.1.6...v0.1.7) (2021-09-06)
+
+
+### Features
+
+* **items:** Crafting system ([6eab825](https://github.com/jacekku/TraviansServer/commit/6eab82578f210de6c528879b349b1946db90f88d))
+* **items:** Equipable items ([70f5341](https://github.com/jacekku/TraviansServer/commit/70f53419103159cc2bf740a2812a08c89e0f35dc))
+* **items:** Items can now be added to inventory ([0b574f2](https://github.com/jacekku/TraviansServer/commit/0b574f2beb7b28ebc0ecb30e48a5272ce9b9b10c))
+* **items:** Items can now be equiped and unequiped ([5d79e61](https://github.com/jacekku/TraviansServer/commit/5d79e61df5c3341df67707db67d899d6c79aad81))
+* **items:** Items can now have multiples of source items ([27799d5](https://github.com/jacekku/TraviansServer/commit/27799d5cdef74b5158dc0ccd7fd6419e6a93ef95))
+* **items:** More item definitions ([895101d](https://github.com/jacekku/TraviansServer/commit/895101d65171db1e52cee576e69b0a1fe043a316))
+* **items:** Player can move items between inventory spaces ([06e0396](https://github.com/jacekku/TraviansServer/commit/06e03965a4fe76ba981e362a295413bc8ac56dbe))
+
+
+### Bug Fixes
+
+* **items:** removing changes to test locally ([4fb5cda](https://github.com/jacekku/TraviansServer/commit/4fb5cda4499b1cabb2df4f297c5ebba36d6e2dc2))
+* Player now gets only new chunks instead of all the visible chunks ([a7dbc3d](https://github.com/jacekku/TraviansServer/commit/a7dbc3d458c305a1dc93b95c3b48b41d0dac7f5e))
+* **users:** Player disconnecting no longer crashes the server ([c8a23b1](https://github.com/jacekku/TraviansServer/commit/c8a23b13dcb979dbcbdab7a2ed581d755d7ceec3))
+
 ### [0.1.6](https://github.com/jacekku/TraviansServer/compare/v0.1.5...v0.1.6) (2021-08-30)
 
 ### Features

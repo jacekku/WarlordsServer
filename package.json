@@ -1,7 +1,7 @@
 {
   "name": "warlords-server",
   "private": true,
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Server for Warlords Online",
   "license": "MIT",
   "scripts": {
