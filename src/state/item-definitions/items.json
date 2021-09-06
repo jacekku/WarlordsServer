@@ -94,5 +94,17 @@
     "equipable": {
       "type": "TRINKET"
     }
+  },
+  {
+    "maxStackSize": 10,
+    "name": "sand"
+  },
+  {
+    "maxStackSize": 10,
+    "name": "glass",
+    "craftable": {
+      "sourceItems": [{ "name": "sand", "requiredAmount": 5 }],
+      "facility": ["inventory-craft"]
+    }
   }
 ]
