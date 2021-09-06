@@ -38,7 +38,7 @@ export class StateService {
     const itemDefinition = this.itemDefinitions.find((i) =>
       Inventory.itemComparator(item, i),
     );
-    return Object.assign(item, itemDefinition);
+    return Object.assign({}, itemDefinition);
   }
 
   findConnectedPlayer(playerToFind: Player) {

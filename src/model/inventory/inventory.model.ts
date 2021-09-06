@@ -114,6 +114,15 @@ export class Inventory {
     );
   }
 
+  public moveItems(sourceIndex, targetIndex) {
+    if (sourceIndex < 0 || sourceIndex >= this.inventorySize) return;
+    if (targetIndex < 0 || sourceIndex >= this.inventorySize) return;
+    if (targetIndex === sourceIndex) return;
+    const temp = this.items[sourceIndex];
+    this.items[sourceIndex] = this.items[targetIndex];
+    this.items[targetIndex] = temp;
+  }
+
   public static wrapInventory(inventory: Inventory) {
     const wrappedInventory = new Inventory();
     wrappedInventory.inventorySize = inventory.inventorySize;
