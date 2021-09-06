@@ -61,5 +61,38 @@
     "equipable": {
       "type": "HEAD"
     }
+  },
+  {
+    "maxStackSize": 1,
+    "name": "iron_sword",
+    "craftable": {
+      "sourceItems": [{ "name": "iron_bar", "requiredAmount": 3 }, "wood"],
+      "facility": ["inventory-craft"]
+    },
+    "equipable": {
+      "type": "MAINHAND"
+    }
+  },
+  {
+    "maxStackSize": 1,
+    "name": "wooden_shield",
+    "craftable": {
+      "sourceItems": [{ "name": "wood", "requiredAmount": 3 }],
+      "facility": ["inventory-craft"]
+    },
+    "equipable": {
+      "type": "OFFHAND"
+    }
+  },
+  {
+    "maxStackSize": 1,
+    "name": "gold_necklace",
+    "craftable": {
+      "sourceItems": [{ "name": "gold_bar", "requiredAmount": 2 }, "iron_bar"],
+      "facility": ["inventory-craft"]
+    },
+    "equipable": {
+      "type": "TRINKET"
+    }
   }
 ]
