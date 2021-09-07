@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ItemsModule } from './items/items.module';
+import { LoggingModule } from './logging/logging.module';
 import { StateModule } from './state/state.module';
 import { TerrainModule } from './terrain/terrain.module';
 import { UsersModule } from './users/users.module';
@@ -14,6 +15,7 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     StateModule,
     ItemsModule,
+    LoggingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

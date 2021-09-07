@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Player } from 'src/model/users/player.model';
 import { Terrain } from 'src/model/terrain/terrain.model';
 import { CraftingFacility } from 'src/model/inventory/crafting/crafting-facility.model';
-import { Item } from 'src/model/inventory/item.model';
 import { ItemParser } from './item-definitions/item-parser';
 import { Inventory } from 'src/model/inventory/inventory.model';
 import { ItemDefinition } from 'src/model/inventory/item-definition.model';

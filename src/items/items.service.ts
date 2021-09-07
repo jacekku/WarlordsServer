@@ -1,17 +1,17 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
+import { ConfigurableLogger } from 'src/logging/logging.service';
 import { CraftingSourceItemDefinition } from 'src/model/inventory/crafting/crafting-source-item-definition.model';
 import { Equiped } from 'src/model/inventory/equipment/equiped.model';
 import { Inventory } from 'src/model/inventory/inventory.model';
 import { ItemDefinition } from 'src/model/inventory/item-definition.model';
 import { Item } from 'src/model/inventory/item.model';
-import { Block } from 'src/model/terrain/block.model';
 import { Player } from 'src/model/users/player.model';
 import { StateService } from 'src/state/state.service';
 
 @Injectable()
 export class ItemsService {
-  private readonly logger = new Logger(ItemsService.name);
+  private readonly logger = new ConfigurableLogger(ItemsService.name);
 
   constructor(public readonly stateService: StateService) {}
 
@@ -119,10 +119,6 @@ export class ItemsService {
     return this.removeItem(currentSource, item);
   }
   // public transferItems(source: Player, recipient: Player, items: Item[]) {}
-
-  public dropItem(player: Player, block: Block, item: Item) {
-    return;
-  }
 
   craftItem(player: Player, itemToCraft: Item) {
     const currentPlayer = this.stateService.findConnectedPlayer(player);

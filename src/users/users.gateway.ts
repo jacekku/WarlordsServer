@@ -6,10 +6,10 @@ import {
   WebSocketServer,
   WsResponse,
 } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
 import { Server } from 'socket.io';
 import { UsersService } from './users.service';
 import { Player } from 'src/model/users/player.model';
+import { ConfigurableLogger } from 'src/logging/logging.service';
 
 @WebSocketGateway({
   cors: {
@@ -19,7 +19,7 @@ import { Player } from 'src/model/users/player.model';
   },
 })
 export class UsersWebsocketGateway implements OnGatewayDisconnect {
-  private readonly logger = new Logger(UsersWebsocketGateway.name);
+  private readonly logger = new ConfigurableLogger(UsersWebsocketGateway.name);
 
   @WebSocketServer()
   server: Server;

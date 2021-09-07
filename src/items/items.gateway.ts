@@ -5,13 +5,12 @@ import {
   WebSocketServer,
   WsResponse,
 } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
 import { Server } from 'socket.io';
 import { Player } from 'src/model/users/player.model';
 import { ItemsService } from './items.service';
 import { Item } from 'src/model/inventory/item.model';
-import { Block } from 'src/model/terrain/block.model';
 import { Inventory } from 'src/model/inventory/inventory.model';
+import { ConfigurableLogger } from 'src/logging/logging.service';
 
 @WebSocketGateway({
   cors: {
@@ -21,7 +20,7 @@ import { Inventory } from 'src/model/inventory/inventory.model';
   },
 })
 export class ItemsWebsocketGateway {
-  private readonly logger = new Logger(ItemsWebsocketGateway.name);
+  private readonly logger = new ConfigurableLogger(ItemsWebsocketGateway.name);
 
   constructor(public readonly itemsService: ItemsService) {}
 
@@ -33,6 +32,7 @@ export class ItemsWebsocketGateway {
     @MessageBody('player') player: Player,
     @MessageBody('item') item: Item,
   ): WsResponse<any> {
+    this.logger.debug('items:add ' + player + ' ' + JSON.stringify(item));
     const newInventory = this.itemsService.addItem(player, item);
     return this.buildWsResponse(newInventory);
   }
@@ -41,25 +41,20 @@ export class ItemsWebsocketGateway {
     @MessageBody('player') player: Player,
     @MessageBody('item') item: Item,
   ): WsResponse<any> {
+    this.logger.debug('items:remove ' + player + ' ' + JSON.stringify(item));
     const inventory: Inventory = this.itemsService.removeItem(player, item);
     return this.buildWsResponse(inventory);
   }
   @SubscribeMessage('items:transfer')
   transferItemHandler(
     @MessageBody('source') source: Player,
-    @MessageBody('source') recipient: Player,
+    @MessageBody('recipient') recipient: Player,
     @MessageBody('item') item: Item,
   ): WsResponse<any> {
+    this.logger.debug(
+      'items:transfer ' + source + ' ' + recipient + ' ' + JSON.stringify(item),
+    );
     this.itemsService.transferItem(source, recipient, item);
-    return this.buildWsResponse(null);
-  }
-  @SubscribeMessage('items:drop')
-  dropItemHandler(
-    @MessageBody('player') player: Player,
-    @MessageBody('block') block: Block,
-    @MessageBody('item') item: Item,
-  ): WsResponse<any> {
-    this.itemsService.dropItem(player, block, item);
     return this.buildWsResponse(null);
   }
 
@@ -76,6 +71,9 @@ export class ItemsWebsocketGateway {
     @MessageBody('player') player: Player,
     @MessageBody('itemToCraft') itemToCraft: Item,
   ): WsResponse<Inventory> {
+    this.logger.debug(
+      'items:craft ' + player + ' ' + JSON.stringify(itemToCraft),
+    );
     const inventory = this.itemsService.craftItem(player, itemToCraft);
     return this.buildWsResponse(inventory);
   }
@@ -85,6 +83,9 @@ export class ItemsWebsocketGateway {
     @MessageBody('player') player: Player,
     @MessageBody('itemToEquip') itemToEquip: Item,
   ): WsResponse<any> {
+    this.logger.debug(
+      'items:equip ' + player + ' ' + JSON.stringify(itemToEquip),
+    );
     const inventory = this.itemsService.equipItem(player, itemToEquip);
     return this.buildWsResponse(inventory);
   }
@@ -94,6 +95,9 @@ export class ItemsWebsocketGateway {
     @MessageBody('player') player: Player,
     @MessageBody('itemToUnequip') itemToUnequip: Item,
   ) {
+    this.logger.debug(
+      'items:unequip ' + player + ' ' + JSON.stringify(itemToUnequip),
+    );
     const inventory = this.itemsService.unequipItem(player, itemToUnequip);
     return this.buildWsResponse(inventory);
   }
@@ -104,6 +108,9 @@ export class ItemsWebsocketGateway {
     @MessageBody('sourceIndex') sourceIndex: number,
     @MessageBody('targetIndex') targetIndex: number,
   ) {
+    this.logger.debug(
+      'items:move ' + player + ' ' + sourceIndex + ' ' + targetIndex,
+    );
     const inventory = this.itemsService.moveItems(
       player,
       sourceIndex,

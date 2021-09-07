@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Player } from 'src/model/users/player.model';
 import { Chunk } from 'src/model/terrain/chunk.model';
@@ -7,10 +7,11 @@ import { Terrain } from 'src/model/terrain/terrain.model';
 import { TerrainFileService } from 'src/persistence/terrain/terrain-persistence.service';
 import { StateService } from 'src/state/state.service';
 import { Utilities } from './utilities/utilities.service';
+import { ConfigurableLogger } from 'src/logging/logging.service';
 
 @Injectable()
 export class TerrainService {
-  private logger = new Logger(TerrainService.name);
+  private logger = new ConfigurableLogger(TerrainService.name);
   public terrain: Terrain;
   constructor(
     private readonly terrainPersistentStorage: TerrainFileService,

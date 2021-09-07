@@ -2,10 +2,10 @@ import {
   BadRequestException,
   Injectable,
   BeforeApplicationShutdown,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ConfigurableLogger } from 'src/logging/logging.service';
 import { Quad } from 'src/model/terrain/quad.model';
 import { UsersFileService } from 'src/persistence/users/users-persistence.service';
 import { StateService } from 'src/state/state.service';
@@ -14,7 +14,7 @@ import { Player } from '../model/users/player.model';
 
 @Injectable()
 export class UsersService implements BeforeApplicationShutdown {
-  private readonly logger = new Logger(UsersService.name);
+  private readonly logger = new ConfigurableLogger(UsersService.name);
 
   constructor(
     private readonly usersPersistenceService: UsersFileService,
