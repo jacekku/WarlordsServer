@@ -9,10 +9,15 @@ import { Server } from 'socket.io';
 import { TerrainService } from './terrain.service';
 import { Player } from 'src/model/users/player.model';
 
-@WebSocketGateway({ cors: true })
+@WebSocketGateway({
+  cors: {
+    origin: (host: string, callback) => {
+      callback(null, process.env.CORS_ORIGIN);
+    },
+  },
+})
 export class TerrainWebsocketGateway {
   constructor(private readonly terrainService: TerrainService) {}
-
   @WebSocketServer()
   server: Server;
 

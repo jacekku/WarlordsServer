@@ -9,15 +9,15 @@ services:
       - nestjs-network
     volumes:
       - .:/usr/warlords/
-      - /etc/letsencrypt/live/warlordsonline.net/fullchain.pem:/usr/warlords/fullchain.pem
-      - /etc/letsencrypt/live/warlordsonline.net/privkey.pem:/usr/warlords/privkey.pem
-
+      - ./fullchain.pem:/usr/warlords/fullchain.pem
+      - ./privkey.pem:/usr/warlords/privkey.pem
     ports:
       - 3000:3000
       - 9229:9229
     environment:
       SAVE_FOLDER: '/usr/warlords/saves'
-      DEFAULT_TERRAIN:
+      DEFAULT_TERRAIN: d5da909c9
       FRUSTUM_SIZE: 13
+      CORS_ORIGIN: 'https://warlordsonline.net'
 networks:
   nestjs-network:

@@ -12,9 +12,14 @@ import { ItemsService } from './items.service';
 import { Item } from 'src/model/inventory/item.model';
 import { Block } from 'src/model/terrain/block.model';
 import { Inventory } from 'src/model/inventory/inventory.model';
-import { CraftableItem } from 'src/model/inventory/crafting/craftable.model';
 
-@WebSocketGateway({ cors: true })
+@WebSocketGateway({
+  cors: {
+    origin: (host: string, callback) => {
+      callback(null, process.env.CORS_ORIGIN);
+    },
+  },
+})
 export class ItemsWebsocketGateway {
   private readonly logger = new Logger(ItemsWebsocketGateway.name);
 

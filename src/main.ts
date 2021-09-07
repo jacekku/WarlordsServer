@@ -6,15 +6,23 @@ import * as fs from 'fs';
 async function bootstrap() {
   let app;
   if (process.env.ENVIROMENT === 'DEV') {
-    app = await NestFactory.create(AppModule);
+    app = await NestFactory.create(AppModule, {
+      cors: {
+        origin: process.env.CORS_ORIGIN,
+      },
+    });
   } else {
     const httpsOptions = {
       key: fs.readFileSync('/usr/warlords/privkey.pem'),
       cert: fs.readFileSync('/usr/warlords/fullchain.pem'),
     };
-    app = await NestFactory.create(AppModule, { httpsOptions });
+    app = await NestFactory.create(AppModule, {
+      httpsOptions,
+      cors: {
+        origin: process.env.CORS_ORIGIN,
+      },
+    });
   }
-  app.enableCors();
   app.useWebSocketAdapter(new IoAdapter(app));
   app.enableShutdownHooks();
   await app.listen(3000);
