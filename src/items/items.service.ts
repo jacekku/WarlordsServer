@@ -42,11 +42,7 @@ export class ItemsService {
   }
 
   private itemExists(item: Item) {
-    if (
-      !this.stateService.itemDefinitions.find((i) =>
-        Inventory.itemComparator(i, item),
-      )
-    ) {
+    if (!this.stateService.itemExists(item)) {
       throw new WsException(`item: ${JSON.stringify(item)} does not exist!`);
     }
     return true;
