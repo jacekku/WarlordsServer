@@ -40,6 +40,10 @@ export class StateService {
     return Object.assign({}, itemDefinition);
   }
 
+  itemExists(item: ItemDefinition) {
+    return this.itemDefinitions.find((i) => Inventory.itemComparator(i, item));
+  }
+
   findConnectedPlayer(playerToFind: Player) {
     return this.players.find((player) => player.name === playerToFind.name);
   }
