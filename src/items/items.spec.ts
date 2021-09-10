@@ -1,5 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
+import exp from 'constants';
 import { Inventory } from 'src/model/inventory/inventory.model';
 import { Player } from 'src/model/users/player.model';
 import { ItemsService } from './items.service';
@@ -265,6 +266,23 @@ describe('Items Service', () => {
       mockPlayer.inventory.items = [];
       const throwing = () => itemsService.craftItem(mockPlayer, mockItem);
       expect(throwing).toThrow(WsException);
+    });
+  });
+
+  describe('Other methods:', () => {
+    it("should upsert players inventory if it's undefined", () => {
+      mockPlayer.inventory = undefined;
+      itemsService.getInventory(mockPlayer);
+      expect(mockPlayer.inventory).toBeDefined();
+    });
+    it('should move items in inventory slots', () => {
+      mockPlayer.inventory.items = [
+        { name: 'item1' } as any,
+        { name: 'item2' } as any,
+      ];
+      itemsService.moveItems(mockPlayer, 0, 1);
+      expect(mockPlayer.inventory.items[0].name).toBe('item2');
+      expect(mockPlayer.inventory.items[1].name).toBe('item1');
     });
   });
 });
