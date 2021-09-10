@@ -92,7 +92,7 @@ export class UsersService implements BeforeApplicationShutdown {
     );
   }
 
-  getPlayersInQuad(quad: Quad) {
+  private getPlayersInQuad(quad: Quad) {
     return this.stateService.players.filter((player) =>
       Quad.pointInQuad(quad, player.x, player.y),
     );

@@ -1,10 +1,10 @@
-import { Player } from 'src/model/users/player.model';
-import { UsersFileService } from './users-persistence.service';
 import * as fs from 'fs';
+import { TerrainFileService } from './terrain-persistence.service';
+import { Terrain } from 'src/model/terrain/terrain.model';
 jest.mock('fs');
 describe('Persistence Service', () => {
-  let usersService: UsersFileService;
-  const mockPlayer = new Player('mock_player', 0, 0);
+  let terrainService: TerrainFileService;
+  const mockTerrain = Terrain.generateMap(10, 10, 2);
   const configService = {
     get: () => {
       return 'players';
@@ -14,7 +14,7 @@ describe('Persistence Service', () => {
   const FILE_SYSTEM = {};
 
   beforeAll(() => {
-    usersService = new UsersFileService(configService);
+    terrainService = new TerrainFileService(configService);
     jest.spyOn(fs, 'mkdirSync').mockImplementation((path: any) => {
       FILE_SYSTEM[path] = {};
       return path;
@@ -30,8 +30,9 @@ describe('Persistence Service', () => {
     });
   });
 
-  it('should register player and return player data sucessfully', () => {
-    const createdPlayer = usersService.registerPlayer(mockPlayer, 'mapId');
-    expect(createdPlayer.name).toBe(mockPlayer.name);
+  it('should save and return saved terrain', () => {
+    terrainService.saveMap(mockTerrain);
+    const terrain = terrainService.getMap(mockTerrain.mapId);
+    expect(terrain.mapId).toBe(mockTerrain.mapId);
   });
 });

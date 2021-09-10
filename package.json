@@ -70,7 +70,6 @@
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s",
-      "!**/*.model.ts",
       "!**/*.module.ts",
       "!**/main.ts"
     ],
