@@ -11,7 +11,9 @@ export class LoggingController {
   }
 
   @Post('set')
-  setState(@Body() body: { context: string; newLogLevels: LogLevel[] }) {
+  setState(
+    @Body() body: { context: string; newLogLevels: LogLevel[] | string },
+  ) {
     return this.logger.setLoggingLevel(body.context, body.newLogLevels);
   }
 }
