@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Terrain } from 'src/model/terrain/terrain.model';
 import { Player } from 'src/model/users/player.model';
 import { UsersService } from './users.service';
@@ -9,14 +9,24 @@ describe('State Service', () => {
   const mockPlayer2 = new Player('another', 10, 10);
   const players = [mockPlayer, mockPlayer2];
   const stateService = {
-    players: players,
+    players: [...players],
     findConnectedPlayer: (player: Player) => {
       return stateService.players.find((a) => a.name === player.name);
+    },
+    findConnectedPlayerByName: (playerName: string) => {
+      return stateService.players.find((a) => a.name === playerName);
     },
     terrain: Terrain.generateMap(10, 10, 5),
   } as any;
   const usersFileService = {
-    registerPlayer: (player: Player) => player,
+    registerPlayer: (player: Player) => {
+      return player;
+    },
+    getPlayer: (playerName: string) =>
+      players.find((p) => p.name === playerName),
+    savePlayer: (player) => {
+      return player;
+    },
   } as any;
   const configService = {
     get: (option: string) => {
@@ -29,7 +39,10 @@ describe('State Service', () => {
       stateService,
       configService,
     );
-    stateService.players = players;
+  });
+
+  beforeEach(() => {
+    stateService.players = [...players];
   });
 
   it('should move player', () => {
@@ -62,5 +75,26 @@ describe('State Service', () => {
       userService.checkIfPlayerAlreadyConnected(mockPlayer);
     expect(throwing).toThrow(BadRequestException);
     expect(throwing).toThrow('player already connected: ' + mockPlayer.name);
+  });
+
+  it('should push player to state service when connected', () => {
+    userService.playerConnected({ name: 'newPlayer' } as any);
+    expect(stateService.players[2].name).toBe('newPlayer');
+  });
+
+  it('should disconnect connected player', () => {
+    userService.playerConnected({ name: 'newPlayer' } as any);
+    userService.playerDisconnected('newPlayer' as any);
+    expect(stateService.players).toHaveLength(2);
+  });
+
+  it('should throw if player to disconnect not found ', () => {
+    const throwing = () => userService.playerDisconnected('notConnected');
+    expect(throwing).toThrow(NotFoundException);
+  });
+
+  it('should return all connected player', () => {
+    const conPlayers = userService.getAllConnectedPlayers();
+    expect(conPlayers).toHaveLength(2);
   });
 });
