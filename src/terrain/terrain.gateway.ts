@@ -12,7 +12,7 @@ import { Player } from 'src/model/users/player.model';
 @WebSocketGateway({
   cors: {
     origin: (host: string, callback) => {
-      callback(null, process.env.CORS_ORIGIN);
+      callback(null, process.env.CORS_ORIGIN.split(','));
     },
   },
 })

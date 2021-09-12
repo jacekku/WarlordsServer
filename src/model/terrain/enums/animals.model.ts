@@ -1,5 +1,5 @@
 export enum ANIMALS {
-  FISH,
-  DEER,
-  NO_ANIMAL,
+  FISH = 'FISH',
+  DEER = 'DEER',
+  NONE = 'NONE',
 }

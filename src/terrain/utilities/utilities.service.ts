@@ -10,6 +10,10 @@ export class Utilities {
     };
   }
 
+  static getIndex(x: number, y: number, width: number) {
+    return x + width * y;
+  }
+
   static clampNumber(num: number, min: number, max: number): number {
     return Math.min(Math.max(num, min), max);
   }

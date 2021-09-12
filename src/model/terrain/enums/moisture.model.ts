@@ -1,6 +1,6 @@
 export enum MOISTURE {
-  DESERT,
-  FIELD,
-  FOREST,
-  NONE,
+  DESERT = 'DESERT',
+  FIELD = 'FIELD',
+  FOREST = 'FOREST',
+  NONE = 'NONE',
 }

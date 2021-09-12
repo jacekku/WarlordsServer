@@ -21,6 +21,22 @@
   },
   {
     "maxStackSize": 10,
+    "name": "tin_ore"
+  },
+  {
+    "maxStackSize": 10,
+    "name": "coal"
+  },
+  {
+    "maxStackSize": 10,
+    "name": "salt"
+  },
+  {
+    "maxStackSize": 1,
+    "name": "oil"
+  },
+  {
+    "maxStackSize": 10,
     "name": "copper_bar",
     "craftable": {
       "sourceItems": ["copper_ore", "wood"],
