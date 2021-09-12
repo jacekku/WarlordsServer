@@ -5,6 +5,8 @@ import { CraftingFacility } from 'src/model/inventory/crafting/crafting-facility
 import { ItemParser } from './item-definitions/item-parser';
 import { Inventory } from 'src/model/inventory/inventory.model';
 import { ItemDefinition } from 'src/model/inventory/item-definition.model';
+import { Block } from 'src/model/terrain/block.model';
+import { Utilities } from 'src/terrain/utilities/utilities.service';
 
 @Injectable()
 export class StateService {
@@ -55,5 +57,14 @@ export class StateService {
     }
     const currentPlayer = this.players[playerIndex];
     this.players[playerIndex] = Object.assign(currentPlayer, player);
+  }
+  findBlock(block: Block) {
+    const chunkSize = this.terrain.chunkSize;
+    const chunkIndex = Utilities.getIndex(
+      (Math.floor(block.x / chunkSize) * chunkSize) / chunkSize,
+      (Math.floor(block.y / chunkSize) * chunkSize) / chunkSize,
+      this.terrain.width / this.terrain.chunkSize,
+    );
+    return this.terrain.chunks[chunkIndex].blocks[block.id];
   }
 }

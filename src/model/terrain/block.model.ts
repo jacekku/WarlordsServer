@@ -3,62 +3,68 @@ import { Utilities } from 'src/terrain/utilities/utilities.service';
 import { Chunk } from './chunk.model';
 import { ANIMALS } from './enums/animals.model';
 import { BIOMES } from './enums/biomes.model';
-import { MATERIAL_RICHNESS } from './enums/material-richness.model';
+import { MATERIALS } from './enums/materials.model';
 import { MOISTURE } from './enums/moisture.model';
 import { Quad } from './quad.model';
 
 export class Block extends Quad {
   id: number;
-  type: BIOMES;
   items: any[];
+  resources: string[];
+  buildings: any[];
+
+  biome: BIOMES;
   moisture: MOISTURE;
-  materialRichness: MATERIAL_RICHNESS;
+  materials: any;
   animals: ANIMALS;
 
-  constructor(id: number, type: BIOMES, items: any[], chunk: Chunk) {
+  constructor(id: number, chunk: Chunk) {
     const x = Utilities.getXY(id, chunk.width).x + chunk.x;
     const y = Utilities.getXY(id, chunk.height).y + chunk.y;
     super(x, y, 1, 1);
     this.id = id;
-    this.type = TerrainUtilities.mapToBiome(
+    this.biome = TerrainUtilities.mapToBiome(
       TerrainUtilities.generateValue(this.x, this.y),
     );
     this.items = [];
-    const richness = TerrainUtilities.generateItems(this.x, this.y);
+    const richness = TerrainUtilities.generateResources(this.x, this.y);
     this.moisture = this.moistureMapper(richness.moisture);
-    this.materialRichness = this.materialRichnessMapper(
-      richness.materialRichness,
-    );
+    this.materials = this.materialRichnessMapper(richness.materials);
     this.animals = this.animalsMapper(richness.animals);
   }
 
   moistureMapper(value: number): MOISTURE {
-    if (this.type != BIOMES.PLAIN) return MOISTURE.NONE;
+    if (this.biome != BIOMES.PLAIN) return MOISTURE.NONE;
     if (value < 5) return MOISTURE.DESERT;
     if (value < 50) return MOISTURE.FIELD;
     return MOISTURE.FOREST;
   }
 
-  materialRichnessMapper(value: number): MATERIAL_RICHNESS {
-    if (this.type != BIOMES.MOUNTAIN) return MATERIAL_RICHNESS.NOTHING;
-    if (value < 5) return MATERIAL_RICHNESS.GOLD;
-    if (value < 20) return MATERIAL_RICHNESS.IRON;
-    if (value < 35) return MATERIAL_RICHNESS.COPPER;
-    return MATERIAL_RICHNESS.NOTHING;
+  materialRichnessMapper(value: number): MATERIALS {
+    // if (this.type != BIOMES.MOUNTAIN) return MATERIALS.NONE;
+    if (value < 2) return MATERIALS.GOLD;
+    if (value < 4) return MATERIALS.IRON;
+    if (value < 8) return MATERIALS.COPPER;
+    if (value < 10) return MATERIALS.TIN;
+    if (value < 12) return MATERIALS.IRON;
+    if (value < 14) return MATERIALS.SALT;
+    if (value < 16) return MATERIALS.OIL;
+    if (value < 18) return MATERIALS.COAL;
+    return MATERIALS.NONE;
   }
 
   animalsMapper(value: number): ANIMALS {
-    if (value < 35 && this.type == BIOMES.WATER) return ANIMALS.FISH;
+    if (value < 35 && this.biome == BIOMES.DEEP_WATER) return ANIMALS.FISH;
     if (
       value < 25 &&
-      this.type == BIOMES.PLAIN &&
+      this.biome == BIOMES.PLAIN &&
       this.moisture == MOISTURE.FOREST
     )
       return ANIMALS.DEER;
-    return ANIMALS.NO_ANIMAL;
+    return ANIMALS.NONE;
   }
 
   static generateBlock(blockIndex: number, chunk: Chunk) {
-    return new Block(blockIndex, BIOMES.PLAIN, [], chunk);
+    return new Block(blockIndex, chunk);
   }
 }

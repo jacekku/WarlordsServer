@@ -3,8 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TerrainFileService } from 'src/persistence/terrain/terrain-persistence.service';
 import { StateService } from 'src/state/state.service';
 import * as fs from 'fs';
-import { TerrainWebsocketGateway } from './terrain.gateway';
-import { TerrainService } from './terrain.service';
+import { TerrainWebsocketGateway } from '../terrain.gateway';
+import { TerrainService } from '../terrain.service';
 import { Terrain } from 'src/model/terrain/terrain.model';
 
 jest.mock('fs');

@@ -6,8 +6,10 @@ import { Equiped } from 'src/model/inventory/equipment/equiped.model';
 import { Inventory } from 'src/model/inventory/inventory.model';
 import { ItemDefinition } from 'src/model/inventory/item-definition.model';
 import { Item } from 'src/model/inventory/item.model';
+import { Block } from 'src/model/terrain/block.model';
 import { Player } from 'src/model/users/player.model';
 import { StateService } from 'src/state/state.service';
+import { ItemsActionMapper } from './items-action.mapper';
 
 @Injectable()
 export class ItemsService {
@@ -51,6 +53,22 @@ export class ItemsService {
   private validate(player, item) {
     this.playerHasItem(player, item);
     this.itemExists(item);
+  }
+
+  handleAction(player: Player, action: string, block: Block) {
+    const actualBlock = this.stateService.findBlock(block);
+    const itemName = ItemsActionMapper.mapActionToItem(action, actualBlock);
+    if (!itemName) {
+      throw new WsException(`${action} didn't succeed`);
+    }
+    const itemDefinition = this.stateService.getItemDefinition({
+      name: itemName,
+    } as any);
+    if (!itemDefinition.name) {
+      this.logger.error(itemName + ' not found in item definitions');
+      throw new WsException(itemName + ' not found in item definitions');
+    }
+    return this.addItem(player, itemDefinition as Item);
   }
 
   public equipItem(player: Player, item: Item) {

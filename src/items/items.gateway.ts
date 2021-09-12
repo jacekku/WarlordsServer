@@ -11,11 +11,12 @@ import { ItemsService } from './items.service';
 import { Item } from 'src/model/inventory/item.model';
 import { Inventory } from 'src/model/inventory/inventory.model';
 import { ConfigurableLogger } from 'src/logging/logging.service';
+import { Block } from 'src/model/terrain/block.model';
 
 @WebSocketGateway({
   cors: {
     origin: (host: string, callback) => {
-      callback(null, process.env.CORS_ORIGIN);
+      callback(null, process.env.CORS_ORIGIN.split(','));
     },
   },
 })
@@ -26,6 +27,19 @@ export class ItemsWebsocketGateway {
 
   @WebSocketServer()
   server: Server;
+
+  @SubscribeMessage('items:action')
+  handleAction(
+    @MessageBody('player') player: Player,
+    @MessageBody('action') action: string,
+    @MessageBody('block') block: Block,
+  ): WsResponse<any> {
+    this.logger.debug(
+      `items:command ${player.name} ${action} ${JSON.stringify(block)}`,
+    );
+    const newInventory = this.itemsService.handleAction(player, action, block);
+    return this.buildWsResponse(newInventory);
+  }
 
   @SubscribeMessage('items:add')
   addItemHandler(
