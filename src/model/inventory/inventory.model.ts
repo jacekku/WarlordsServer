@@ -43,7 +43,7 @@ export class Inventory {
   public removeItem(item: ItemDefinition) {
     const index = this.findItemIndex(item);
     if (index < 0) {
-      throw new BadRequestException(
+      throw new WsException(
         'Could not find item in inventory: ' + JSON.stringify(item),
       );
     }

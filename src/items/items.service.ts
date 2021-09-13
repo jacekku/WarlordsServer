@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { ConfigurableLogger } from 'src/logging/logging.service';
-import { CraftingSourceItemDefinition } from 'src/model/inventory/crafting/crafting-source-item-definition.model';
+import { SourceItemDefinition } from 'src/model/inventory/crafting/source-item-definition.model';
 import { Equiped } from 'src/model/inventory/equipment/equiped.model';
 import { Inventory } from 'src/model/inventory/inventory.model';
 import { ItemDefinition } from 'src/model/inventory/item-definition.model';
@@ -149,7 +149,7 @@ export class ItemsService {
       this.removeItem(
         currentPlayer,
         item as ItemDefinition,
-        (item as CraftingSourceItemDefinition).requiredAmount,
+        (item as SourceItemDefinition).requiredAmount,
       ),
     );
 

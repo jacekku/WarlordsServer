@@ -1,0 +1,32 @@
+[
+  {
+    "name": "sand_castle",
+    "buildable": { "sourceItems": [{ "name": "sand", "requiredAmount": 10 }] }
+  },
+  {
+    "name": "fire",
+    "buildable": { "sourceItems": [{ "name": "wood", "requiredAmount": 4 }] },
+    "craftingFacilities": ["cozy-fire", "roasting-fire"]
+  },
+  {
+    "name": "fireplace",
+    "buildable": {
+      "sourceItems": [
+        { "name": "wood", "requiredAmount": 10 },
+        { "name": "stone", "requiredAmount": 10 }
+      ]
+    },
+    "craftingFacilities": ["cozy-fire", "roasting-fire", "smelting-fire"]
+  },
+  {
+    "name": "forge",
+    "buildable": {
+      "sourceItems": [
+        { "name": "wood", "requiredAmount": 20 },
+        { "name": "stone", "requiredAmount": 10 },
+        { "name": "copper_bar", "requiredAmount": 2 }
+      ]
+    },
+    "craftingFacilities": ["smelting-fire", "metal-craft-level1"]
+  }
+]

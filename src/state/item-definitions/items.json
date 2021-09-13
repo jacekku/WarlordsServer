@@ -37,10 +37,14 @@
   },
   {
     "maxStackSize": 10,
+    "name": "stone"
+  },
+  {
+    "maxStackSize": 10,
     "name": "copper_bar",
     "craftable": {
       "sourceItems": ["copper_ore", "wood"],
-      "facility": ["inventory-craft"]
+      "facility": ["smelting-fire"]
     }
   },
   {
@@ -48,7 +52,7 @@
     "name": "iron_bar",
     "craftable": {
       "sourceItems": ["iron_ore", "wood"],
-      "facility": ["inventory-craft"]
+      "facility": ["smelting-fire"]
     }
   },
   {
@@ -56,7 +60,7 @@
     "name": "gold_bar",
     "craftable": {
       "sourceItems": ["gold_ore", "wood"],
-      "facility": ["inventory-craft"]
+      "facility": ["smelting-fire"]
     }
   },
   {
@@ -64,7 +68,7 @@
     "name": "cooked_meat",
     "craftable": {
       "sourceItems": ["meat", "wood"],
-      "facility": ["inventory-craft"]
+      "facility": ["roasting-fire"]
     }
   },
   {
@@ -72,7 +76,7 @@
     "name": "copper_helmet",
     "craftable": {
       "sourceItems": [{ "name": "copper_bar", "requiredAmount": 3 }],
-      "facility": ["inventory-craft"]
+      "facility": ["metal-craft-level1"]
     },
     "equipable": {
       "type": "HEAD"
@@ -83,7 +87,7 @@
     "name": "iron_sword",
     "craftable": {
       "sourceItems": [{ "name": "iron_bar", "requiredAmount": 3 }, "wood"],
-      "facility": ["inventory-craft"]
+      "facility": ["metal-craft-level2"]
     },
     "equipable": {
       "type": "MAINHAND"
@@ -94,7 +98,7 @@
     "name": "wooden_shield",
     "craftable": {
       "sourceItems": [{ "name": "wood", "requiredAmount": 3 }],
-      "facility": ["inventory-craft"]
+      "facility": ["metal-craft-level1"]
     },
     "equipable": {
       "type": "OFFHAND"
@@ -105,7 +109,7 @@
     "name": "gold_necklace",
     "craftable": {
       "sourceItems": [{ "name": "gold_bar", "requiredAmount": 2 }, "iron_bar"],
-      "facility": ["inventory-craft"]
+      "facility": ["metal-craft-level5"]
     },
     "equipable": {
       "type": "TRINKET"
@@ -120,7 +124,7 @@
     "name": "glass",
     "craftable": {
       "sourceItems": [{ "name": "sand", "requiredAmount": 5 }],
-      "facility": ["inventory-craft"]
+      "facility": ["smelting-fire"]
     }
   }
 ]

@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import { Utilities } from 'src/terrain/utilities/utilities.service';
 import { Chunk } from './chunk.model';
 import { Quad } from './quad.model';
 
@@ -31,7 +32,7 @@ export class Terrain extends Quad {
       height,
       chunkSize,
       chunks,
-      this.generateMapId(),
+      Utilities.generateStringId(),
       0,
     );
     for (let i = 0; i < (width / chunkSize) * (height / chunkSize); i++) {
@@ -40,12 +41,6 @@ export class Terrain extends Quad {
     terrain.chunks = chunks;
     terrain.chunkNumber = chunks.length;
     return terrain;
-  }
-  static generateMapId(): string {
-    return 'xxxxxxxxx'
-      .split('')
-      .map(() => Math.floor(Math.random() * 16).toString(16))
-      .join('');
   }
 
   toJSON() {
