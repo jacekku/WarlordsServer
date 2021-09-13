@@ -36,11 +36,8 @@ export class ItemsActionMapper {
       values: [{ value: ANIMALS.FISH, item: 'meat' }],
     },
     GATHER_SAND: {
-      field: ItemsActionMapper.FIELDS.biome,
-      values: [
-        { value: BIOMES.BEACH, item: 'sand' },
-        { value: MOISTURE.DESERT, item: 'sand' },
-      ],
+      field: ItemsActionMapper.FIELDS.moisture,
+      values: [{ value: MOISTURE.DESERT, item: 'sand' }],
     },
     CHOP_WOOD: {
       field: ItemsActionMapper.FIELDS.moisture,
@@ -53,6 +50,14 @@ export class ItemsActionMapper {
     FORAGE_BERRIES: {
       field: ItemsActionMapper.FIELDS.moisture,
       values: [{ value: MOISTURE.FOREST, item: 'berries' }],
+    },
+    GATHER_STONES: {
+      field: ItemsActionMapper.FIELDS.biome,
+      values: [{ value: BIOMES.MOUNTAIN, item: 'stone' }],
+    },
+    MINE_STONES: {
+      field: ItemsActionMapper.FIELDS.biome,
+      values: [{ value: BIOMES.MOUNTAIN, item: 'stone' }],
     },
   };
 

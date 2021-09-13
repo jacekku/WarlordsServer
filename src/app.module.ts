@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { BuildingsModule } from './buildings/buildings.module';
 import { ItemsModule } from './items/items.module';
 import { LoggingModule } from './logging/logging.module';
 import { StateModule } from './state/state.module';
@@ -16,6 +17,7 @@ import { UsersModule } from './users/users.module';
     StateModule,
     ItemsModule,
     LoggingModule,
+    BuildingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

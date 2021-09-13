@@ -9,9 +9,6 @@ import { Quad } from './quad.model';
 
 export class Block extends Quad {
   id: number;
-  items: any[];
-  resources: string[];
-  buildings: any[];
 
   biome: BIOMES;
   moisture: MOISTURE;
@@ -26,7 +23,6 @@ export class Block extends Quad {
     this.biome = TerrainUtilities.mapToBiome(
       TerrainUtilities.generateValue(this.x, this.y),
     );
-    this.items = [];
     const richness = TerrainUtilities.generateResources(this.x, this.y);
     this.moisture = this.moistureMapper(richness.moisture);
     this.materials = this.materialRichnessMapper(richness.materials);

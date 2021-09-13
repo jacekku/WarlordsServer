@@ -1,9 +1,9 @@
 import { CraftingFacility } from './crafting-facility.model';
-import { CraftingSourceItemDefinition } from './crafting-source-item-definition.model';
+import { SourceItemDefinition } from './source-item-definition.model';
 
 export class CraftableItem {
   result: string;
-  sourceItems: CraftingSourceItemDefinition[];
+  sourceItems: SourceItemDefinition[];
   facility: CraftingFacility[];
 
   toJSON() {

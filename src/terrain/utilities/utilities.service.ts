@@ -13,6 +13,12 @@ export class Utilities {
   static getIndex(x: number, y: number, width: number) {
     return x + width * y;
   }
+  static generateStringId(): string {
+    return 'xxxxxxxxx'
+      .split('')
+      .map(() => Math.floor(Math.random() * 16).toString(16))
+      .join('');
+  }
 
   static clampNumber(num: number, min: number, max: number): number {
     return Math.min(Math.max(num, min), max);

@@ -9,5 +9,6 @@ import { ItemsService } from './items.service';
   imports: [PersistenceModule, StateModule],
   controllers: [ItemsController],
   providers: [ItemsService, ItemsWebsocketGateway],
+  exports: [ItemsService],
 })
 export class ItemsModule {}

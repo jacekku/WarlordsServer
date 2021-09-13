@@ -1,5 +1,29 @@
 [
   {
     "name": "inventory-craft"
+  },
+  {
+    "name": "roasting-fire"
+  },
+  {
+    "name": "smelting-fire"
+  },
+  {
+    "name": "cozy-fire"
+  },
+  {
+    "name": "metal-craft-level1"
+  },
+  {
+    "name": "metal-craft-level2"
+  },
+  {
+    "name": "metal-craft-level3"
+  },
+  {
+    "name": "metal-craft-level4"
+  },
+  {
+    "name": "metal-craft-level5"
   }
 ]
