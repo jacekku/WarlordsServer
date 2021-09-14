@@ -39,7 +39,14 @@ export class BuildingsService {
     }
     const buildingDefinition =
       this.stateService.getBuildingDefinition(building);
-
+    if (!buildingDefinition.name) {
+      if (upgrade) {
+        throw new WsException('cannot upgrade building anymore');
+      }
+      this.logger.error("couldn't find building " + building.name);
+      throw new WsException("couldn't find building " + building.name);
+    }
+    console.log(buildingDefinition);
     buildingDefinition.buildable.sourceItems.forEach((item) => {
       this.itemsService.playerHasItems(
         currentPlayer,
