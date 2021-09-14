@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/jacekku/TraviansServer/compare/v0.1.7...v0.2.0) (2021-09-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* **buildings:** Building system
+
+### Features
+
+* **buildings:** Building system ([3ca3611](https://github.com/jacekku/TraviansServer/commit/3ca3611c9318ad62eedd35b981046239fb6bdfb9))
+* **buildings:** Buildings now act as crafting facilities ([dde0a71](https://github.com/jacekku/TraviansServer/commit/dde0a7187423d0a71b2e168eb107fd7b605d32c9))
+* controllable logging mechanism ([a4a7ac3](https://github.com/jacekku/TraviansServer/commit/a4a7ac3a361560d29e0c800d15c16a32ed28a05f))
+* **items:** added sand and glass items ([6a5b3a1](https://github.com/jacekku/TraviansServer/commit/6a5b3a105d939cf13a12d100633930196b4f163a))
+* **items:** New gathering handling ([3b463df](https://github.com/jacekku/TraviansServer/commit/3b463dfd669cb5569fc7b44f7eda2dc26cbf509c))
+
+
+### Bug Fixes
+
+* **security:** Added cors origin to all websockets and to the main server ([824fa1a](https://github.com/jacekku/TraviansServer/commit/824fa1aca2a2ece0e8d5821d8fcce90c01b67233))
+
 ### [0.1.7](https://github.com/jacekku/TraviansServer/compare/v0.1.6...v0.1.7) (2021-09-06)
 
 
