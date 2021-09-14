@@ -23,7 +23,11 @@ describe('StateController', () => {
     it('should return state', () => {
       const stateController = app.get<StateController>(StateController);
       const state = stateController.getState();
-      expect(state).toStrictEqual({ terrain: undefined, players: undefined });
+      expect(state).toStrictEqual({
+        terrain: undefined,
+        players: undefined,
+        buildings: undefined,
+      });
     });
   });
 });

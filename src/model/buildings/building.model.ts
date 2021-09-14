@@ -9,13 +9,13 @@ export class Building extends BuildingDefinition {
   id: string;
   level: number;
 
-  constructor(x, y, owner, name, level = 1) {
+  constructor(x, y, owner, name, level = 1, id = Utilities.generateStringId()) {
     super();
     this.x = x;
     this.y = y;
     this.owner = { name: owner.name } as any;
     this.name = name;
     this.level = level;
-    this.id = Utilities.generateStringId();
+    this.id = id;
   }
 }

@@ -47,8 +47,9 @@ export class BuildingsWebsocketGateway {
     @MessageBody('player') player: Player,
     @MessageBody('action') action: string,
     @MessageBody('building') building: Building,
+    @MessageBody('block') block: Block,
   ): WsResponse<any> {
-    this.buildingsService.handleAction(player, action, building);
+    this.buildingsService.handleAction(player, action, building, block);
     return this.buildResponse(
       this.buildingsService.getVisibleBuildings(player),
     );

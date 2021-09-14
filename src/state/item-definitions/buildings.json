@@ -1,13 +1,33 @@
 [
   {
-    "name": "sand_castle",
-    "buildable": { "sourceItems": [{ "name": "sand", "requiredAmount": 10 }] }
+    "name": "sand_castle3",
+    "level": 3,
+    "buildable": {
+      "sourceItems": [
+        { "name": "sand", "requiredAmount": 10 },
+        { "name": "stone", "requiredAmount": 2 },
+        { "name": "wood", "requiredAmount": 2 }
+      ]
+    }
   },
   {
-    "name": "fire",
-    "buildable": { "sourceItems": [{ "name": "wood", "requiredAmount": 4 }] },
-    "craftingFacilities": ["cozy-fire", "roasting-fire"]
+    "name": "sand_castle2",
+    "level": 2,
+    "buildable": {
+      "sourceItems": [
+        { "name": "sand", "requiredAmount": 10 },
+        { "name": "stone", "requiredAmount": 2 }
+      ]
+    },
+    "upgrade": { "name": "sand_castle3" }
   },
+
+  {
+    "name": "sand_castle1",
+    "buildable": { "sourceItems": [{ "name": "sand", "requiredAmount": 10 }] },
+    "upgrade": { "name": "sand_castle2" }
+  },
+
   {
     "name": "fireplace",
     "buildable": {
@@ -16,17 +36,61 @@
         { "name": "stone", "requiredAmount": 10 }
       ]
     },
+    "level": 2,
     "craftingFacilities": ["cozy-fire", "roasting-fire", "smelting-fire"]
+  },
+  {
+    "name": "fire",
+    "buildable": { "sourceItems": [{ "name": "wood", "requiredAmount": 4 }] },
+    "craftingFacilities": ["cozy-fire", "roasting-fire"],
+    "upgrade": { "name": "fireplace" }
+  },
+  {
+    "name": "foundry",
+    "buildable": {
+      "sourceItems": [
+        { "name": "wood", "requiredAmount": 20 },
+        { "name": "stone", "requiredAmount": 10 },
+        { "name": "iron_bar", "requiredAmount": 2 }
+      ]
+    },
+    "craftingFacilities": [
+      "smelting-fire",
+      "smelting-fire2",
+      "smelting-fire3",
+      "metal-craft-level1",
+      "metal-craft-level2",
+      "metal-craft-level3"
+    ],
+    "level": 3
+  },
+  {
+    "name": "smithy",
+    "buildable": {
+      "sourceItems": [
+        { "name": "wood", "requiredAmount": 20 },
+        { "name": "stone", "requiredAmount": 20 },
+        { "name": "copper_bar", "requiredAmount": 2 }
+      ]
+    },
+    "level": 2,
+    "craftingFacilities": [
+      "smelting-fire",
+      "smelting-fire2",
+      "metal-craft-level1",
+      "metal-craft-level2"
+    ],
+    "upgrade": { "name": "foundry" }
   },
   {
     "name": "forge",
     "buildable": {
       "sourceItems": [
         { "name": "wood", "requiredAmount": 20 },
-        { "name": "stone", "requiredAmount": 10 },
-        { "name": "copper_bar", "requiredAmount": 2 }
+        { "name": "stone", "requiredAmount": 10 }
       ]
     },
-    "craftingFacilities": ["smelting-fire", "metal-craft-level1"]
+    "craftingFacilities": ["smelting-fire", "metal-craft-level1"],
+    "upgrade": { "name": "smithy" }
   }
 ]

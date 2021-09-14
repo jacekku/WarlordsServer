@@ -5,6 +5,8 @@ export class BuildingDefinition {
   name: string;
   buildable: Buildable;
   craftingFacilities: CraftingFacility[];
+  upgrade: BuildingDefinition;
+  level: number;
 
   public static comparator(
     building1: BuildingDefinition,

@@ -17,14 +17,11 @@ export class ItemsService {
 
   constructor(public readonly stateService: StateService) {}
 
-  private playerHasItem(player: Player, item: Item): boolean {
-    if (
-      !player.inventory.items
-        .filter(Boolean)
-        .find((invItem) => Inventory.itemComparator(invItem, item))
-    ) {
+  public playerHasItems(player: Player, item: Item, amount = 1): boolean {
+    const itemAmount = player.inventory.collapseInventory().get(item.name);
+    if (!itemAmount || itemAmount < amount) {
       throw new WsException(
-        `item: ${JSON.stringify(item)} not found on player: ${player.name}`,
+        `${amount} ${item.name} not found on player: ${player.name}`,
       );
     }
     return true;
@@ -50,8 +47,8 @@ export class ItemsService {
     return true;
   }
 
-  private validate(player, item) {
-    this.playerHasItem(player, item);
+  private validate(player, item, amount = 1) {
+    this.playerHasItems(player, item, amount);
     this.itemExists(item);
   }
 
@@ -112,7 +109,7 @@ export class ItemsService {
     const currentPlayer = this.stateService.findConnectedPlayer(player);
     this.upsertPlayerInventory(currentPlayer);
 
-    this.validate(currentPlayer, item);
+    this.validate(currentPlayer, item, amount);
     const itemDefinition = this.stateService.getItemDefinition(item);
     for (let i = 0; i < amount; i++) {
       currentPlayer.inventory.removeItem(itemDefinition);
