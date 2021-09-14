@@ -46,7 +46,6 @@ export class BuildingsService {
       this.logger.error("couldn't find building " + building.name);
       throw new WsException("couldn't find building " + building.name);
     }
-    console.log(buildingDefinition);
     buildingDefinition.buildable.sourceItems.forEach((item) => {
       this.itemsService.playerHasItems(
         currentPlayer,
