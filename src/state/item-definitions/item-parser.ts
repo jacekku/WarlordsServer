@@ -79,6 +79,7 @@ export class ItemParser {
       const building = new BuildingDefinition();
       building.buildable = new Buildable();
       building.name = readBuilding.name;
+      building.level = readBuilding.level || 1;
       building.buildable.sourceItems = Array.from(
         readBuilding.buildable.sourceItems,
       ).map((item) => {
@@ -101,6 +102,15 @@ export class ItemParser {
           if (!facility) return;
           building.craftingFacilities.push(facility);
         });
+      }
+      if (readBuilding.upgrade) {
+        const buildingUpgrade = this.findBuilding(readBuilding.upgrade.name);
+        if (!buildingUpgrade) {
+          throw new Error(
+            'could not find building ' + readBuilding.upgrade.name,
+          );
+        }
+        building.upgrade = buildingUpgrade;
       }
       this.buildings.push(building);
     }

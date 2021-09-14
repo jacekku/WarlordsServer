@@ -5,6 +5,8 @@ import { initial } from 'lodash';
 import { ItemsService } from 'src/items/items.service';
 import { ConfigurableLogger } from 'src/logging/logging.service';
 import { Building } from 'src/model/buildings/building.model';
+import { ItemDefinition } from 'src/model/inventory/item-definition.model';
+import { Item } from 'src/model/inventory/item.model';
 import { Block } from 'src/model/terrain/block.model';
 import { Player } from 'src/model/users/player.model';
 import { BuildingFileService } from 'src/persistence/buildings/buildings-persistence.service';
@@ -21,25 +23,37 @@ export class BuildingsService {
     private readonly itemsService: ItemsService,
   ) {}
 
-  handleCreate(player: Player, building: Building, block: Block) {
+  handleCreate(
+    player: Player,
+    building: Building,
+    block: Block,
+    upgrade = false,
+  ) {
     const currentPlayer = this.stateService.findConnectedPlayer(player);
     const currentBlock = this.stateService.findBlock(block);
     const buildingInThisSpace = this.buildingFileService
       .getAllBuildings(this.stateService.terrain.mapId)
       .find((b) => b.x === player.x && b.y === player.y);
-    if (buildingInThisSpace) {
+    if (!upgrade && buildingInThisSpace) {
       throw new WsException("there's already a building here");
     }
     const buildingDefinition =
       this.stateService.getBuildingDefinition(building);
+
     buildingDefinition.buildable.sourceItems.forEach((item) => {
-      this.itemsService.removeItem(currentPlayer, item, item.requiredAmount);
+      this.itemsService.playerHasItems(
+        currentPlayer,
+        item as any,
+        item.requiredAmount,
+      );
     });
     const newBuilding = new Building(
       currentBlock.x,
       currentBlock.y,
       currentPlayer,
       buildingDefinition.name,
+      buildingDefinition.level,
+      building.id,
     );
     newBuilding.buildable = buildingDefinition.buildable;
     newBuilding.craftingFacilities = buildingDefinition.craftingFacilities;
@@ -47,6 +61,9 @@ export class BuildingsService {
       newBuilding,
       this.stateService.terrain.mapId,
     );
+    buildingDefinition.buildable.sourceItems.forEach((item) => {
+      this.itemsService.removeItem(currentPlayer, item, item.requiredAmount);
+    });
   }
 
   handleRemove(player: Player, building: Building) {
@@ -55,15 +72,24 @@ export class BuildingsService {
       this.stateService.terrain.mapId,
     );
   }
-  handleUpdate(player: Player, building: Building) {
-    building.level += 1;
-    this.buildingFileService.updateBuilding(
-      building,
-      this.stateService.terrain.mapId,
+  handleUpdate(player: Player, building: Building, block: Block) {
+    const buildingDefinition =
+      this.stateService.getBuildingDefinition(building);
+    this.handleCreate(
+      player,
+      buildingDefinition.upgrade as Building,
+      block,
+      true,
     );
+    this.handleRemove(player, building);
   }
 
-  handleAction(player: Player, action: string, building: Building) {
+  handleAction(
+    player: Player,
+    action: string,
+    building: Building,
+    block: Block,
+  ) {
     const currentPlayer = this.stateService.findConnectedPlayer(player);
     const currentBuilding = this.buildingFileService.getBuilding(
       building,
@@ -76,7 +102,8 @@ export class BuildingsService {
       throw new WsException('you are not the owner of this building');
     }
     if (action == 'DEMOLISH') this.handleRemove(currentPlayer, currentBuilding);
-    if (action == 'UPGRADE') this.handleUpdate(currentPlayer, currentBuilding);
+    if (action == 'UPGRADE')
+      this.handleUpdate(currentPlayer, currentBuilding, block);
   }
 
   getVisibleBuildings(player: Player) {

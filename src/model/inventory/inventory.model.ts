@@ -1,4 +1,3 @@
-import { BadRequestException } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Equiped } from './equipment/equiped.model';
 import { EquipmentMap } from './equipment/equipment.map';
@@ -29,7 +28,7 @@ export class Inventory {
   public addItem(item: Item) {
     const index: number = this.findAvailableIndex(item);
     if (index < 0) {
-      throw new BadRequestException(
+      throw new WsException(
         'Could not find available space in inventory: ' + JSON.stringify(item),
       );
     }
@@ -43,9 +42,7 @@ export class Inventory {
   public removeItem(item: ItemDefinition) {
     const index = this.findItemIndex(item);
     if (index < 0) {
-      throw new WsException(
-        'Could not find item in inventory: ' + JSON.stringify(item),
-      );
+      throw new WsException('Could not find item in inventory: ' + item.name);
     }
     this.items[index].stackSize -= 1;
     if (this.items[index].stackSize <= 0) this.items[index] = null;
@@ -134,5 +131,16 @@ export class Inventory {
   public static itemComparator(item1: ItemDefinition, item2: ItemDefinition) {
     if (!item1 || !item2) return false;
     return item1.name === item2.name || item1.name === (item2 as any);
+  }
+
+  public collapseInventory() {
+    const items = this.items;
+    const collapsed: Map<string, number> = new Map();
+    items.filter(Boolean).forEach((item) => {
+      collapsed.has(item.name)
+        ? collapsed.set(item.name, collapsed.get(item.name) + item.stackSize)
+        : collapsed.set(item.name, item.stackSize);
+    });
+    return collapsed;
   }
 }

@@ -52,7 +52,7 @@
     "name": "iron_bar",
     "craftable": {
       "sourceItems": ["iron_ore", "wood"],
-      "facility": ["smelting-fire"]
+      "facility": ["smelting-fire2"]
     }
   },
   {
@@ -60,14 +60,14 @@
     "name": "gold_bar",
     "craftable": {
       "sourceItems": ["gold_ore", "wood"],
-      "facility": ["smelting-fire"]
+      "facility": ["smelting-fire3"]
     }
   },
   {
     "maxStackSize": 10,
     "name": "cooked_meat",
     "craftable": {
-      "sourceItems": ["meat", "wood"],
+      "sourceItems": ["meat"],
       "facility": ["roasting-fire"]
     }
   },
@@ -109,7 +109,7 @@
     "name": "gold_necklace",
     "craftable": {
       "sourceItems": [{ "name": "gold_bar", "requiredAmount": 2 }, "iron_bar"],
-      "facility": ["metal-craft-level5"]
+      "facility": ["metal-craft-level3"]
     },
     "equipable": {
       "type": "TRINKET"
@@ -124,7 +124,7 @@
     "name": "glass",
     "craftable": {
       "sourceItems": [{ "name": "sand", "requiredAmount": 5 }],
-      "facility": ["smelting-fire"]
+      "facility": ["smelting-fire3"]
     }
   }
 ]
