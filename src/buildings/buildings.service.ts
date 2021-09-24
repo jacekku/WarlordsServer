@@ -1,12 +1,8 @@
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
-import { stat } from 'fs';
-import { initial } from 'lodash';
 import { ItemsService } from 'src/items/items.service';
 import { ConfigurableLogger } from 'src/logging/logging.service';
 import { Building } from 'src/model/buildings/building.model';
-import { ItemDefinition } from 'src/model/inventory/item-definition.model';
-import { Item } from 'src/model/inventory/item.model';
 import { Block } from 'src/model/terrain/block.model';
 import { Player } from 'src/model/users/player.model';
 import { BuildingFileService } from 'src/persistence/buildings/buildings-persistence.service';
@@ -45,6 +41,9 @@ export class BuildingsService {
       }
       this.logger.error("couldn't find building " + building.name);
       throw new WsException("couldn't find building " + building.name);
+    }
+    if (buildingDefinition.level > 1) {
+      throw new WsException('cannot build; upgrade existing building');
     }
     buildingDefinition.buildable.sourceItems.forEach((item) => {
       this.itemsService.playerHasItems(

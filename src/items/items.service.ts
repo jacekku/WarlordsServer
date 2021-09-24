@@ -88,8 +88,7 @@ export class ItemsService {
     const itemDefinition = this.stateService.getItemDefinition(item);
     const itemToUnequip =
       currentPlayer.inventory.findEquipedItemByDefinition(itemDefinition);
-    if (!itemToUnequip.name)
-      throw new WsException('no equiped on ' + item.equipable.type);
+    if (!itemToUnequip.name) throw new WsException('no equiped item found');
     currentPlayer.inventory.unequipItem(itemToUnequip);
     return this.addItem(player, itemDefinition as Item);
   }

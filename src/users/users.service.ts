@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { WsException } from '@nestjs/websockets';
 import { ConfigurableLogger } from 'src/logging/logging.service';
 import { Quad } from 'src/model/terrain/quad.model';
 import { UsersFileService } from 'src/persistence/users/users-persistence.service';
@@ -49,9 +50,7 @@ export class UsersService implements BeforeApplicationShutdown {
 
   checkIfPlayerAlreadyConnected(newPlayer: Player) {
     if (this.findConnectedPlayer(newPlayer)) {
-      throw new BadRequestException(
-        'player already connected: ' + newPlayer.name,
-      );
+      throw new WsException('player already connected: ' + newPlayer.name);
     }
   }
 
