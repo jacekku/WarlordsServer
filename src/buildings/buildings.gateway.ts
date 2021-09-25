@@ -1,16 +1,10 @@
 import {
-  MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { ItemsService } from 'src/items/items.service';
 import { ConfigurableLogger } from 'src/logging/logging.service';
-import { Building } from 'src/model/buildings/building.model';
-import { Block } from 'src/model/terrain/block.model';
-import { Player } from 'src/model/users/player.model';
 import { BuildingsService } from './buildings.service';
 
 @WebSocketGateway({
@@ -31,38 +25,33 @@ export class BuildingsWebsocketGateway {
   server: Server;
 
   @SubscribeMessage('buildings:create')
-  handleCreate(
-    @MessageBody('player') player: Player,
-    @MessageBody('building') building: Building,
-    @MessageBody('block') block: Block,
-  ): WsResponse<any> {
+  handleCreate(client: any, payload: any) {
+    const { player, building, block, success } = payload;
     this.buildingsService.handleCreate(player, building, block);
-    return this.buildResponse(
+    client.emit(
+      'buildings:requestUpdate',
       this.buildingsService.getVisibleBuildings(player),
     );
+    client.emit('success', success);
   }
 
   @SubscribeMessage('buildings:action')
-  handleAction(
-    @MessageBody('player') player: Player,
-    @MessageBody('action') action: string,
-    @MessageBody('building') building: Building,
-    @MessageBody('block') block: Block,
-  ): WsResponse<any> {
+  handleAction(client: any, payload: any) {
+    const { player, action, building, block, success } = payload;
     this.buildingsService.handleAction(player, action, building, block);
-    return this.buildResponse(
+    client.emit(
+      'buildings:requestUpdate',
       this.buildingsService.getVisibleBuildings(player),
     );
+    client.emit('success', success);
   }
 
   @SubscribeMessage('buildings:requestUpdate')
-  handleUpdateRequest(@MessageBody('player') player: Player): WsResponse<any> {
-    return this.buildResponse(
+  handleUpdateRequest(client: any, payload: any) {
+    const { player } = payload;
+    client.emit(
+      'buildings:requestUpdate',
       this.buildingsService.getVisibleBuildings(player),
     );
-  }
-
-  buildResponse(data, event = 'buildings:requestUpdate'): WsResponse<any> {
-    return { event, data };
   }
 }

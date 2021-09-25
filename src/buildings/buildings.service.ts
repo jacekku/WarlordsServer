@@ -42,7 +42,7 @@ export class BuildingsService {
       this.logger.error("couldn't find building " + building.name);
       throw new WsException("couldn't find building " + building.name);
     }
-    if (buildingDefinition.level > 1) {
+    if (buildingDefinition.level > 1 && !upgrade) {
       throw new WsException('cannot build; upgrade existing building');
     }
     buildingDefinition.buildable.sourceItems.forEach((item) => {

@@ -29,16 +29,14 @@ export class ItemsWebsocketGateway {
   server: Server;
 
   @SubscribeMessage('items:action')
-  handleAction(
-    @MessageBody('player') player: Player,
-    @MessageBody('action') action: string,
-    @MessageBody('block') block: Block,
-  ): WsResponse<any> {
+  handleAction(client: any, payload: any) {
+    const { player, action, block, success } = payload;
     this.logger.debug(
       `items:command ${player.name} ${action} ${JSON.stringify(block)}`,
     );
     const newInventory = this.itemsService.handleAction(player, action, block);
-    return this.buildWsResponse(newInventory);
+    client.emit('items:update', newInventory);
+    client.emit('success', success);
   }
 
   @SubscribeMessage('items:add')
@@ -81,39 +79,36 @@ export class ItemsWebsocketGateway {
   }
 
   @SubscribeMessage('items:craft')
-  craftItemsHandler(
-    @MessageBody('player') player: Player,
-    @MessageBody('itemToCraft') itemToCraft: Item,
-  ): WsResponse<Inventory> {
+  craftItemsHandler(client: any, payload: any) {
+    const { player, itemToCraft, success } = payload;
     this.logger.debug(
       'items:craft ' + player + ' ' + JSON.stringify(itemToCraft),
     );
     const inventory = this.itemsService.craftItem(player, itemToCraft);
-    return this.buildWsResponse(inventory);
+    client.emit('items:update', inventory);
+    client.emit('success', success);
   }
 
   @SubscribeMessage('items:equip')
-  equipItemHandler(
-    @MessageBody('player') player: Player,
-    @MessageBody('itemToEquip') itemToEquip: Item,
-  ): WsResponse<any> {
+  equipItemHandler(client: any, payload: any) {
+    const { player, itemToEquip, success } = payload;
     this.logger.debug(
       'items:equip ' + player + ' ' + JSON.stringify(itemToEquip),
     );
     const inventory = this.itemsService.equipItem(player, itemToEquip);
-    return this.buildWsResponse(inventory);
+    client.emit('items:update', inventory);
+    client.emit('success', success);
   }
 
   @SubscribeMessage('items:unequip')
-  unequipItemHandler(
-    @MessageBody('player') player: Player,
-    @MessageBody('itemToUnequip') itemToUnequip: Item,
-  ) {
+  unequipItemHandler(client: any, payload: any) {
+    const { player, itemToUnequip, success } = payload;
     this.logger.debug(
       'items:unequip ' + player + ' ' + JSON.stringify(itemToUnequip),
     );
     const inventory = this.itemsService.unequipItem(player, itemToUnequip);
-    return this.buildWsResponse(inventory);
+    client.emit('items:update', inventory);
+    client.emit('success', success);
   }
 
   @SubscribeMessage('items:move')
