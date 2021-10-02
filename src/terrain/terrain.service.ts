@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Player } from 'src/model/users/player.model';
-import { Chunk } from 'src/model/terrain/chunk.model';
-import { Quad } from 'src/model/terrain/quad.model';
-import { Terrain } from 'src/model/terrain/terrain.model';
+import { Player } from 'src/users/model/player.model';
 import { TerrainFileService } from 'src/persistence/terrain/terrain-persistence.service';
 import { StateService } from 'src/state/state.service';
 import { Utilities } from './utilities/utilities.service';
 import { ConfigurableLogger } from 'src/logging/logging.service';
+import { Chunk } from './model/chunk.model';
+import { Quad } from './model/quad.model';
+import { Terrain } from './model/terrain.model';
 
 @Injectable()
 export class TerrainService {

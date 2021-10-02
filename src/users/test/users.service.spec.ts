@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { Terrain } from 'src/model/terrain/terrain.model';
-import { Player } from 'src/model/users/player.model';
-import { UsersService } from './users.service';
+import { Terrain } from 'src/terrain/model/terrain.model';
+import { Player } from 'src/users/model/player.model';
+import { UsersService } from '../users.service';
 
 describe('State Service', () => {
   let userService: UsersService;

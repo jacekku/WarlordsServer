@@ -8,7 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { UsersService } from './users.service';
-import { Player } from 'src/model/users/player.model';
+import { Player } from 'src/users/model/player.model';
 import { ConfigurableLogger } from 'src/logging/logging.service';
 
 @WebSocketGateway({

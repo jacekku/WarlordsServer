@@ -1,6 +1,6 @@
 import { Body } from '@nestjs/common';
 import { Controller, Get, Param, Post } from '@nestjs/common';
-import { Terrain } from 'src/model/terrain/terrain.model';
+import { Terrain } from './model/terrain.model';
 import { TerrainService } from './terrain.service';
 
 @Controller('terrain')

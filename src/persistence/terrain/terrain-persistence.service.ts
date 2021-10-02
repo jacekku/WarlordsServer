@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Chunk } from 'src/model/terrain/chunk.model';
-import { Terrain } from 'src/model/terrain/terrain.model';
+
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
+import { Chunk } from 'src/terrain/model/chunk.model';
+import { Terrain } from 'src/terrain/model/terrain.model';
 
 @Injectable()
 export class TerrainFileService {

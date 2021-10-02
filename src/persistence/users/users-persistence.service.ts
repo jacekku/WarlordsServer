@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { IUsersPersistence } from './interfaces/users-persistence-interface.service';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
-import { Player } from 'src/model/users/player.model';
+import { Player } from 'src/users/model/player.model';
 
 @Injectable()
 export class UsersFileService implements IUsersPersistence {

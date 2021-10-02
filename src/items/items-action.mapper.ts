@@ -1,8 +1,8 @@
-import { Block } from 'src/model/terrain/block.model';
-import { ANIMALS } from 'src/model/terrain/enums/animals.model';
-import { BIOMES } from 'src/model/terrain/enums/biomes.model';
-import { MATERIALS } from 'src/model/terrain/enums/materials.model';
-import { MOISTURE } from 'src/model/terrain/enums/moisture.model';
+import { Block } from 'src/terrain/model/block.model';
+import { ANIMALS } from 'src/terrain/model/enums/animals.model';
+import { BIOMES } from 'src/terrain/model/enums/biomes.model';
+import { MATERIALS } from 'src/terrain/model/enums/materials.model';
+import { MOISTURE } from 'src/terrain/model/enums/moisture.model';
 
 export class ItemsActionMapper {
   private static readonly FIELDS = {

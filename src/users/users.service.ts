@@ -1,17 +1,13 @@
-import {
-  BadRequestException,
-  Injectable,
-  BeforeApplicationShutdown,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, BeforeApplicationShutdown } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WsException } from '@nestjs/websockets';
+import * as _ from 'lodash';
 import { ConfigurableLogger } from 'src/logging/logging.service';
-import { Quad } from 'src/model/terrain/quad.model';
 import { UsersFileService } from 'src/persistence/users/users-persistence.service';
 import { StateService } from 'src/state/state.service';
+import { Quad } from 'src/terrain/model/quad.model';
 import { Utilities } from 'src/terrain/utilities/utilities.service';
-import { Player } from '../model/users/player.model';
+import { Player } from './model/player.model';
 
 @Injectable()
 export class UsersService implements BeforeApplicationShutdown {
@@ -89,7 +85,7 @@ export class UsersService implements BeforeApplicationShutdown {
         this.stateService.terrain,
         this.configService.get<number>('FRUSTUM_SIZE'),
       ),
-    );
+    ).map((player) => _.omit(player, ['timers', 'inventory']));
   }
 
   private getPlayersInQuad(quad: Quad) {

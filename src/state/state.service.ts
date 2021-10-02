@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Player } from 'src/model/users/player.model';
-import { Terrain } from 'src/model/terrain/terrain.model';
-import { CraftingFacility } from 'src/model/inventory/crafting/crafting-facility.model';
-import { ItemParser } from './item-definitions/item-parser';
-import { Inventory } from 'src/model/inventory/inventory.model';
-import { ItemDefinition } from 'src/model/inventory/item-definition.model';
-import { Block } from 'src/model/terrain/block.model';
+import { BuildingDefinition } from 'src/buildings/model/building-definition.model';
+import { Building } from 'src/buildings/model/building.model';
+import { CraftingFacility } from 'src/items/model/crafting/crafting-facility.model';
+import { Inventory } from 'src/items/model/inventory.model';
+import { ItemDefinition } from 'src/items/model/item-definition.model';
+import { Block } from 'src/terrain/model/block.model';
+import { Terrain } from 'src/terrain/model/terrain.model';
 import { Utilities } from 'src/terrain/utilities/utilities.service';
-import { Building } from 'src/model/buildings/building.model';
-import { BuildingDefinition } from 'src/model/buildings/building-definition.model';
+import { Player } from 'src/users/model/player.model';
+import { ItemParser } from './item-definitions/item-parser';
 
 @Injectable()
 export class StateService {
@@ -62,6 +62,10 @@ export class StateService {
 
   findConnectedPlayer(playerToFind: Player) {
     return this.players.find((player) => player.name === playerToFind.name);
+  }
+
+  getAllPlayers() {
+    return this.players;
   }
 
   updatePlayer(player: Player) {

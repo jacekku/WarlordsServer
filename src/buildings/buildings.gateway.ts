@@ -3,8 +3,10 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { update } from 'lodash';
 import { Server } from 'socket.io';
 import { ConfigurableLogger } from 'src/logging/logging.service';
+import { TimerService } from 'src/timer/timer.service';
 import { BuildingsService } from './buildings.service';
 
 @WebSocketGateway({
@@ -19,7 +21,10 @@ export class BuildingsWebsocketGateway {
     BuildingsWebsocketGateway.name,
   );
 
-  constructor(public readonly buildingsService: BuildingsService) {}
+  constructor(
+    public readonly buildingsService: BuildingsService,
+    private readonly timerService: TimerService,
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -27,23 +32,36 @@ export class BuildingsWebsocketGateway {
   @SubscribeMessage('buildings:create')
   handleCreate(client: any, payload: any) {
     const { player, building, block, success } = payload;
-    this.buildingsService.handleCreate(player, building, block);
-    client.emit(
-      'buildings:requestUpdate',
-      this.buildingsService.getVisibleBuildings(player),
-    );
-    client.emit('success', success);
+    this.buildingsService.validateCreate(player, building, block);
+    const callback = () => {
+      this.buildingsService.handleCreate(player, building, block);
+      client.emit(
+        'buildings:requestUpdate',
+        this.buildingsService.getVisibleBuildings(player),
+      );
+      client.emit('success', success);
+    };
+    const timer = this.timerService.addTimer(player, 'BUILD', callback);
+    client.emit('timer', timer);
   }
 
   @SubscribeMessage('buildings:action')
   handleAction(client: any, payload: any) {
     const { player, action, building, block, success } = payload;
-    this.buildingsService.handleAction(player, action, building, block);
-    client.emit(
-      'buildings:requestUpdate',
-      this.buildingsService.getVisibleBuildings(player),
-    );
-    client.emit('success', success);
+    this.buildingsService.validateAction(player, building);
+    if (action == 'UPGRADE') {
+      this.buildingsService.validateCreate(player, building, block, true);
+    }
+    const callback = () => {
+      this.buildingsService.handleAction(player, action, building, block);
+      client.emit(
+        'buildings:requestUpdate',
+        this.buildingsService.getVisibleBuildings(player),
+      );
+      client.emit('success', success);
+    };
+    const timer = this.timerService.addTimer(player, 'BUILD', callback);
+    client.emit('timer', timer);
   }
 
   @SubscribeMessage('buildings:requestUpdate')

@@ -6,12 +6,13 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { Player } from 'src/model/users/player.model';
+import { Player } from 'src/users/model/player.model';
 import { ItemsService } from './items.service';
-import { Item } from 'src/model/inventory/item.model';
-import { Inventory } from 'src/model/inventory/inventory.model';
+
 import { ConfigurableLogger } from 'src/logging/logging.service';
-import { Block } from 'src/model/terrain/block.model';
+import { Inventory } from './model/inventory.model';
+import { Item } from './model/item.model';
+import { TimerService } from 'src/timer/timer.service';
 
 @WebSocketGateway({
   cors: {
@@ -23,7 +24,10 @@ import { Block } from 'src/model/terrain/block.model';
 export class ItemsWebsocketGateway {
   private readonly logger = new ConfigurableLogger(ItemsWebsocketGateway.name);
 
-  constructor(public readonly itemsService: ItemsService) {}
+  constructor(
+    public readonly itemsService: ItemsService,
+    private readonly timerService: TimerService,
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -34,9 +38,21 @@ export class ItemsWebsocketGateway {
     this.logger.debug(
       `items:command ${player.name} ${action} ${JSON.stringify(block)}`,
     );
-    const newInventory = this.itemsService.handleAction(player, action, block);
-    client.emit('items:update', newInventory);
-    client.emit('success', success);
+    const itemDefinition = this.itemsService.validateAction(
+      player,
+      action,
+      block,
+    );
+    const timerCallback = () => {
+      const newInventory = this.itemsService.handleAction(
+        player,
+        itemDefinition as Item,
+      );
+      client.emit('items:update', newInventory);
+      client.emit('success', success);
+    };
+    const timer = this.timerService.addTimer(player, action, timerCallback);
+    client.emit('timer', timer);
   }
 
   @SubscribeMessage('items:add')
@@ -84,9 +100,14 @@ export class ItemsWebsocketGateway {
     this.logger.debug(
       'items:craft ' + player + ' ' + JSON.stringify(itemToCraft),
     );
-    const inventory = this.itemsService.craftItem(player, itemToCraft);
-    client.emit('items:update', inventory);
-    client.emit('success', success);
+    this.itemsService.validateCraftItem(player, itemToCraft);
+    const callback = () => {
+      const inventory = this.itemsService.craftItem(player, itemToCraft);
+      client.emit('items:update', inventory);
+      client.emit('success', success);
+    };
+    const timer = this.timerService.addTimer(player, 'CRAFT', callback);
+    client.emit('timer', timer);
   }
 
   @SubscribeMessage('items:equip')

@@ -1,5 +1,5 @@
-import { MATERIALS } from 'src/model/terrain/enums/materials.model';
-import { MOISTURE } from 'src/model/terrain/enums/moisture.model';
+import { MATERIALS } from 'src/terrain/model/enums/materials.model';
+import { MOISTURE } from 'src/terrain/model/enums/moisture.model';
 import { ItemsActionMapper } from '../items-action.mapper';
 
 describe('Items Action Mapper', () => {

@@ -1,4 +1,4 @@
-import { Player } from 'src/model/users/player.model';
+import { Player } from 'src/users/model/player.model';
 
 export interface IUsersPersistence {
   savePlayer(newPlayer: Player, mapId: string): void;

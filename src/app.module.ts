@@ -7,6 +7,7 @@ import { ItemsModule } from './items/items.module';
 import { LoggingModule } from './logging/logging.module';
 import { StateModule } from './state/state.module';
 import { TerrainModule } from './terrain/terrain.module';
+import { TimerModule } from './timer/timer.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { UsersModule } from './users/users.module';
     ItemsModule,
     LoggingModule,
     BuildingsModule,
+    TimerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
