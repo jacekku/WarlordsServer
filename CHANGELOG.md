@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/jacekku/TraviansServer/compare/v0.2.0...v0.3.0) (2021-10-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* Timer system
+
+### Features
+
+* **sound:** Sound System ([1e81bf0](https://github.com/jacekku/TraviansServer/commit/1e81bf06dbde9c4f99e12816ed7f2b0951c56746))
+* Timer system ([453a639](https://github.com/jacekku/TraviansServer/commit/453a63977ffd39289200bcb1d6012f3adbac637b))
+
+
+### Bug Fixes
+
+* additional checks ([586c39a](https://github.com/jacekku/TraviansServer/commit/586c39a6ca4f69fdafae8a5d11b2816c3b49f9d0))
+* **buildings:** Upgrading buildings without upgrade option no longer causes 500 ([9c85dcd](https://github.com/jacekku/TraviansServer/commit/9c85dcd48470d6be037b5b4e1d877ca556140daf))
+* **players:** Disconnecting no longer crashes the server ([4b5aa28](https://github.com/jacekku/TraviansServer/commit/4b5aa28d20ac8a749a4a9240d9afc1b688b54940))
+
 ## [0.2.0](https://github.com/jacekku/TraviansServer/compare/v0.1.7...v0.2.0) (2021-09-14)
 
 
