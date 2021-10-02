@@ -1,8 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
-import { Inventory } from 'src/model/inventory/inventory.model';
-import { Player } from 'src/model/users/player.model';
+import { Player } from 'src/users/model/player.model';
 import { ItemsService } from '../items.service';
+import { Inventory } from '../model/inventory.model';
 
 describe('Items Service', () => {
   let itemsService: ItemsService;

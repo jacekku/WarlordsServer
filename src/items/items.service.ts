@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { ConfigurableLogger } from 'src/logging/logging.service';
-import { SourceItemDefinition } from 'src/model/inventory/crafting/source-item-definition.model';
-import { Equiped } from 'src/model/inventory/equipment/equiped.model';
-import { Inventory } from 'src/model/inventory/inventory.model';
-import { ItemDefinition } from 'src/model/inventory/item-definition.model';
-import { Item } from 'src/model/inventory/item.model';
-import { Block } from 'src/model/terrain/block.model';
-import { Player } from 'src/model/users/player.model';
+import { SourceItemDefinition } from 'src/items/model/crafting/source-item-definition.model';
+import { Player } from 'src/users/model/player.model';
 import { StateService } from 'src/state/state.service';
 import { ItemsActionMapper } from './items-action.mapper';
+import { Block } from 'src/terrain/model/block.model';
+import { Equiped } from './model/equipment/equiped.model';
+import { Inventory } from './model/inventory.model';
+import { ItemDefinition } from './model/item-definition.model';
+import { Item } from './model/item.model';
 
 @Injectable()
 export class ItemsService {
@@ -52,7 +52,7 @@ export class ItemsService {
     this.itemExists(item);
   }
 
-  handleAction(player: Player, action: string, block: Block) {
+  validateAction(player: Player, action: string, block: Block) {
     const actualBlock = this.stateService.findBlock(block);
     const itemName = ItemsActionMapper.mapActionToItem(action, actualBlock);
     if (!itemName) {
@@ -65,6 +65,31 @@ export class ItemsService {
       this.logger.error(itemName + ' not found in item definitions');
       throw new WsException(itemName + ' not found in item definitions');
     }
+    const currentPlayer = this.stateService.findConnectedPlayer(player);
+    this.upsertPlayerInventory(currentPlayer);
+    if (this.playerInventoryIsFull(currentPlayer, itemDefinition as Item)) {
+      throw new WsException('player inventory is full');
+    }
+    return itemDefinition;
+  }
+
+  validateCraftItem(player: Player, itemToCraft: Item) {
+    const currentPlayer = this.stateService.findConnectedPlayer(player);
+    this.upsertPlayerInventory(currentPlayer);
+    this.itemExists(itemToCraft);
+    const itemToCraftDefinition =
+      this.stateService.getItemDefinition(itemToCraft);
+    if (!itemToCraftDefinition.craftable) {
+      throw new WsException(`${itemToCraftDefinition} is not craftable`);
+    }
+    const sourceItems = itemToCraftDefinition.craftable.sourceItems;
+    sourceItems.forEach((item) => this.validate(currentPlayer, item));
+    if (this.playerInventoryIsFull(currentPlayer, itemToCraft)) {
+      throw new WsException('player inventory is full');
+    }
+  }
+
+  handleAction(player: Player, itemDefinition: Item) {
     return this.addItem(player, itemDefinition as Item);
   }
 
@@ -133,14 +158,10 @@ export class ItemsService {
   craftItem(player: Player, itemToCraft: Item) {
     const currentPlayer = this.stateService.findConnectedPlayer(player);
     this.upsertPlayerInventory(currentPlayer);
-    this.itemExists(itemToCraft);
     const itemToCraftDefinition =
       this.stateService.getItemDefinition(itemToCraft);
-    if (!itemToCraftDefinition.craftable) {
-      throw new WsException(`${itemToCraftDefinition} is not craftable`);
-    }
     const sourceItems = itemToCraftDefinition.craftable.sourceItems;
-    sourceItems.forEach((item) => this.validate(currentPlayer, item));
+
     sourceItems.forEach((item) =>
       this.removeItem(
         currentPlayer,

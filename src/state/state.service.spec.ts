@@ -1,5 +1,5 @@
-import { Terrain } from 'src/model/terrain/terrain.model';
-import { Player } from 'src/model/users/player.model';
+import { Terrain } from 'src/terrain/model/terrain.model';
+import { Player } from 'src/users/model/player.model';
 import { StateService } from './state.service';
 
 describe('State Service', () => {

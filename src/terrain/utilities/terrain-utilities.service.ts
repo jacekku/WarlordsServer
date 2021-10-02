@@ -1,7 +1,7 @@
 import * as Simplex from 'perlin-simplex';
 const simplex = new Simplex();
-import { BIOMES } from 'src/model/terrain/enums/biomes.model';
-import { Terrain } from 'src/model/terrain/terrain.model';
+import { BIOMES } from 'src/terrain/model/enums/biomes.model';
+import { Terrain } from '../model/terrain.model';
 import { Utilities } from './utilities.service';
 export class TerrainUtilities {
   static generateItems(x: number, y: number) {

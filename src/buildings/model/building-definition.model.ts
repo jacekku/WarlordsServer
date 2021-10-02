@@ -1,4 +1,4 @@
-import { CraftingFacility } from '../inventory/crafting/crafting-facility.model';
+import { CraftingFacility } from 'src/items/model/crafting/crafting-facility.model';
 import { Buildable } from './buildable.model';
 
 export class BuildingDefinition {

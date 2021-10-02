@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
-import { Building } from 'src/model/buildings/building.model';
+import { Building } from 'src/buildings/model/building.model';
 
 @Injectable()
 export class BuildingFileService {

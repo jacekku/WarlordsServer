@@ -2,10 +2,10 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { StateService } from 'src/state/state.service';
 import * as fs from 'fs';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import { UsersController } from '../users.controller';
+import { UsersService } from '../users.service';
 import { UsersFileService } from 'src/persistence/users/users-persistence.service';
-import { Terrain } from 'src/model/terrain/terrain.model';
+import { Terrain } from 'src/terrain/model/terrain.model';
 
 jest.mock('fs');
 

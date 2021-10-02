@@ -7,7 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { TerrainService } from './terrain.service';
-import { Player } from 'src/model/users/player.model';
+import { Player } from 'src/users/model/player.model';
 
 @WebSocketGateway({
   cors: {

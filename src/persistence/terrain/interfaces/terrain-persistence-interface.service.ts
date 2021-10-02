@@ -1,5 +1,5 @@
-import { Chunk } from 'src/model/terrain/chunk.model';
-import { Terrain } from 'src/model/terrain/terrain.model';
+import { Chunk } from 'src/terrain/model/chunk.model';
+import { Terrain } from 'src/terrain/model/terrain.model';
 
 export interface ITerrainPersistence {
   saveMap(terrain: Terrain): Terrain;
