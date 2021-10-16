@@ -47,7 +47,7 @@ export class BuildingFileService {
     const buildingData = fs.readFileSync(
       `${this.getBuildingsPath(mapId)}/${building.id}.json`,
     );
-    return JSON.parse(buildingData.toString());
+    return Building.from(JSON.parse(buildingData.toString()));
   }
 
   getAllBuildings(mapId: string) {
@@ -60,7 +60,7 @@ export class BuildingFileService {
       const data = fs.readFileSync(
         `${this.getBuildingsPath(mapId)}/${filename}`,
       );
-      buildings.push(JSON.parse(data.toString()));
+      buildings.push(Building.from(JSON.parse(data.toString())));
     });
     return buildings;
   }

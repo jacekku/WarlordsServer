@@ -1,10 +1,8 @@
 import {
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
 } from '@nestjs/websockets';
-import { update } from 'lodash';
-import { Server } from 'socket.io';
 import { ConfigurableLogger } from 'src/logging/logging.service';
 import { TimerService } from 'src/timer/timer.service';
 import { BuildingsService } from './buildings.service';
@@ -16,7 +14,7 @@ import { BuildingsService } from './buildings.service';
     },
   },
 })
-export class BuildingsWebsocketGateway {
+export class BuildingsWebsocketGateway implements OnGatewayInit {
   private readonly logger = new ConfigurableLogger(
     BuildingsWebsocketGateway.name,
   );
@@ -26,8 +24,9 @@ export class BuildingsWebsocketGateway {
     private readonly timerService: TimerService,
   ) {}
 
-  @WebSocketServer()
-  server: Server;
+  afterInit(server: any) {
+    this.buildingsService.websocketServer = server;
+  }
 
   @SubscribeMessage('buildings:create')
   handleCreate(client: any, payload: any) {
@@ -60,7 +59,7 @@ export class BuildingsWebsocketGateway {
       );
       client.emit('success', success);
     };
-    const timer = this.timerService.addTimer(player, 'BUILD', callback);
+    const timer = this.timerService.addTimer(player, action, callback);
     client.emit('timer', timer);
   }
 
