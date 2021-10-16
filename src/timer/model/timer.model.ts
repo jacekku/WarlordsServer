@@ -1,3 +1,4 @@
+import { ConnectedSocket } from '@nestjs/websockets';
 import { Utilities } from 'src/terrain/utilities/utilities.service';
 
 export class Timer {
@@ -32,7 +33,11 @@ export class Timer {
   checkEnded() {
     if (this.currentCycle >= this.cycleAmount) {
       this.hasEnded = true;
-      this.callback();
+      const reset = this.callback();
+      if (reset) {
+        this.hasEnded = false;
+        this.currentCycle = 0;
+      }
     }
   }
   cancel() {

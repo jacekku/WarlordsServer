@@ -1,5 +1,6 @@
 import { CraftingFacility } from 'src/items/model/crafting/crafting-facility.model';
 import { Buildable } from './buildable.model';
+import { Growable } from './growable.model';
 
 export class BuildingDefinition {
   name: string;
@@ -7,6 +8,7 @@ export class BuildingDefinition {
   craftingFacilities: CraftingFacility[];
   upgrade: BuildingDefinition;
   level: number;
+  growable: Growable;
 
   public static comparator(
     building1: BuildingDefinition,

@@ -19,11 +19,40 @@ export class StateService {
   public readonly facilitiesDefinitions: CraftingFacility[];
   public readonly buildingDefinitions: BuildingDefinition[];
 
+  public notifyList: Map<string, CallableFunction[]>;
+
   constructor() {
     const itemParser = new ItemParser();
     this.itemDefinitions = itemParser.items;
     this.facilitiesDefinitions = itemParser.facilities;
     this.buildingDefinitions = itemParser.buildings;
+
+    this.buildings = [];
+
+    this.notifyList = new Map();
+    this.notifyList.set('buildingUpdate', []);
+    this.notifyList.set('playerUpdate', []);
+    this.notifyList.set('terrainUpdate', []);
+  }
+  saveBuildings() {
+    console.log('saveBuildings not set');
+  }
+
+  updateBuilding(building: Building, remove = false) {
+    const buildingIndex = this.buildings.findIndex(
+      (bld) => building.id === bld.id,
+    );
+    if (buildingIndex < 0) {
+      this.buildings.push(building);
+      return;
+    }
+    if (remove) {
+      delete this.buildings[buildingIndex];
+      this.buildings = this.buildings.filter(Boolean);
+    } else {
+      this.buildings[buildingIndex] = building;
+    }
+    this.notifyList.get('buildingUpdate').forEach((callback) => callback());
   }
 
   getState() {

@@ -10,7 +10,9 @@ export class TimerMapper {
     FORAGE_BERRIES: { cycleAmount: 4 },
     GATHER_STONES: { cycleAmount: 4 },
     MINE_STONES: { cycleAmount: 10 },
-    BUILD: { cycleAmount: 15 },
+    BUILD: { cycleAmount: 4 },
+    DEMOLISH: { cycleAmount: 15 },
+    HARVEST: { cycleAmount: 2 },
     CRAFT: { cycleAmount: 5 },
   };
 

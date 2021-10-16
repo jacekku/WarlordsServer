@@ -1,11 +1,12 @@
-import { CraftingFacility } from '../../items/model/crafting/crafting-facility.model';
 import * as ITEMS_JSON from './items.json';
 import * as FACILITIES_JSON from './crafting-facilities.json';
 import * as BUILDINGS_JSON from './buildings.json';
-import { CraftableItem } from 'src/items/model/crafting/craftable.model';
-import { SourceItemDefinition } from 'src/items/model/crafting/source-item-definition.model';
 import { Buildable } from 'src/buildings/model/buildable.model';
 import { BuildingDefinition } from 'src/buildings/model/building-definition.model';
+import { Growable } from 'src/buildings/model/growable.model';
+import { CraftableItem } from 'src/items/model/crafting/craftable.model';
+import { CraftingFacility } from 'src/items/model/crafting/crafting-facility.model';
+import { SourceItemDefinition } from 'src/items/model/crafting/source-item-definition.model';
 import { EquipableItem } from 'src/items/model/equipment/equipable-item.model';
 import { ItemDefinition } from 'src/items/model/item-definition.model';
 import { Item } from 'src/items/model/item.model';
@@ -111,6 +112,11 @@ export class ItemParser {
           );
         }
         building.upgrade = buildingUpgrade;
+      }
+      if (readBuilding.growable) {
+        building.growable = new Growable();
+        building.growable.cycleAmount = readBuilding.growable.cycleAmount;
+        building.growable.maxGrowth = readBuilding.growable.maxGrowth;
       }
       this.buildings.push(building);
     }

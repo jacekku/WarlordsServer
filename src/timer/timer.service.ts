@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigurableLogger } from 'src/logging/logging.service';
 import { Timer } from './model/timer.model';
 import { Server } from 'socket.io';
 import { Player } from 'src/users/model/player.model';
 import { TimerMapper } from './timer.mapper';
 import { StateService } from 'src/state/state.service';
+import { Building } from 'src/buildings/model/building.model';
+import { Growable } from 'src/buildings/model/growable.model';
 
 @Injectable()
-export class TimerService {
+export class TimerService implements OnApplicationBootstrap {
   logger = new ConfigurableLogger(TimerService.name);
   timers: Map<string, Timer>;
   cancelledTimers: Map<string, Timer>;
@@ -18,6 +20,20 @@ export class TimerService {
     this.timers = new Map();
     this.cancelledTimers = new Map();
     this.finishedTimers = new Map();
+  }
+
+  onApplicationBootstrap() {
+    this.stateService.buildings
+      .filter((building) => building.growable)
+      .map((building) => Building.from(building))
+      .forEach((building) => {
+        const timer = new Timer(building.growable.cycleAmount, () => {
+          const result = Growable.grow(building);
+          this.stateService.updateBuilding(building);
+          return result;
+        });
+        this.registerTimer(timer);
+      });
   }
 
   tick() {

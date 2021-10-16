@@ -18,4 +18,7 @@ export class Building extends BuildingDefinition {
     this.level = level;
     this.id = id;
   }
+  static from(json) {
+    return Object.assign(new BuildingDefinition(), json);
+  }
 }

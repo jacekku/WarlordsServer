@@ -92,5 +92,15 @@
     },
     "craftingFacilities": ["smelting-fire", "metal-craft-level1"],
     "upgrade": { "name": "smithy" }
+  },
+  {
+    "name": "wheat_field",
+    "buildable": {
+      "sourceItems": [{ "name": "wood", "requiredAmount": 1 }]
+    },
+    "growable": {
+      "cycleAmount": 2,
+      "maxGrowth": 5
+    }
   }
 ]
