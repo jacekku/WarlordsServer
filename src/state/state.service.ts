@@ -27,8 +27,6 @@ export class StateService {
     this.facilitiesDefinitions = itemParser.facilities;
     this.buildingDefinitions = itemParser.buildings;
 
-    this.buildings = [];
-
     this.notifyList = new Map();
     this.notifyList.set('buildingUpdate', []);
     this.notifyList.set('playerUpdate', []);
@@ -53,6 +51,10 @@ export class StateService {
       this.buildings[buildingIndex] = building;
     }
     this.notifyList.get('buildingUpdate').forEach((callback) => callback());
+  }
+
+  updateTerrain() {
+    this.notifyList.get('terrainUpdate').forEach((callback) => callback());
   }
 
   getState() {
@@ -90,7 +92,7 @@ export class StateService {
   }
 
   findConnectedPlayer(playerToFind: Player) {
-    return this.players.find((player) => player.name === playerToFind.name);
+    return this.players.find((player) => player?.name === playerToFind?.name);
   }
 
   getAllPlayers() {

@@ -1,12 +1,18 @@
+import { Prop, Schema } from '@nestjs/mongoose';
 import * as _ from 'lodash';
 import { Utilities } from 'src/terrain/utilities/utilities.service';
 import { Chunk } from './chunk.model';
 import { Quad } from './quad.model';
 
+@Schema()
 export class Terrain extends Quad {
+  @Prop()
   chunkSize: number;
+  // @Prop()
   chunks: Chunk[];
+  @Prop()
   mapId: string;
+  @Prop()
   chunkNumber: number;
 
   constructor(

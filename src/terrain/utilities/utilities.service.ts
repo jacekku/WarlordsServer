@@ -39,6 +39,7 @@ export class Utilities {
     terrain: Terrain,
     frustumSize: number,
   ): Quad {
+    if (!player) return;
     const x = Utilities.clampNumber(
       player.x - Math.floor(frustumSize / 2),
       0,

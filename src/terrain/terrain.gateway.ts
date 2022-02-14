@@ -31,6 +31,7 @@ export class TerrainWebsocketGateway {
     @MessageBody('player') player: Player,
     @MessageBody('chunks') chunks: number[],
   ): WsResponse<any> {
+    if (!player.name) return;
     return {
       event: 'terrain:chunk',
       data: this.terrainService.returnChunksVisibleToPlayer(player, chunks),

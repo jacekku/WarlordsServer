@@ -30,8 +30,11 @@ describe('Persistence Service', () => {
     });
   });
 
-  it('should register player and return player data sucessfully', () => {
-    const createdPlayer = usersService.registerPlayer(mockPlayer, 'mapId');
+  it('should register player and return player data sucessfully', async () => {
+    const createdPlayer = await usersService.registerPlayer(
+      mockPlayer,
+      'mapId',
+    );
     expect(createdPlayer.name).toBe(mockPlayer.name);
   });
 });

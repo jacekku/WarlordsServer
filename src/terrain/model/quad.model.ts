@@ -1,10 +1,16 @@
+import { Prop } from '@nestjs/mongoose';
+
 export class Quad {
-  constructor(
-    public x: number,
-    public y: number,
-    public width: number,
-    public height: number,
-  ) {
+  @Prop()
+  public x: number;
+  @Prop()
+  public y: number;
+  @Prop()
+  public width: number;
+  @Prop()
+  public height: number;
+
+  constructor(x: number, y: number, width: number, height: number) {
     this.x = Number(x);
     this.y = Number(y);
     this.width = Number(width);
@@ -23,6 +29,7 @@ export class Quad {
   }
 
   static quadsOverlapping(quad1: Quad, quad2: Quad) {
+    if (!quad1 || !quad2) return false;
     return (
       this.pointInQuad(quad1, quad2.x, quad2.y) ||
       this.pointInQuad(quad1, quad2.x + quad2.width, quad2.y + quad2.height) ||

@@ -52,12 +52,12 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
   }
 
   @SubscribeMessage('players:connect')
-  playerConnected(client: any, payload: any) {
+  async playerConnected(client: any, payload: any) {
     const { player, success } = payload;
     this.userService.checkIfPlayerAlreadyConnected(player);
     this.pushPlayerNameToSocketClient(client, player);
     this.logger.log('player connected: ' + client.player);
-    this.userService.playerConnected(player);
+    await this.userService.playerConnected(player);
     client.emit('players:connect');
     client.emit('success', success);
     this.emitToAllPlayers('players:update');

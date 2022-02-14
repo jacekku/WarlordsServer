@@ -1,3 +1,4 @@
+import { Prop } from '@nestjs/mongoose';
 import { WsException } from '@nestjs/websockets';
 import { Equiped } from './equipment/equiped.model';
 import { EquipmentMap } from './equipment/equipment.map';
@@ -5,9 +6,13 @@ import { ItemDefinition } from './item-definition.model';
 import { Item } from './item.model';
 
 export class Inventory {
+  @Prop()
   public equiped: Equiped;
+  @Prop()
   public items: Item[];
+  @Prop()
   public inventorySize: number;
+  @Prop()
   public uid: number;
 
   constructor(inventorySize = 16) {

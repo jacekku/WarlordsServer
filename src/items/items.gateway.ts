@@ -90,6 +90,7 @@ export class ItemsWebsocketGateway {
   updateItemsHandler(
     @MessageBody('player') player: Player,
   ): WsResponse<Inventory> {
+    if (!player.name) return;
     const inventory = this.itemsService.getInventory(player);
     return this.buildWsResponse(inventory);
   }

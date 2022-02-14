@@ -1,3 +1,4 @@
+import { Prop } from '@nestjs/mongoose';
 import { TerrainUtilities } from 'src/terrain/utilities/terrain-utilities.service';
 import { Utilities } from 'src/terrain/utilities/utilities.service';
 import { Chunk } from './chunk.model';
@@ -8,11 +9,15 @@ import { MOISTURE } from './enums/moisture.model';
 import { Quad } from './quad.model';
 
 export class Block extends Quad {
+  @Prop()
   id: number;
-
+  @Prop({ enum: BIOMES })
   biome: BIOMES;
+  @Prop({ enum: MOISTURE })
   moisture: MOISTURE;
-  materials: any;
+  @Prop()
+  materials: string;
+  @Prop({ enum: ANIMALS })
   animals: ANIMALS;
 
   constructor(id: number, chunk: Chunk) {

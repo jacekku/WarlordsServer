@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IUsersPersistence } from './interfaces/users-persistence-interface.service';
+import { IUsersPersistence } from '../interfaces/users-persistence-interface.service';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { Player } from 'src/users/model/player.model';
@@ -27,13 +27,13 @@ export class UsersFileService implements IUsersPersistence {
     );
   }
 
-  registerPlayer(newPlayer: Player, mapId: string): Player {
+  async registerPlayer(newPlayer: Player, mapId: string): Promise<Player> {
     this.createFolder(newPlayer, mapId);
     this.savePlayer(newPlayer, mapId);
     return this.getPlayer(newPlayer.name, mapId);
   }
 
-  getPlayer(playerName: string, mapId: string): Player {
+  async getPlayer(playerName: string, mapId: string): Promise<Player> {
     if (!this.folderExists(mapId, playerName)) return;
     const data = fs.readFileSync(this.getPlayerFilePath(mapId, playerName));
     return JSON.parse(data.toString());

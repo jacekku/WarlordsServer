@@ -1,5 +1,6 @@
 import {
   BeforeApplicationShutdown,
+  Inject,
   Injectable,
   OnApplicationBootstrap,
   OnModuleInit,
@@ -7,10 +8,8 @@ import {
 import { Server } from 'socket.io';
 
 import { WsException } from '@nestjs/websockets';
-import { stat } from 'fs';
 import { ItemsService } from 'src/items/items.service';
 import { ConfigurableLogger } from 'src/logging/logging.service';
-import { BuildingFileService } from 'src/persistence/buildings/buildings-persistence.service';
 import { StateService } from 'src/state/state.service';
 import { Block } from 'src/terrain/model/block.model';
 import { Timer } from 'src/timer/model/timer.model';
@@ -18,38 +17,43 @@ import { TimerService } from 'src/timer/timer.service';
 import { Player } from 'src/users/model/player.model';
 import { Building } from './model/building.model';
 import { Growable } from './model/growable.model';
-import { serialize } from 'v8';
+import { IBuildingsPersistence } from 'src/persistence/buildings/interfaces/buildings-persistence-interface.model';
+import { BUILDINGS_PERSISTENCE_SERVICE } from 'src/constants';
 
 @Injectable()
 export class BuildingsService
-  implements OnModuleInit, BeforeApplicationShutdown, OnApplicationBootstrap
+  implements BeforeApplicationShutdown, OnApplicationBootstrap, OnModuleInit
 {
   websocketServer: Server;
   private readonly logger = new ConfigurableLogger(BuildingsService.name);
   constructor(
     private readonly stateService: StateService,
-    private readonly buildingFileService: BuildingFileService,
+    @Inject(BUILDINGS_PERSISTENCE_SERVICE)
+    private readonly buildingPersistenceService: IBuildingsPersistence,
     private readonly itemsService: ItemsService,
     private readonly timerService: TimerService,
   ) {}
+
+  onModuleInit() {
+    this.stateService.saveBuildings = this.saveBuildings.bind(this);
+    this.stateService.buildings = [];
+  }
 
   beforeApplicationShutdown(signal?: string) {
     this.logger.warn('received: ' + signal + ' - saving all buildings');
     this.stateService.saveBuildings();
   }
-  onModuleInit() {
-    this.stateService.saveBuildings = this.saveBuildings.bind(this);
-    const buildings = this.buildingFileService.getAllBuildings(
-      this.stateService.terrain.mapId,
-    );
 
-    buildings.forEach((building) => this.stateService.buildings.push(building));
-  }
   onApplicationBootstrap() {
     this.stateService.notifyList
       .get('buildingUpdate')
       .push(this.notifyBuildingUpdate.bind(this));
+
+    this.stateService.notifyList
+      .get('terrainUpdate')
+      .push(this.onTerrainUpdate.bind(this));
   }
+
   notifyBuildingUpdate() {
     this.websocketServer.emit(
       'buildings:requestUpdate',
@@ -57,9 +61,19 @@ export class BuildingsService
     );
   }
 
-  validateAction(player: any, building: any) {
+  onTerrainUpdate() {
+    this.buildingPersistenceService
+      .getAllBuildings(this.stateService.terrain.mapId)
+      .then((buildings) => {
+        buildings.forEach((building) =>
+          this.stateService.buildings.push(building),
+        );
+      });
+  }
+
+  async validateAction(player: any, building: any) {
     const currentPlayer = this.stateService.findConnectedPlayer(player);
-    const currentBuilding = this.buildingFileService.getBuilding(
+    const currentBuilding = await this.buildingPersistenceService.getBuilding(
       building,
       this.stateService.terrain.mapId,
     );
@@ -73,19 +87,21 @@ export class BuildingsService
 
   saveBuildings() {
     this.stateService.buildings.forEach((building) =>
-      this.buildingFileService.updateBuilding(
+      this.buildingPersistenceService.updateBuilding(
         building,
         this.stateService.terrain.mapId,
       ),
     );
   }
 
-  validateCreate(player, building, block, upgrade = false) {
+  async validateCreate(player, building, block, upgrade = false) {
     const currentPlayer = this.stateService.findConnectedPlayer(player);
 
-    const buildingInThisSpace = this.buildingFileService
-      .getAllBuildings(this.stateService.terrain.mapId)
-      .find((b) => b.x === player.x && b.y === player.y);
+    const buildingInThisSpace = (
+      await this.buildingPersistenceService.getAllBuildings(
+        this.stateService.terrain.mapId,
+      )
+    ).find((b) => b.x === player.x && b.y === player.y);
     if (!upgrade && buildingInThisSpace) {
       throw new WsException("there's already a building here");
     }
@@ -143,18 +159,19 @@ export class BuildingsService
       });
       this.timerService.registerTimer(timer);
     }
-    this.buildingFileService.createBuilding(
+    this.buildingPersistenceService.createBuilding(
       newBuilding,
       this.stateService.terrain.mapId,
     );
     this.stateService.updateBuilding(newBuilding);
+
     buildingDefinition.buildable.sourceItems.forEach((item) => {
       this.itemsService.removeItem(currentPlayer, item, item.requiredAmount);
     });
   }
 
   handleRemove(player: Player, building: Building) {
-    this.buildingFileService.removeBuilding(
+    this.buildingPersistenceService.removeBuilding(
       building,
       this.stateService.terrain.mapId,
     );
@@ -172,14 +189,14 @@ export class BuildingsService
     this.handleRemove(player, building);
   }
 
-  handleAction(
+  async handleAction(
     player: Player,
     action: string,
     building: Building,
     block: Block,
   ) {
     const currentPlayer = this.stateService.findConnectedPlayer(player);
-    const currentBuilding = this.buildingFileService.getBuilding(
+    const currentBuilding = await this.buildingPersistenceService.getBuilding(
       building,
       this.stateService.terrain.mapId,
     );

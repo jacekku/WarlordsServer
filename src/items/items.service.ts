@@ -19,6 +19,7 @@ export class ItemsService {
 
   public playerHasItems(player: Player, item: Item, amount = 1): boolean {
     const itemAmount = player.inventory.collapseInventory().get(item.name);
+
     if (!itemAmount || itemAmount < amount) {
       throw new WsException(
         `${amount} ${item.name} not found on player: ${player.name}`,
@@ -113,7 +114,10 @@ export class ItemsService {
     const itemDefinition = this.stateService.getItemDefinition(item);
     const itemToUnequip =
       currentPlayer.inventory.findEquipedItemByDefinition(itemDefinition);
-    if (!itemToUnequip.name) throw new WsException('no equiped item found');
+    if (!itemToUnequip.name)
+      throw new WsException(
+        `no equiped item found on ${itemDefinition.equipable.type}`,
+      );
     currentPlayer.inventory.unequipItem(itemToUnequip);
     return this.addItem(player, itemDefinition as Item);
   }
@@ -182,6 +186,7 @@ export class ItemsService {
 
   public getInventory(player) {
     const currentPlayer = this.stateService.findConnectedPlayer(player);
+    if (!currentPlayer) return;
     this.upsertPlayerInventory(currentPlayer);
     return currentPlayer.inventory;
   }

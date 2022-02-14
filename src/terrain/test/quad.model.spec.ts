@@ -1,4 +1,4 @@
-import { Quad } from '../terrain/quad.model';
+import { Quad } from '../model/quad.model';
 import * as chunks from './chunks.json';
 
 describe('Quad Model', () => {

@@ -1,9 +1,10 @@
-import { Injectable, BeforeApplicationShutdown } from '@nestjs/common';
+import { Injectable, BeforeApplicationShutdown, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WsException } from '@nestjs/websockets';
 import * as _ from 'lodash';
+import { USERS_PERSISTENCE_SERVICE } from 'src/constants';
 import { ConfigurableLogger } from 'src/logging/logging.service';
-import { UsersFileService } from 'src/persistence/users/users-persistence.service';
+import { IUsersPersistence } from 'src/persistence/users/interfaces/users-persistence-interface.service';
 import { StateService } from 'src/state/state.service';
 import { Quad } from 'src/terrain/model/quad.model';
 import { Utilities } from 'src/terrain/utilities/utilities.service';
@@ -14,23 +15,24 @@ export class UsersService implements BeforeApplicationShutdown {
   private readonly logger = new ConfigurableLogger(UsersService.name);
 
   constructor(
-    private readonly usersPersistenceService: UsersFileService,
+    @Inject(USERS_PERSISTENCE_SERVICE)
+    private readonly usersPersistenceService: IUsersPersistence,
     private readonly stateService: StateService,
     private readonly configService: ConfigService,
   ) {
     stateService.players = [];
   }
 
-  getPlayer(playerName: string): Player {
+  async getPlayer(playerName: string): Promise<Player> {
     return this.usersPersistenceService.getPlayer(
       playerName,
       this.stateService.terrain.mapId,
     );
   }
 
-  registerPlayer(newPlayer: Player): Player {
+  async registerPlayer(newPlayer: Player): Promise<Player> {
     const newlySpawnedPlayer = new Player(newPlayer.name, 10, 10);
-    return this.usersPersistenceService.registerPlayer(
+    return await this.usersPersistenceService.registerPlayer(
       newlySpawnedPlayer,
       this.stateService.terrain.mapId,
     );
@@ -50,11 +52,13 @@ export class UsersService implements BeforeApplicationShutdown {
     }
   }
 
-  playerConnected(newPlayer: Player): Player {
-    const player =
-      this.getPlayer(newPlayer.name) || this.registerPlayer(newPlayer);
+  async playerConnected(newPlayer: Player): Promise<Player> {
+    let player = await this.getPlayer(newPlayer.name);
+    if (!player || !player.name) {
+      player = await this.registerPlayer(newPlayer);
+    }
     this.stateService.players.push(player);
-    return player;
+    return;
   }
 
   playerDisconnected(playerName: string) {
@@ -79,6 +83,7 @@ export class UsersService implements BeforeApplicationShutdown {
   }
 
   findVisiblePlayers(player: Player) {
+    if (!player) return;
     return this.getPlayersInQuad(
       Utilities.calculatePlayerFrustum(
         player,
