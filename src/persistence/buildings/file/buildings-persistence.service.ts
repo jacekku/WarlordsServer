@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
 import { Building } from 'src/buildings/model/building.model';
+import { IBuildingsPersistence } from '../interfaces/buildings-persistence-interface.model';
 
 @Injectable()
-export class BuildingFileService {
+export class BuildingFileService implements IBuildingsPersistence {
   constructor(private configService: ConfigService) {}
 
   private BUILDINGS_FOLDER = `${this.configService.get(
@@ -43,14 +44,14 @@ export class BuildingFileService {
     fs.rmSync(`${this.getBuildingsPath(mapId)}/${building.id}.json`);
   }
 
-  getBuilding(building: Building, mapId: string): Building {
+  async getBuilding(building: Building, mapId: string): Promise<Building> {
     const buildingData = fs.readFileSync(
       `${this.getBuildingsPath(mapId)}/${building.id}.json`,
     );
     return Building.from(JSON.parse(buildingData.toString()));
   }
 
-  getAllBuildings(mapId: string) {
+  async getAllBuildings(mapId: string): Promise<Building[]> {
     if (!fs.existsSync(this.getBuildingsPath(mapId))) {
       fs.mkdirSync(this.getBuildingsPath(mapId), { recursive: true });
     }

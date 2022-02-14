@@ -1,13 +1,20 @@
+import { Prop, Schema } from '@nestjs/mongoose';
 import { Utilities } from 'src/terrain/utilities/utilities.service';
 import { Player } from 'src/users/model/player.model';
 import { BuildingDefinition } from './building-definition.model';
 
+@Schema()
 export class Building extends BuildingDefinition {
+  @Prop()
   x: number;
+  @Prop()
   y: number;
+  @Prop()
   owner: Player;
+  @Prop()
   id: string;
-  level: number;
+  @Prop()
+  mapId: string;
 
   constructor(x, y, owner, name, level = 1, id = Utilities.generateStringId()) {
     super();

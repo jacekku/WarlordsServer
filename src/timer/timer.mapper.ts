@@ -5,7 +5,7 @@ export class TimerMapper {
     HUNT: { cycleAmount: 10 },
     FISH: { cycleAmount: 10 },
     GATHER_SAND: { cycleAmount: 2 },
-    CHOP_WOOD: { cycleAmount: 10 },
+    CHOP_WOOD: { cycleAmount: 2 },
     GATHER_STICKS: { cycleAmount: 4 },
     FORAGE_BERRIES: { cycleAmount: 4 },
     GATHER_STONES: { cycleAmount: 4 },

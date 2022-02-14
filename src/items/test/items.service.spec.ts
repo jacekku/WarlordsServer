@@ -1,11 +1,14 @@
-import { BadRequestException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import { WsException } from '@nestjs/websockets';
+import { StateService } from 'src/state/state.service';
 import { Player } from 'src/users/model/player.model';
 import { ItemsService } from '../items.service';
 import { Inventory } from '../model/inventory.model';
 
 describe('Items Service', () => {
   let itemsService: ItemsService;
+  let app: TestingModule;
+
   const mockPlayer = new Player('mock_player', 0, 0);
   const stateService = {
     getItemDefinition: (item) => {
@@ -15,9 +18,20 @@ describe('Items Service', () => {
       return mockPlayer;
     },
     itemExists: () => true,
+    itemDefinitions: [],
   };
-  beforeAll(() => {
-    itemsService = new ItemsService(stateService as any);
+  beforeAll(async () => {
+    app = await Test.createTestingModule({
+      providers: [
+        ItemsService,
+        {
+          provide: StateService,
+          useValue: stateService,
+        },
+      ],
+    }).compile();
+
+    itemsService = app.get<ItemsService>(ItemsService);
   });
   beforeEach(() => {
     mockPlayer.inventory = new Inventory();
@@ -30,6 +44,7 @@ describe('Items Service', () => {
       } as any);
       expect(inventory.items[0].name).toBe('mock_item');
     });
+
     it('should add item to first stack in inventory', () => {
       mockPlayer.inventory.items = [
         { name: 'mock_item', maxStackSize: 2, stackSize: 1 } as any,
@@ -39,6 +54,7 @@ describe('Items Service', () => {
       } as any);
       expect(inventory.items[0].stackSize).toBe(2);
     });
+
     it('should add item to first stack in inventory (index 0 is taken)', () => {
       mockPlayer.inventory.items = [
         { name: 'other_item', maxStackSize: 2, stackSize: 1 } as any,
@@ -55,6 +71,7 @@ describe('Items Service', () => {
       expect(inventory.items[1].stackSize).toBe(2);
       expect(inventory.items[1].name).toBe('mock_item');
     });
+
     it('should throw if the inventory is full', () => {
       mockPlayer.inventory = new Inventory(1);
       mockPlayer.inventory.items = [{ name: 'another_item' } as any];
@@ -149,7 +166,7 @@ describe('Items Service', () => {
       } as any;
       const throwing = () => itemsService.unequipItem(mockPlayer, mockItem);
       expect(throwing).toThrow(WsException);
-      expect(throwing).toThrow('no equiped on HEAD');
+      expect(throwing).toThrow('no equiped item found on HEAD');
     });
   });
 
@@ -159,24 +176,30 @@ describe('Items Service', () => {
         name: 'mock_item',
         stackSize: 1,
         craftable: {
-          sourceItems: ['mock_source_item'],
+          sourceItems: [{ name: 'mock_source_item' }],
         },
       } as any;
+
       mockPlayer.inventory.items = [
         {
           name: 'mock_source_item',
           stackSize: 1,
         } as any,
       ];
+
       const inventory = itemsService.craftItem(mockPlayer, mockItem);
       expect(inventory.items[0]).toStrictEqual(mockItem);
     });
+
     it('should craft item with multiple sourceItems', () => {
       const mockItem = {
         name: 'mock_item',
         stackSize: 1,
         craftable: {
-          sourceItems: ['mock_source_item', 'mock_source_item2'],
+          sourceItems: [
+            { name: 'mock_source_item' },
+            { name: 'mock_source_item2' },
+          ],
         },
       } as any;
       mockPlayer.inventory.items = [
@@ -251,7 +274,7 @@ describe('Items Service', () => {
         } as any,
       ];
       const throwing = () => itemsService.craftItem(mockPlayer, mockItem);
-      expect(throwing).toThrow(BadRequestException);
+      expect(throwing).toThrow(WsException);
     });
 
     it("should throw if player doesn't have enough source items", () => {

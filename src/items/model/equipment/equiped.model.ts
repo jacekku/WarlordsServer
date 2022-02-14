@@ -1,17 +1,30 @@
+import { Prop } from '@nestjs/mongoose';
 import { Item } from '../item.model';
 
 export class Equiped {
+  @Prop()
   public chest: Item = new Item();
+  @Prop()
   public legs: Item = new Item();
+  @Prop()
   public pauldrons: Item = new Item();
+  @Prop()
   public head: Item = new Item();
+  @Prop()
   public gauntlets: Item = new Item();
+  @Prop()
   public cape: Item = new Item();
+  @Prop()
   public shirt: Item = new Item();
+  @Prop()
   public boots: Item = new Item();
+  @Prop()
   public mainhand: Item = new Item();
+  @Prop()
   public offhand: Item = new Item();
+  @Prop()
   public trinket: Item = new Item();
+  @Prop()
   public ring: Item = new Item();
 
   public setEquiped(equiped: Equiped) {

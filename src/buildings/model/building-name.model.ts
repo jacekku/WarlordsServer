@@ -1,6 +1,6 @@
 import { Prop } from '@nestjs/mongoose';
 
-export class CraftingFacility {
+export class BuildingName {
   @Prop()
   name: string;
 }

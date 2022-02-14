@@ -1,10 +1,16 @@
+import { Prop, Schema } from '@nestjs/mongoose';
 import { Utilities } from 'src/terrain/utilities/utilities.service';
 import { Block } from './block.model';
 import { Quad } from './quad.model';
 import { Terrain } from './terrain.model';
 
+@Schema()
 export class Chunk extends Quad {
+  @Prop()
   id: number;
+  @Prop()
+  mapId: string;
+  @Prop()
   blocks: Block[];
 
   constructor(id: number, blocks: Block[], terrain: Terrain) {

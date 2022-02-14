@@ -1,6 +1,6 @@
 import * as fs from 'fs';
+import { Terrain } from 'src/terrain/model/terrain.model';
 import { TerrainFileService } from './terrain-persistence.service';
-import { Terrain } from 'src/model/terrain/terrain.model';
 jest.mock('fs');
 describe('Persistence Service', () => {
   let terrainService: TerrainFileService;
@@ -30,9 +30,9 @@ describe('Persistence Service', () => {
     });
   });
 
-  it('should save and return saved terrain', () => {
+  it('should save and return saved terrain', async () => {
     terrainService.saveMap(mockTerrain);
-    const terrain = terrainService.getMap(mockTerrain.mapId);
+    const terrain = await terrainService.getMap(mockTerrain.mapId);
     expect(terrain.mapId).toBe(mockTerrain.mapId);
   });
 });

@@ -1,11 +1,31 @@
+import { Prop, Schema } from '@nestjs/mongoose';
 import _ from 'lodash';
 import { Inventory } from 'src/items/model/inventory.model';
 
+@Schema()
 export class Player {
-  playerChunk: any;
+  @Prop()
+  playerChunk: number;
+  @Prop()
   active: boolean;
+  @Prop()
   id: string;
+  @Prop()
   inventory: Inventory;
+  @Prop()
   timers: string[];
-  constructor(public name: string, public x: number, public y: number) {}
+  @Prop()
+  mapId: string;
+  @Prop()
+  name: string;
+  @Prop()
+  x: number;
+  @Prop()
+  y: number;
+
+  constructor(name: string, x: number, y: number) {
+    this.name = name;
+    this.x = x;
+    this.y = y;
+  }
 }

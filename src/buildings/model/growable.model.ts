@@ -1,8 +1,12 @@
+import { Prop } from '@nestjs/mongoose';
 import { BuildingDefinition } from './building-definition.model';
 
 export class Growable {
+  @Prop()
   cycleAmount: number;
+  @Prop()
   maxGrowth: number;
+  @Prop()
   growthStage: number;
 
   static grow(building: BuildingDefinition) {

@@ -62,6 +62,7 @@ export class TimerService implements OnApplicationBootstrap {
 
   sendUpdatesToPlayers(clients: any[]) {
     clients.forEach((client) => {
+      if (!client) return;
       const currentPlayer = this.stateService.findConnectedPlayer({
         name: client.player,
       } as any);

@@ -42,7 +42,7 @@ export class TerrainController {
   }
 
   @Get('chunk/:chunkId')
-  getChunk(@Param('chunkId') chunkId: number) {
-    return this.terrainService.getChunk(chunkId);
+  async getChunk(@Param('chunkId') chunkId: number) {
+    return await this.terrainService.getChunk(chunkId);
   }
 }

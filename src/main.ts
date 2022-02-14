@@ -5,7 +5,7 @@ import * as fs from 'fs';
 
 async function bootstrap() {
   let app;
-  if (process.env.ENVIROMENT === 'DEV') {
+  if (process.env.ENVIRONMENT === 'DEV') {
     app = await NestFactory.create(AppModule, {
       cors: {
         origin: process.env.CORS_ORIGIN.split(','),

@@ -4,18 +4,28 @@ import { StateService } from 'src/state/state.service';
 import * as fs from 'fs';
 import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
-import { UsersFileService } from 'src/persistence/users/users-persistence.service';
 import { Terrain } from 'src/terrain/model/terrain.model';
+import { USERS_PERSISTENCE_SERVICE } from 'src/constants';
+import { UsersFileService } from 'src/persistence/users/file/users-persistence.service';
 
 jest.mock('fs');
 
 describe('UsersController', () => {
   let app: TestingModule;
   const FILE_SYSTEM = {};
+
   beforeAll(async () => {
     app = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [UsersService, StateService, ConfigService, UsersFileService],
+      providers: [
+        UsersService,
+        StateService,
+        ConfigService,
+        {
+          provide: USERS_PERSISTENCE_SERVICE,
+          useClass: UsersFileService,
+        },
+      ],
     }).compile();
 
     app.get<StateService>(StateService).terrain = Terrain.generateMap(5, 5, 1);

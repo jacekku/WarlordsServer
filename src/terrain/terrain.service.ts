@@ -1,23 +1,31 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  OnModuleInit,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Player } from 'src/users/model/player.model';
-import { TerrainFileService } from 'src/persistence/terrain/terrain-persistence.service';
 import { StateService } from 'src/state/state.service';
 import { Utilities } from './utilities/utilities.service';
 import { ConfigurableLogger } from 'src/logging/logging.service';
 import { Chunk } from './model/chunk.model';
 import { Quad } from './model/quad.model';
 import { Terrain } from './model/terrain.model';
+import { ITerrainPersistence } from 'src/persistence/terrain/interfaces/terrain-persistence-interface.service';
+import { TERRAIN_PERSISTENCE_SERVICE } from 'src/constants';
 
 @Injectable()
-export class TerrainService {
+export class TerrainService implements OnModuleInit {
   private logger = new ConfigurableLogger(TerrainService.name);
   public terrain: Terrain;
   constructor(
-    private readonly terrainPersistentStorage: TerrainFileService,
+    @Inject(TERRAIN_PERSISTENCE_SERVICE)
+    private readonly terrainPersistentStorage: ITerrainPersistence,
     private readonly stateService: StateService,
     private readonly configService: ConfigService,
-  ) {
+  ) {}
+  onModuleInit() {
     this.loadDefaultMap();
   }
 
@@ -49,20 +57,33 @@ export class TerrainService {
     return visibleChunks.filter((chunk: Chunk) => !chunks.includes(chunk.id));
   }
 
-  getChunk(chunkId: number): Chunk {
-    return this.terrainPersistentStorage.getChunk(this.terrain.mapId, chunkId);
+  async getChunk(chunkId: number): Promise<Chunk> {
+    return await this.terrainPersistentStorage.getChunk(
+      this.terrain.mapId,
+      chunkId,
+    );
   }
 
-  async reloadMapFromId(mapId: string) {
-    const map = await this.terrainPersistentStorage.getMap(mapId);
-    this.loadMap(map);
-    this.logger.log('map loaded: ' + map.mapId);
+  reloadMapFromId(mapId: string) {
+    this.terrainPersistentStorage
+      .getMap(mapId)
+      .then((map) => {
+        this.loadMap(map);
+        this.logger.log('map loaded: ' + map.mapId);
+      })
+      .catch((err) => {
+        this.logger.error({
+          message: `cannot load map from storage ${mapId}`,
+          err: err.toString(),
+        });
+      });
+
     return true;
   }
 
-  saveMap(terrain: Terrain): Terrain {
+  async saveMap(terrain: Terrain): Promise<Terrain> {
     this.terrainPersistentStorage.saveMap(terrain);
-    return this.terrainPersistentStorage.getMap(terrain.mapId);
+    return await this.terrainPersistentStorage.getMap(terrain.mapId);
   }
 
   generateMap(width: number, height: number, chunkSize: number): Terrain {
@@ -80,6 +101,7 @@ export class TerrainService {
       terrain.chunkNumber,
     );
     this.stateService.terrain = this.terrain;
+    this.stateService.updateTerrain();
     return this.terrain;
   }
 }

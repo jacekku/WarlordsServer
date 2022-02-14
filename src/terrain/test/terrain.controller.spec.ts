@@ -1,11 +1,12 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Terrain } from 'src/model/terrain/terrain.model';
-import { TerrainFileService } from 'src/persistence/terrain/terrain-persistence.service';
+import { TerrainFileService } from 'src/persistence/terrain/file/terrain-persistence.service';
 import { StateService } from 'src/state/state.service';
 import { TerrainController } from '../terrain.controller';
 import { TerrainService } from '../terrain.service';
 import * as fs from 'fs';
+import { Terrain } from '../model/terrain.model';
+import { TERRAIN_PERSISTENCE_SERVICE } from 'src/constants';
 
 jest.mock('fs');
 
@@ -20,6 +21,10 @@ describe('TerrainController', () => {
         StateService,
         ConfigService,
         TerrainFileService,
+        {
+          provide: TERRAIN_PERSISTENCE_SERVICE,
+          useClass: TerrainFileService,
+        },
       ],
     }).compile();
 
@@ -54,9 +59,9 @@ describe('TerrainController', () => {
       terrainController.saveMap(terrain);
     });
 
-    it('should return terrain', () => {
+    it('should return terrain', async () => {
       const terrainController = app.get<TerrainController>(TerrainController);
-      const result = terrainController.generateAndSave(10, 10, 5);
+      const result = await terrainController.generateAndSave(10, 10, 5);
       expect(result.mapId).toBeDefined();
       expect(result.chunkNumber).toBeDefined();
       expect(result.chunkSize).toBe(5);
