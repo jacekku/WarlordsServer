@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/jacekku/TraviansServer/compare/v0.3.0...v0.4.0) (2022-02-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **database:** Adding mongodb
+
+### Features
+
+* **database:** Adding mongodb ([9695ef1](https://github.com/jacekku/TraviansServer/commit/9695ef1cdfcf0ee5b8ed337c38549e24901c2a54))
+
 ## [0.3.0](https://github.com/jacekku/TraviansServer/compare/v0.2.0...v0.3.0) (2021-10-02)
 
 
