@@ -8,6 +8,7 @@ import { IUsersPersistence } from 'src/persistence/users/interfaces/users-persis
 import { StateService } from 'src/state/state.service';
 import { Quad } from 'src/terrain/model/quad.model';
 import { Utilities } from 'src/terrain/utilities/utilities.service';
+import { Character } from './model/character.model';
 import { Player } from './model/player.model';
 
 @Injectable()
@@ -31,7 +32,12 @@ export class UsersService implements BeforeApplicationShutdown {
   }
 
   async registerPlayer(newPlayer: Player): Promise<Player> {
-    const newlySpawnedPlayer = new Player(newPlayer.name, 10, 10);
+    const position = this.stateService.terrain.getAvailableSpot();
+    const newlySpawnedPlayer = new Player(
+      newPlayer.name,
+      position.x,
+      position.y,
+    );
     return await this.usersPersistenceService.registerPlayer(
       newlySpawnedPlayer,
       this.stateService.terrain.mapId,
@@ -59,6 +65,13 @@ export class UsersService implements BeforeApplicationShutdown {
     }
     this.stateService.players.push(player);
     return;
+  }
+
+  async registerCharacter(character: Character): Promise<Character> {
+    if (!character.characterName) return;
+    if (!character.uid) return;
+    if (!character.mapId) character.mapId = this.stateService.terrain.mapId;
+    return this.usersPersistenceService.registerCharacter(character);
   }
 
   playerDisconnected(playerName: string) {

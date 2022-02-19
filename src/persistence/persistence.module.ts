@@ -11,6 +11,7 @@ import {
 } from 'src/constants';
 import { Chunk } from 'src/terrain/model/chunk.model';
 import { Terrain } from 'src/terrain/model/terrain.model';
+import { Character } from 'src/users/model/character.model';
 import { Player } from 'src/users/model/player.model';
 import { BuildingFileService } from './buildings/file/buildings-persistence.service';
 import { BuildingsMongoService } from './buildings/mongodb/buildings-persistence-mongodb.service';
@@ -28,8 +29,10 @@ import {
 import { TerrainMongoService } from './terrain/mongodb/terrain-persistence-mongodb.service';
 import { UsersFileService } from './users/file/users-persistence.service';
 import {
+  CharacterDocument,
+  CharacterSchema,
   PlayerDocument,
-  PlayerSchemas,
+  PlayerSchema,
 } from './users/mongodb/schema/user.schema';
 import { UsersMongoService } from './users/mongodb/users-persistence-mongodb.service';
 
@@ -56,12 +59,17 @@ const usersPersistenceServiceProvider: Provider<any> = {
   useFactory: (
     configService: ConfigService,
     playerModel: Model<PlayerDocument>,
+    characterModel: Model<CharacterDocument>,
   ) => {
     return env.PERSISTENCE_TYPE === 'mongodb'
-      ? new UsersMongoService(playerModel)
+      ? new UsersMongoService(playerModel, characterModel)
       : new UsersFileService(configService);
   },
-  inject: [ConfigService, getModelToken(Player.name)],
+  inject: [
+    ConfigService,
+    getModelToken(Player.name),
+    getModelToken(Character.name),
+  ],
 };
 
 const buildingsPersistenceServiceProvider: Provider<any> = {
@@ -83,7 +91,8 @@ const buildingsPersistenceServiceProvider: Provider<any> = {
       { name: Building.name, schema: BuildingSchema },
       { name: Chunk.name, schema: ChunkSchema },
       { name: Terrain.name, schema: TerrainSchema },
-      { name: Player.name, schema: PlayerSchemas },
+      { name: Player.name, schema: PlayerSchema },
+      { name: Character.name, schema: CharacterSchema },
     ]),
   ],
   providers: [

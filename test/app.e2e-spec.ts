@@ -7,6 +7,7 @@ describe('AppController (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
+    jest.useFakeTimers();
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();

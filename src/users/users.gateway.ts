@@ -10,6 +10,7 @@ import { Server } from 'socket.io';
 import { UsersService } from './users.service';
 import { Player } from 'src/users/model/player.model';
 import { ConfigurableLogger } from 'src/logging/logging.service';
+import { WEBSOCKET } from 'src/constants';
 
 @WebSocketGateway({
   cors: {
@@ -26,48 +27,54 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
 
   constructor(private readonly userService: UsersService) {}
 
-  @SubscribeMessage('players:all')
+  @SubscribeMessage(WEBSOCKET.PLAYERS.ALL)
   getAllPlayers(): WsResponse<any> {
     return this.buildResponse(
-      'players:all',
+      WEBSOCKET.PLAYERS.ALL,
       this.userService.getAllConnectedPlayers(),
     );
   }
 
-  @SubscribeMessage('players:requestUpdate')
+  @SubscribeMessage(WEBSOCKET.PLAYERS.REQUEST_UPDATE)
   getUpdatedPlayers(@MessageBody('player') player: Player): WsResponse<any> {
     const connectedPlayer = this.userService.findConnectedPlayer(player);
     return this.buildResponse(
-      'players:requestUpdate',
+      WEBSOCKET.PLAYERS.REQUEST_UPDATE,
       this.userService.findVisiblePlayers(connectedPlayer),
     );
   }
 
-  @SubscribeMessage('players:move')
-  movePlayer(client: any, payload: any) {
+  @SubscribeMessage(WEBSOCKET.PLAYERS.MOVE)
+  movePlayer(
+    client: any,
+    payload: { player: Player; move: { x: number; y: number }; success: any },
+  ) {
     const { player, move, success } = payload;
     this.userService.movePlayer(player, move);
-    this.emitToAllPlayers('players:update');
-    client.emit('success', success);
+    this.emitToAllPlayers(WEBSOCKET.PLAYERS.UPDATE);
+    client.emit(WEBSOCKET.SUCCESS, success);
   }
 
-  @SubscribeMessage('players:connect')
-  async playerConnected(client: any, payload: any) {
+  @SubscribeMessage(WEBSOCKET.PLAYERS.CONNECT)
+  async playerConnected(
+    client: any,
+    payload: { player: Player; success: any },
+  ) {
     const { player, success } = payload;
     this.userService.checkIfPlayerAlreadyConnected(player);
     this.pushPlayerNameToSocketClient(client, player);
     this.logger.log('player connected: ' + client.player);
     await this.userService.playerConnected(player);
-    client.emit('players:connect');
-    client.emit('success', success);
-    this.emitToAllPlayers('players:update');
+    client.emit(WEBSOCKET.PLAYERS.CONNECT);
+    client.emit(WEBSOCKET.SUCCESS, success);
+    this.emitToAllPlayers(WEBSOCKET.PLAYERS.UPDATE);
   }
 
   handleDisconnect(client: any) {
     this.logger.log('player disconnected: ' + client.player);
     if (!client.player) return;
     this.userService.playerDisconnected(client.player);
-    this.emitToAllPlayers('players:update');
+    this.emitToAllPlayers(WEBSOCKET.PLAYERS.UPDATE);
   }
 
   buildResponse(event: string, data: any): WsResponse<any> {
