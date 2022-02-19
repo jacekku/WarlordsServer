@@ -99,4 +99,12 @@ export class Terrain extends Quad {
     );
     return newTerrain;
   }
+
+  getAvailableSpot() {
+    // TODO check if this spot is spawnable
+    return {
+      x: Math.floor(Math.random() * this.width),
+      y: Math.floor(Math.random() * this.height),
+    };
+  }
 }

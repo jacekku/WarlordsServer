@@ -3,10 +3,13 @@ import { IUsersPersistence } from '../interfaces/users-persistence-interface.ser
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { Player } from 'src/users/model/player.model';
+import { Character } from 'src/users/model/character.model';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class UsersFileService implements IUsersPersistence {
   constructor(private configService: ConfigService) {}
+
   private PLAYER_FOLDER = `${this.configService.get<string>(
     'SAVE_FOLDER',
   )}/mapId/players`;
@@ -25,6 +28,10 @@ export class UsersFileService implements IUsersPersistence {
       this.getPlayerFilePath(mapId, newPlayer.name),
       JSON.stringify(newPlayer),
     );
+  }
+
+  async registerCharacter(newCharacter: Character): Promise<Character> {
+    throw new Error('not implemented');
   }
 
   async registerPlayer(newPlayer: Player, mapId: string): Promise<Player> {

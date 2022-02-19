@@ -1,6 +1,7 @@
 import { WsException } from '@nestjs/websockets';
 import { Terrain } from 'src/terrain/model/terrain.model';
 import { Player } from 'src/users/model/player.model';
+import { mockTerrain } from 'test/mocks/terrain.service.mock';
 import { UsersService } from '../users.service';
 
 describe('State Service', () => {
@@ -67,7 +68,11 @@ describe('State Service', () => {
 
   it('should register player correctly', async () => {
     const player = await userService.registerPlayer({ name: 'new' } as any);
-    expect(player).toStrictEqual(new Player('new', 10, 10));
+    expect(player.name).toBe('new');
+    expect(player.x).toBeGreaterThanOrEqual(0);
+    expect(player.y).toBeGreaterThanOrEqual(0);
+    expect(player.x).toBeLessThanOrEqual(mockTerrain.width);
+    expect(player.y).toBeLessThanOrEqual(mockTerrain.height);
   });
 
   it('should throw if player already connected', () => {
