@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import * as fs from 'fs';
+import { RolesGuard } from './auth/roles.guard';
 
 async function bootstrap() {
   let app;
@@ -23,6 +24,7 @@ async function bootstrap() {
       },
     });
   }
+  // app.useGlobalGuards(new RolesGuard());
   app.useWebSocketAdapter(new IoAdapter(app));
   app.enableShutdownHooks();
   await app.listen(3000);

@@ -29,7 +29,24 @@ export class UsersMongoService implements IUsersPersistence {
     return this.savePlayer(newPlayer, mapId);
   }
 
-  registerCharacter(newCharacter: Character): Promise<Character> {
+  async getCharacters(uid: string): Promise<Character[]> {
+    return this.characterModel
+      .find({
+        uid: uid,
+      })
+      .exec();
+  }
+
+  async registerCharacter(newCharacter: Character): Promise<Character> {
     return new this.characterModel(newCharacter).save();
+  }
+
+  async getCharacter(characterName: string, mapId: string) {
+    return this.characterModel
+      .exists({
+        characterName: characterName,
+        mapId: mapId,
+      })
+      .exec();
   }
 }

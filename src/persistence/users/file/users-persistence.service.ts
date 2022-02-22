@@ -4,7 +4,6 @@ import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { Player } from 'src/users/model/player.model';
 import { Character } from 'src/users/model/character.model';
-import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class UsersFileService implements IUsersPersistence {
@@ -31,9 +30,14 @@ export class UsersFileService implements IUsersPersistence {
   }
 
   async registerCharacter(newCharacter: Character): Promise<Character> {
-    throw new Error('not implemented');
+    throw new Error('Method not implemented.');
   }
-
+  getCharacters(uid: string): Promise<Character[]> {
+    throw new Error('Method not implemented.');
+  }
+  getCharacter(characterName: string, mapId: string) {
+    throw new Error('Method not implemented.');
+  }
   async registerPlayer(newPlayer: Player, mapId: string): Promise<Player> {
     this.createFolder(newPlayer, mapId);
     this.savePlayer(newPlayer, mapId);

@@ -19,5 +19,17 @@ services:
       DEFAULT_TERRAIN: d5da909c9
       FRUSTUM_SIZE: 13
       CORS_ORIGIN: 'https://warlordsonline.net'
+      PERSISTENCE_TYPE: mongodb
+      MONGO_HOST: mongodb #name of container with mongodb
+      MONGO_PORT: 27017
+      MONGO_DB_NAME: warlordsOnline
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    ports:
+      - 27017:27017
+    networks:
+      - nestjs-network
+
 networks:
   nestjs-network:
