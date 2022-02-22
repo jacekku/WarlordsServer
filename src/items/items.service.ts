@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { ConfigurableLogger } from 'src/logging/logging.service';
 import { StateService } from 'src/state/state.service';

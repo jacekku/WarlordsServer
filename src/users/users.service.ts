@@ -1,4 +1,9 @@
-import { Injectable, BeforeApplicationShutdown, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  BeforeApplicationShutdown,
+  Inject,
+  BadRequestException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WsException } from '@nestjs/websockets';
 import * as _ from 'lodash';
@@ -68,10 +73,18 @@ export class UsersService implements BeforeApplicationShutdown {
   }
 
   async registerCharacter(character: Character): Promise<Character> {
-    if (!character.characterName) return;
-    if (!character.uid) return;
+    if (!character.characterName) throw new BadRequestException('NAME_EMPTY');
+    if (!character.uid) throw new BadRequestException('UID_EMPTY');
     if (!character.mapId) character.mapId = this.stateService.terrain.mapId;
+    const characterExists = await this.getCharacter(
+      character.characterName,
+      character.mapId,
+    );
+    if (characterExists) throw new BadRequestException('EXISTS');
     return this.usersPersistenceService.registerCharacter(character);
+  }
+  async getCharacter(characterName: string, mapId: string) {
+    return this.usersPersistenceService.getCharacter(characterName, mapId);
   }
 
   playerDisconnected(playerName: string) {
@@ -118,6 +131,10 @@ export class UsersService implements BeforeApplicationShutdown {
 
   findConnectedPlayerByName(playerName: string) {
     return this.findConnectedPlayer({ name: playerName } as Player);
+  }
+
+  async getCharacters(uid: string): Promise<Character[]> {
+    return this.usersPersistenceService.getCharacters(uid);
   }
 
   beforeApplicationShutdown(signal?: string) {

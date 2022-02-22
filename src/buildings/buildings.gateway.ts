@@ -29,9 +29,9 @@ export class BuildingsWebsocketGateway implements OnGatewayInit {
   }
 
   @SubscribeMessage('buildings:create')
-  handleCreate(client: any, payload: any) {
+  async handleCreate(client: any, payload: any) {
     const { player, building, block, success } = payload;
-    this.buildingsService.validateCreate(player, building, block);
+    await this.buildingsService.validateCreate(player, building, block);
     const callback = () => {
       this.buildingsService.handleCreate(player, building, block);
       client.emit(
@@ -45,9 +45,9 @@ export class BuildingsWebsocketGateway implements OnGatewayInit {
   }
 
   @SubscribeMessage('buildings:action')
-  handleAction(client: any, payload: any) {
+  async handleAction(client: any, payload: any) {
     const { player, action, building, block, success } = payload;
-    this.buildingsService.validateAction(player, building);
+    await this.buildingsService.validateAction(player, building);
     if (action == 'UPGRADE') {
       this.buildingsService.validateCreate(player, building, block, true);
     }
