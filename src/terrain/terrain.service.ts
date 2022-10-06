@@ -1,18 +1,18 @@
+import { ConfigurableLogger } from '@Logging/logging.service';
 import {
-  BadRequestException,
-  Inject,
   Injectable,
   OnModuleInit,
+  Inject,
+  BadRequestException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Player } from 'src/users/model/player.model';
-import { StateService } from 'src/state/state.service';
-import { Utilities } from './utilities/utilities.service';
-import { ConfigurableLogger } from 'src/logging/logging.service';
-import { Chunk } from './model/chunk.model';
-import { Quad } from './model/quad.model';
-import { Terrain } from './model/terrain.model';
-import { ITerrainPersistence } from 'src/persistence/terrain/interfaces/terrain-persistence-interface.service';
+import { ITerrainPersistence } from '@Persistence/terrain/interfaces/terrain-persistence-interface.service';
+import { StateService } from '@State/state.service';
+import { Chunk } from '@Terrain/model/chunk.model';
+import { Quad } from '@Terrain/model/quad.model';
+import { Terrain } from '@Terrain/model/terrain.model';
+import { Utilities } from '@Terrain/utilities/utilities.service';
+import { Player } from '@Users/model/player.model';
 import { TERRAIN_PERSISTENCE_SERVICE } from 'src/constants';
 
 @Injectable()

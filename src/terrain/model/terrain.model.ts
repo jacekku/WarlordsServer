@@ -1,8 +1,8 @@
 import { Prop, Schema } from '@nestjs/mongoose';
+import { Chunk } from '@Terrain/model/chunk.model';
+import { Quad } from '@Terrain/model/quad.model';
+import { Utilities } from '@Terrain/utilities/utilities.service';
 import * as _ from 'lodash';
-import { Utilities } from 'src/terrain/utilities/utilities.service';
-import { Chunk } from './chunk.model';
-import { Quad } from './quad.model';
 
 @Schema()
 export class Terrain extends Quad {

@@ -1,8 +1,9 @@
+import { BIOMES } from '@Terrain/model/enums/biomes.model';
+import { Terrain } from '@Terrain/model/terrain.model';
+import { Utilities } from '@Terrain/utilities/utilities.service';
 import * as Simplex from 'perlin-simplex';
 const simplex = new Simplex();
-import { BIOMES } from 'src/terrain/model/enums/biomes.model';
-import { Terrain } from '../model/terrain.model';
-import { Utilities } from './utilities.service';
+
 export class TerrainUtilities {
   static generateItems(x: number, y: number) {
     throw new Error('Method not implemented.');

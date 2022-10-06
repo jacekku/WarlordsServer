@@ -1,6 +1,6 @@
-import { Player } from 'src/users/model/player.model';
-import { Quad } from '../model/quad.model';
-import { Terrain } from '../model/terrain.model';
+import { Quad } from '@Terrain/model/quad.model';
+import { Terrain } from '@Terrain/model/terrain.model';
+import { Player } from '@Users/model/player.model';
 
 export class Utilities {
   static getXY(index: number, columns: number): { x: number; y: number } {

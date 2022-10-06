@@ -1,13 +1,13 @@
 import {
-  WsResponse,
-  SubscribeMessage,
   WebSocketGateway,
-  MessageBody,
   WebSocketServer,
+  SubscribeMessage,
+  WsResponse,
+  MessageBody,
 } from '@nestjs/websockets';
+import { TerrainService } from '@Terrain/terrain.service';
+import { Player } from '@Users/model/player.model';
 import { Server } from 'socket.io';
-import { TerrainService } from './terrain.service';
-import { Player } from 'src/users/model/player.model';
 
 @WebSocketGateway({
   cors: {
