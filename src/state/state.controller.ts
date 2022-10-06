@@ -1,7 +1,7 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/roles.decorator';
-import { StateService } from './state.service';
+import { JwtAuthGuard } from '@Auth/jwt-auth.guard';
+import { Roles } from '@Auth/roles.decorator';
+import { UseGuards, Controller, Get } from '@nestjs/common';
+import { StateService } from '@State/state.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('state')

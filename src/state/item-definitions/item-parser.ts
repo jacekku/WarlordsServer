@@ -1,15 +1,15 @@
 import * as ITEMS_JSON from './items.json';
 import * as FACILITIES_JSON from './crafting-facilities.json';
 import * as BUILDINGS_JSON from './buildings.json';
-import { Buildable } from 'src/buildings/model/buildable.model';
-import { BuildingDefinition } from 'src/buildings/model/building-definition.model';
-import { Growable } from 'src/buildings/model/growable.model';
-import { CraftableItem } from 'src/items/model/crafting/craftable.model';
-import { CraftingFacility } from 'src/items/model/crafting/crafting-facility.model';
-import { SourceItemDefinition } from 'src/items/model/crafting/source-item-definition.model';
-import { EquipableItem } from 'src/items/model/equipment/equipable-item.model';
-import { ItemDefinition } from 'src/items/model/item-definition.model';
-import { Item } from 'src/items/model/item.model';
+import { Buildable } from '@Buildings/model/buildable.model';
+import { BuildingDefinition } from '@Buildings/model/building-definition.model';
+import { Growable } from '@Buildings/model/growable.model';
+import { CraftableItem } from '@Items/model/crafting/craftable.model';
+import { CraftingFacility } from '@Items/model/crafting/crafting-facility.model';
+import { SourceItemDefinition } from '@Items/model/crafting/source-item-definition.model';
+import { EquipableItem } from '@Items/model/equipment/equipable-item.model';
+import { ItemDefinition } from '@Items/model/item-definition.model';
+import { Item } from '@Items/model/item.model';
 
 export class ItemParser {
   items: ItemDefinition[] = [];
