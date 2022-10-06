@@ -1,8 +1,8 @@
 import { WsException } from '@nestjs/websockets';
+import { Player } from '@Users/model/player.model';
+import { UsersService } from '@Users/users.service';
 import { Terrain } from 'src/terrain/model/terrain.model';
-import { Player } from 'src/users/model/player.model';
 import { mockTerrain } from 'test/mocks/terrain.service.mock';
-import { UsersService } from '../users.service';
 
 describe('State Service', () => {
   let userService: UsersService;

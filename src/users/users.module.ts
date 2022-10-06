@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { PersistenceModule } from 'src/persistence/persistence.module';
-import { StateModule } from 'src/state/state.module';
-import { UsersController } from './users.controller';
-import { UsersWebsocketGateway } from './users.gateway';
-import { UsersService } from './users.service';
+import { PersistenceModule } from '@Persistence/persistence.module';
+import { StateModule } from '@State/state.module';
+import { UsersController } from '@Users/users.controller';
+import { UsersWebsocketGateway } from '@Users/users.gateway';
+import { UsersService } from '@Users/users.service';
 
 @Module({
   imports: [PersistenceModule, StateModule],

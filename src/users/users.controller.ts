@@ -1,9 +1,9 @@
-import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '@Auth/jwt-auth.guard';
+import { Controller, UseGuards, Get, Param, Post } from '@nestjs/common';
 import { MessageBody } from '@nestjs/websockets';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Character } from './model/character.model';
-import { Player } from './model/player.model';
-import { UsersService } from './users.service';
+import { Character } from '@Users/model/character.model';
+import { Player } from '@Users/model/player.model';
+import { UsersService } from '@Users/users.service';
 
 @Controller('players')
 @UseGuards(JwtAuthGuard)

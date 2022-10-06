@@ -1,15 +1,15 @@
+import { ConfigurableLogger } from '@Logging/logging.service';
 import {
-  MessageBody,
-  OnGatewayDisconnect,
-  SubscribeMessage,
   WebSocketGateway,
+  OnGatewayDisconnect,
   WebSocketServer,
+  SubscribeMessage,
   WsResponse,
+  MessageBody,
 } from '@nestjs/websockets';
+import { Player } from '@Users/model/player.model';
+import { UsersService } from '@Users/users.service';
 import { Server } from 'socket.io';
-import { UsersService } from './users.service';
-import { Player } from 'src/users/model/player.model';
-import { ConfigurableLogger } from 'src/logging/logging.service';
 import { WEBSOCKET } from 'src/constants';
 
 @WebSocketGateway({

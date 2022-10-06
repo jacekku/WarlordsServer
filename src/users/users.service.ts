@@ -1,3 +1,4 @@
+import { ConfigurableLogger } from '@Logging/logging.service';
 import {
   Injectable,
   BeforeApplicationShutdown,
@@ -6,15 +7,14 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WsException } from '@nestjs/websockets';
+import { IUsersPersistence } from '@Persistence/users/interfaces/users-persistence-interface.service';
+import { StateService } from '@State/state.service';
+import { Quad } from '@Terrain/model/quad.model';
+import { Utilities } from '@Terrain/utilities/utilities.service';
+import { Character } from '@Users/model/character.model';
+import { Player } from '@Users/model/player.model';
 import * as _ from 'lodash';
 import { USERS_PERSISTENCE_SERVICE } from 'src/constants';
-import { ConfigurableLogger } from 'src/logging/logging.service';
-import { IUsersPersistence } from 'src/persistence/users/interfaces/users-persistence-interface.service';
-import { StateService } from 'src/state/state.service';
-import { Quad } from 'src/terrain/model/quad.model';
-import { Utilities } from 'src/terrain/utilities/utilities.service';
-import { Character } from './model/character.model';
-import { Player } from './model/player.model';
 
 @Injectable()
 export class UsersService implements BeforeApplicationShutdown {
