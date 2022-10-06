@@ -1,12 +1,12 @@
 import { Prop } from '@nestjs/mongoose';
-import { TerrainUtilities } from 'src/terrain/utilities/terrain-utilities.service';
-import { Utilities } from 'src/terrain/utilities/utilities.service';
-import { Chunk } from './chunk.model';
-import { ANIMALS } from './enums/animals.model';
-import { BIOMES } from './enums/biomes.model';
-import { MATERIALS } from './enums/materials.model';
-import { MOISTURE } from './enums/moisture.model';
-import { Quad } from './quad.model';
+import { Chunk } from '@Terrain/model/chunk.model';
+import { ANIMALS } from '@Terrain/model/enums/animals.model';
+import { BIOMES } from '@Terrain/model/enums/biomes.model';
+import { MATERIALS } from '@Terrain/model/enums/materials.model';
+import { MOISTURE } from '@Terrain/model/enums/moisture.model';
+import { Quad } from '@Terrain/model/quad.model';
+import { TerrainUtilities } from '@Terrain/utilities/terrain-utilities.service';
+import { Utilities } from '@Terrain/utilities/utilities.service';
 
 export class Block extends Quad {
   @Prop()

@@ -1,12 +1,12 @@
 import { ConfigService } from '@nestjs/config';
-import { Test, TestingModule } from '@nestjs/testing';
-import { StateService } from 'src/state/state.service';
+import { TestingModule, Test } from '@nestjs/testing';
+import { TerrainFileService } from '@Persistence/terrain/file/terrain-persistence.service';
+import { StateService } from '@State/state.service';
+import { Terrain } from '@Terrain/model/terrain.model';
+import { TerrainWebsocketGateway } from '@Terrain/terrain.gateway';
+import { TerrainService } from '@Terrain/terrain.service';
 import * as fs from 'fs';
-import { TerrainWebsocketGateway } from '../terrain.gateway';
-import { TerrainService } from '../terrain.service';
-import { Terrain } from '../model/terrain.model';
 import { TERRAIN_PERSISTENCE_SERVICE } from 'src/constants';
-import { TerrainFileService } from 'src/persistence/terrain/file/terrain-persistence.service';
 
 jest.mock('fs');
 

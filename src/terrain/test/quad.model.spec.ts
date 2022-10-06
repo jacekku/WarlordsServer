@@ -1,5 +1,5 @@
-import { Quad } from '../model/quad.model';
-import * as chunks from './chunks.json';
+import { Quad } from '@Terrain/model/quad.model';
+import * as chunks from '@Terrain/test/chunks.json';
 
 describe('Quad Model', () => {
   const frustum = { x: 6, y: 0, width: 13, height: 13 } as Quad;

@@ -1,9 +1,8 @@
-import { Body, SetMetadata, UseGuards } from '@nestjs/common';
-import { Controller, Get, Param, Post } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/roles.decorator';
-import { Terrain } from './model/terrain.model';
-import { TerrainService } from './terrain.service';
+import { JwtAuthGuard } from '@Auth/jwt-auth.guard';
+import { Roles } from '@Auth/roles.decorator';
+import { UseGuards, Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { Terrain } from '@Terrain/model/terrain.model';
+import { TerrainService } from '@Terrain/terrain.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('terrain')
