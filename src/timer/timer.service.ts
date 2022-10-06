@@ -1,12 +1,12 @@
+import { Building } from '@Buildings/model/building.model';
+import { Growable } from '@Buildings/model/growable.model';
+import { ConfigurableLogger } from '@Logging/logging.service';
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { ConfigurableLogger } from 'src/logging/logging.service';
-import { Timer } from './model/timer.model';
+import { StateService } from '@State/state.service';
+import { Timer } from '@Timer/model/timer.model';
+import { TimerMapper } from '@Timer/timer.mapper';
+import { Player } from '@Users/model/player.model';
 import { Server } from 'socket.io';
-import { Player } from 'src/users/model/player.model';
-import { TimerMapper } from './timer.mapper';
-import { StateService } from 'src/state/state.service';
-import { Building } from 'src/buildings/model/building.model';
-import { Growable } from 'src/buildings/model/growable.model';
 
 @Injectable()
 export class TimerService implements OnApplicationBootstrap {

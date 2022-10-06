@@ -1,5 +1,4 @@
-import { ConnectedSocket } from '@nestjs/websockets';
-import { Utilities } from 'src/terrain/utilities/utilities.service';
+import { Utilities } from '@Terrain/utilities/utilities.service';
 
 export class Timer {
   id: string;
