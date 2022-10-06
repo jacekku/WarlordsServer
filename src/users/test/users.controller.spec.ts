@@ -1,14 +1,12 @@
 import { ConfigService } from '@nestjs/config';
-import { Test, TestingModule } from '@nestjs/testing';
-import { StateService } from 'src/state/state.service';
-import * as fs from 'fs';
-import { UsersController } from '../users.controller';
-import { UsersService } from '../users.service';
-import { Terrain } from 'src/terrain/model/terrain.model';
+import { TestingModule, Test } from '@nestjs/testing';
+import { UsersFileService } from '@Persistence/users/file/users-persistence.service';
+import { StateService } from '@State/state.service';
+import { Terrain } from '@Terrain/model/terrain.model';
+import { UsersController } from '@Users/users.controller';
+import { UsersService } from '@Users/users.service';
 import { USERS_PERSISTENCE_SERVICE } from 'src/constants';
-import { UsersFileService } from 'src/persistence/users/file/users-persistence.service';
-
-jest.mock('fs');
+import * as fs from 'fs';
 
 describe('UsersController', () => {
   let app: TestingModule;

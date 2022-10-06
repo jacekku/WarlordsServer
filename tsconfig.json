@@ -12,6 +12,17 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@Auth/*": ["src/auth/*"],
+      "@Buildings/*": ["src/buildings/*"],
+      "@Items/*": ["src/items/*"],
+      "@Logging/*": ["src/logging/*"],
+      "@Persistence/*": ["src/persistence/*"],
+      "@State/*": ["src/state/*"],
+      "@Terrain/*": ["src/terrain/*"],
+      "@Timer/*": ["src/timer/*"],
+      "@Users/*": ["src/users/*"]
+    }
   }
 }

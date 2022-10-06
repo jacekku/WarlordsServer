@@ -1,6 +1,5 @@
+import { Inventory } from '@Items/model/inventory.model';
 import { Prop, Schema } from '@nestjs/mongoose';
-import _ from 'lodash';
-import { Inventory } from 'src/items/model/inventory.model';
 
 @Schema()
 export class Player {
