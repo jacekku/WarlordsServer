@@ -1,8 +1,8 @@
+import { LoggingModule } from '@Logging/logging.module';
 import { Module } from '@nestjs/common';
-import { LoggingModule } from 'src/logging/logging.module';
-import { StateModule } from 'src/state/state.module';
-import { TimerWebsocketGateway } from './timer.gateway';
-import { TimerService } from './timer.service';
+import { StateModule } from '@State/state.module';
+import { TimerWebsocketGateway } from '@Timer/timer.gateway';
+import { TimerService } from '@Timer/timer.service';
 
 @Module({
   imports: [LoggingModule, StateModule],

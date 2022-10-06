@@ -1,9 +1,9 @@
 import {
+  WebSocketGateway,
   OnGatewayInit,
   SubscribeMessage,
-  WebSocketGateway,
 } from '@nestjs/websockets';
-import { TimerService } from './timer.service';
+import { TimerService } from '@Timer/timer.service';
 
 @WebSocketGateway({
   cors: {
