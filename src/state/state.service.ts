@@ -1,14 +1,14 @@
+import { BuildingDefinition } from '@Buildings/model/building-definition.model';
+import { Building } from '@Buildings/model/building.model';
+import { CraftingFacility } from '@Items/model/crafting/crafting-facility.model';
+import { Inventory } from '@Items/model/inventory.model';
+import { ItemDefinition } from '@Items/model/item-definition.model';
 import { Injectable } from '@nestjs/common';
-import { BuildingDefinition } from 'src/buildings/model/building-definition.model';
-import { Building } from 'src/buildings/model/building.model';
-import { CraftingFacility } from 'src/items/model/crafting/crafting-facility.model';
-import { Inventory } from 'src/items/model/inventory.model';
-import { ItemDefinition } from 'src/items/model/item-definition.model';
-import { Block } from 'src/terrain/model/block.model';
-import { Terrain } from 'src/terrain/model/terrain.model';
-import { Utilities } from 'src/terrain/utilities/utilities.service';
-import { Player } from 'src/users/model/player.model';
-import { ItemParser } from './item-definitions/item-parser';
+import { ItemParser } from '@State/item-definitions/item-parser';
+import { Block } from '@Terrain/model/block.model';
+import { Terrain } from '@Terrain/model/terrain.model';
+import { Utilities } from '@Terrain/utilities/utilities.service';
+import { Player } from '@Users/model/player.model';
 
 @Injectable()
 export class StateService {

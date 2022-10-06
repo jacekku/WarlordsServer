@@ -1,6 +1,6 @@
-import { Terrain } from 'src/terrain/model/terrain.model';
-import { Player } from 'src/users/model/player.model';
-import { StateService } from './state.service';
+import { StateService } from '@State/state.service';
+import { Terrain } from '@Terrain/model/terrain.model';
+import { Player } from '@Users/model/player.model';
 
 describe('State Service', () => {
   let stateService: StateService;
