@@ -1,8 +1,8 @@
+import { Buildable } from '@Buildings/model/buildable.model';
+import { BuildingName } from '@Buildings/model/building-name.model';
+import { Growable } from '@Buildings/model/growable.model';
+import { CraftingFacility } from '@Items/model/crafting/crafting-facility.model';
 import { Prop } from '@nestjs/mongoose';
-import { CraftingFacility } from 'src/items/model/crafting/crafting-facility.model';
-import { Buildable } from './buildable.model';
-import { BuildingName } from './building-name.model';
-import { Growable } from './growable.model';
 
 export class BuildingDefinition extends BuildingName {
   @Prop()

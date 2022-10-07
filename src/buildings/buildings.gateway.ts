@@ -1,11 +1,11 @@
+import { BuildingsService } from '@Buildings/buildings.service';
+import { ConfigurableLogger } from '@Logging/logging.service';
 import {
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
-import { ConfigurableLogger } from 'src/logging/logging.service';
-import { TimerService } from 'src/timer/timer.service';
-import { BuildingsService } from './buildings.service';
+import { TimerService } from '@Timer/timer.service';
 
 @WebSocketGateway({
   cors: {

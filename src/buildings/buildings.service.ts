@@ -1,3 +1,7 @@
+import { Building } from '@Buildings/model/building.model';
+import { Growable } from '@Buildings/model/growable.model';
+import { ItemsService } from '@Items/items.service';
+import { ConfigurableLogger } from '@Logging/logging.service';
 import {
   BeforeApplicationShutdown,
   Inject,
@@ -5,19 +9,14 @@ import {
   OnApplicationBootstrap,
   OnModuleInit,
 } from '@nestjs/common';
-import { Server } from 'socket.io';
-
 import { WsException } from '@nestjs/websockets';
-import { ItemsService } from 'src/items/items.service';
-import { ConfigurableLogger } from 'src/logging/logging.service';
-import { StateService } from 'src/state/state.service';
-import { Block } from 'src/terrain/model/block.model';
-import { Timer } from 'src/timer/model/timer.model';
-import { TimerService } from 'src/timer/timer.service';
-import { Player } from 'src/users/model/player.model';
-import { Building } from './model/building.model';
-import { Growable } from './model/growable.model';
-import { IBuildingsPersistence } from 'src/persistence/buildings/interfaces/buildings-persistence-interface.model';
+import { IBuildingsPersistence } from '@Persistence/buildings/interfaces/buildings-persistence-interface.model';
+import { StateService } from '@State/state.service';
+import { Block } from '@Terrain/model/block.model';
+import { Timer } from '@Timer/model/timer.model';
+import { TimerService } from '@Timer/timer.service';
+import { Player } from '@Users/model/player.model';
+import { Server } from 'socket.io';
 import { BUILDINGS_PERSISTENCE_SERVICE } from 'src/constants';
 
 @Injectable()
