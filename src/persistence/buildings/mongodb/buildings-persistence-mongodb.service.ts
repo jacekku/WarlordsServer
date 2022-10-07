@@ -1,8 +1,8 @@
+import { Building } from '@Buildings/model/building.model';
 import { Injectable } from '@nestjs/common';
+import { IBuildingsPersistence } from '@Persistence/buildings/interfaces/buildings-persistence-interface.model';
+import { BuildingDocument } from '@Persistence/buildings/mongodb/schema/building.schema';
 import { Model } from 'mongoose';
-import { Building } from 'src/buildings/model/building.model';
-import { IBuildingsPersistence } from '../interfaces/buildings-persistence-interface.model';
-import { BuildingDocument } from './schema/building.schema';
 
 @Injectable()
 export class BuildingsMongoService implements IBuildingsPersistence {

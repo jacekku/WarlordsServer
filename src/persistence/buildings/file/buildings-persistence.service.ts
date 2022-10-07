@@ -1,9 +1,8 @@
+import { Building } from '@Buildings/model/building.model';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { IBuildingsPersistence } from '@Persistence/buildings/interfaces/buildings-persistence-interface.model';
 import * as fs from 'fs';
-import { Building } from 'src/buildings/model/building.model';
-import { IBuildingsPersistence } from '../interfaces/buildings-persistence-interface.model';
-
 @Injectable()
 export class BuildingFileService implements IBuildingsPersistence {
   constructor(private configService: ConfigService) {}

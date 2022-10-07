@@ -1,6 +1,6 @@
+import { Building } from '@Buildings/model/building.model';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Building } from 'src/buildings/model/building.model';
 
 export type BuildingDocument = Building & Document;
 
