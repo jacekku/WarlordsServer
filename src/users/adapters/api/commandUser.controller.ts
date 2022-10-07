@@ -1,30 +1,27 @@
 import { JwtAuthGuard } from '@Auth/jwt-auth.guard';
+import { ConfigurableLogger } from '@Logging/logging.service';
 import { Controller, UseGuards, Get, Param, Post } from '@nestjs/common';
 import { MessageBody } from '@nestjs/websockets';
 import { Character } from '@Users/domain/model/character.model';
-import { Player } from 'src/common_model/player.model';
-import { UsersService } from '@Users/users.service';
+import { Player } from '@Users/domain/model/player.model';
+import { UsersServiceUseCase } from '@Users/usecase/users.service';
 
 @Controller('players')
 @UseGuards(JwtAuthGuard)
-export class UsersController {
-  constructor(private readonly userService: UsersService) {}
-  @Get(':playerName')
-  async getPlayer(@Param('playerName') playerName: string): Promise<Player> {
-    return this.userService.getPlayer(playerName);
-  }
+export class CommandUsersController {
+  private readonly logger = new ConfigurableLogger(CommandUsersController.name);
+
+  constructor(private readonly userService: UsersServiceUseCase) {}
 
   @Post('character')
   async addCharacter(@MessageBody() character: Character): Promise<Player> {
+    this.logger.log(`creating character: ${character.characterName}`);
     const newCharacter = await this.userService.registerCharacter(character);
+
+    this.logger.log(`creating character: ${newCharacter}`);
 
     return await this.userService.registerPlayer({
       name: newCharacter.characterName,
     } as any);
-  }
-
-  @Get('characterList/:uid')
-  async getCharacterList(@Param('uid') uid: string): Promise<Character[]> {
-    return this.userService.getCharacters(uid);
   }
 }

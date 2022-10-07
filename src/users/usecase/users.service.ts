@@ -7,21 +7,20 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WsException } from '@nestjs/websockets';
-import { IUsersPersistence } from '@Persistence/users/interfaces/users-persistence-interface.service';
 import { StateService } from '@State/state.service';
 import { Quad } from '@Terrain/model/quad.model';
 import { Utilities } from '@Terrain/utilities/utilities.service';
-import { Character } from '@Users/domain/model/character.model';
+import { Character } from 'src/common_model/character.model';
 import { Player } from 'src/common_model/player.model';
 import * as _ from 'lodash';
-import { USERS_PERSISTENCE_SERVICE } from 'src/constants';
+import { IUsersPersistence } from '@Users/domain/ports/users-persistence-interface.service';
 
 @Injectable()
-export class UsersService implements BeforeApplicationShutdown {
-  private readonly logger = new ConfigurableLogger(UsersService.name);
+export class UsersServiceUseCase implements BeforeApplicationShutdown {
+  private readonly logger = new ConfigurableLogger(UsersServiceUseCase.name);
 
   constructor(
-    @Inject(USERS_PERSISTENCE_SERVICE)
+    @Inject(IUsersPersistence)
     private readonly usersPersistenceService: IUsersPersistence,
     private readonly stateService: StateService,
     private readonly configService: ConfigService,
@@ -43,7 +42,7 @@ export class UsersService implements BeforeApplicationShutdown {
       position.x,
       position.y,
     );
-    return await this.usersPersistenceService.registerPlayer(
+    return await this.usersPersistenceService.savePlayer(
       newlySpawnedPlayer,
       this.stateService.terrain.mapId,
     );
@@ -81,9 +80,9 @@ export class UsersService implements BeforeApplicationShutdown {
       character.mapId,
     );
     if (characterExists) throw new BadRequestException('EXISTS');
-    return this.usersPersistenceService.registerCharacter(character);
+    return await this.usersPersistenceService.registerCharacter(character);
   }
-  async getCharacter(characterName: string, mapId: string) {
+  private async getCharacter(characterName: string, mapId: string) {
     return this.usersPersistenceService.getCharacter(characterName, mapId);
   }
 

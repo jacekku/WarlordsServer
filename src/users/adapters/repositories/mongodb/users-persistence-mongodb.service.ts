@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
 import { Character } from '@Users/domain/model/character.model';
-import { Player } from 'src/common_model/player.model';
-import { IUsersPersistence } from '../interfaces/users-persistence-interface.service';
+import { Player } from '@Users/domain/model/player.model';
+import { IUsersPersistence } from '@Users/domain/ports/users-persistence-interface.service';
+import { Model } from 'mongoose';
 import { CharacterDocument, PlayerDocument } from './schema/user.schema';
 
 @Injectable()
@@ -25,10 +25,6 @@ export class UsersMongoService implements IUsersPersistence {
       .exec();
   }
 
-  async registerPlayer(newPlayer: Player, mapId: string): Promise<Player> {
-    return this.savePlayer(newPlayer, mapId);
-  }
-
   async getCharacters(uid: string): Promise<Character[]> {
     return this.characterModel
       .find({
@@ -41,12 +37,12 @@ export class UsersMongoService implements IUsersPersistence {
     return new this.characterModel(newCharacter).save();
   }
 
-  async getCharacter(characterName: string, mapId: string) {
+  async getCharacter(characterName: string, mapId: string): Promise<Character> {
     return this.characterModel
       .exists({
         characterName: characterName,
         mapId: mapId,
       })
-      .exec();
+      .exec() as unknown as Character;
   }
 }
