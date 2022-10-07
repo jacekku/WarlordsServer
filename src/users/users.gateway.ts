@@ -7,7 +7,7 @@ import {
   WsResponse,
   MessageBody,
 } from '@nestjs/websockets';
-import { Player } from '@Users/model/player.model';
+import { Player } from '@Users/domain/model/player.model';
 import { UsersService } from '@Users/users.service';
 import { Server } from 'socket.io';
 import { WEBSOCKET } from 'src/constants';

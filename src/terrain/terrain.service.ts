@@ -12,7 +12,7 @@ import { Chunk } from '@Terrain/model/chunk.model';
 import { Quad } from '@Terrain/model/quad.model';
 import { Terrain } from '@Terrain/model/terrain.model';
 import { Utilities } from '@Terrain/utilities/utilities.service';
-import { Player } from '@Users/model/player.model';
+import { Player } from '@Users/domain/model/player.model';
 import { TERRAIN_PERSISTENCE_SERVICE } from 'src/constants';
 
 @Injectable()

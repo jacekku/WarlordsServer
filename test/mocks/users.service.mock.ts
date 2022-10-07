@@ -1,4 +1,4 @@
-import { Character } from 'src/users/model/character.model';
+import { Character } from '@Users/domain/model/character.model';
 
 export const userPersistanceServiceMock = {
   registerCharacter: (character) => character,

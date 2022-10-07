@@ -6,7 +6,7 @@ import {
   MessageBody,
 } from '@nestjs/websockets';
 import { TerrainService } from '@Terrain/terrain.service';
-import { Player } from '@Users/model/player.model';
+import { Player } from '@Users/domain/model/player.model';
 import { Server } from 'socket.io';
 
 @WebSocketGateway({
