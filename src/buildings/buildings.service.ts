@@ -15,7 +15,7 @@ import { StateService } from '@State/state.service';
 import { Block } from '@Terrain/model/block.model';
 import { Timer } from '@Timer/model/timer.model';
 import { TimerService } from '@Timer/timer.service';
-import { Player } from '@Users/model/player.model';
+import { Player } from '@Users/domain/model/player.model';
 import { Server } from 'socket.io';
 import { BUILDINGS_PERSISTENCE_SERVICE } from 'src/constants';
 

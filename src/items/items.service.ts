@@ -3,7 +3,7 @@ import { WsException } from '@nestjs/websockets';
 import { ConfigurableLogger } from 'src/logging/logging.service';
 import { StateService } from 'src/state/state.service';
 import { Block } from 'src/terrain/model/block.model';
-import { Player } from 'src/users/model/player.model';
+import { Player } from '@Users/domain/model/player.model';
 import { ItemsActionMapper } from './items-action.mapper';
 import { SourceItemDefinition } from './model/crafting/source-item-definition.model';
 import { Equiped } from './model/equipment/equiped.model';

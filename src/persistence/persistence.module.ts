@@ -11,8 +11,8 @@ import {
 } from 'src/constants';
 import { Chunk } from 'src/terrain/model/chunk.model';
 import { Terrain } from 'src/terrain/model/terrain.model';
-import { Character } from 'src/users/model/character.model';
-import { Player } from 'src/users/model/player.model';
+import { Character } from '@Users/domain/model/character.model';
+import { Player } from '@Users/domain/model/player.model';
 import { BuildingFileService } from './buildings/file/buildings-persistence.service';
 import { BuildingsMongoService } from './buildings/mongodb/buildings-persistence-mongodb.service';
 import {

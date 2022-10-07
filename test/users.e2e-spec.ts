@@ -2,7 +2,7 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { AppModule } from './../src/app.module';
 import { INestApplication } from '@nestjs/common';
-import { Character } from 'src/users/model/character.model';
+import { Character } from '@Users/domain/model/character.model';
 import {
   TERRAIN_PERSISTENCE_SERVICE,
   USERS_PERSISTENCE_SERVICE,

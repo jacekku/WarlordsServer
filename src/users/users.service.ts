@@ -11,8 +11,8 @@ import { IUsersPersistence } from '@Persistence/users/interfaces/users-persisten
 import { StateService } from '@State/state.service';
 import { Quad } from '@Terrain/model/quad.model';
 import { Utilities } from '@Terrain/utilities/utilities.service';
-import { Character } from '@Users/model/character.model';
-import { Player } from '@Users/model/player.model';
+import { Character } from '@Users/domain/model/character.model';
+import { Player } from '@Users/domain/model/player.model';
 import * as _ from 'lodash';
 import { USERS_PERSISTENCE_SERVICE } from 'src/constants';
 

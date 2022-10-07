@@ -8,7 +8,7 @@ import { ItemParser } from '@State/item-definitions/item-parser';
 import { Block } from '@Terrain/model/block.model';
 import { Terrain } from '@Terrain/model/terrain.model';
 import { Utilities } from '@Terrain/utilities/utilities.service';
-import { Player } from '@Users/model/player.model';
+import { Player } from '@Users/domain/model/player.model';
 
 @Injectable()
 export class StateService {
