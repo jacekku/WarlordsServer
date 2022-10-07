@@ -5,7 +5,7 @@ import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { StateService } from '@State/state.service';
 import { Timer } from '@Timer/model/timer.model';
 import { TimerMapper } from '@Timer/timer.mapper';
-import { Player } from '@Users/domain/model/player.model';
+import { Player } from 'src/common_model/player.model';
 import { Server } from 'socket.io';
 
 @Injectable()

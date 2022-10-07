@@ -1,5 +1,5 @@
 import { Character } from '@Users/domain/model/character.model';
-import { Player } from '@Users/domain/model/player.model';
+import { Player } from 'src/common_model/player.model';
 
 export interface IUsersPersistence {
   getCharacter(characterName: string, mapId: string);

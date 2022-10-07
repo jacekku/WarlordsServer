@@ -1,4 +1,4 @@
-import { Player } from '@Users/domain/model/player.model';
+import { Player } from 'src/common_model/player.model';
 import { UsersFileService } from './users-persistence.service';
 import * as fs from 'fs';
 jest.mock('fs');

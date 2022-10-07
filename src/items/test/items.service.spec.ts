@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WsException } from '@nestjs/websockets';
 import { StateService } from 'src/state/state.service';
-import { Player } from '@Users/domain/model/player.model';
+import { Player } from 'src/common_model/player.model';
 import { ItemsService } from '../items.service';
 import { Inventory } from '../model/inventory.model';
 

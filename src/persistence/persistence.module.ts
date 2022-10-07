@@ -12,7 +12,7 @@ import {
 import { Chunk } from 'src/terrain/model/chunk.model';
 import { Terrain } from 'src/terrain/model/terrain.model';
 import { Character } from '@Users/domain/model/character.model';
-import { Player } from '@Users/domain/model/player.model';
+import { Player } from 'src/common_model/player.model';
 import { BuildingFileService } from './buildings/file/buildings-persistence.service';
 import { BuildingsMongoService } from './buildings/mongodb/buildings-persistence-mongodb.service';
 import {

@@ -2,7 +2,7 @@ import { JwtAuthGuard } from '@Auth/jwt-auth.guard';
 import { Controller, UseGuards, Get, Param, Post } from '@nestjs/common';
 import { MessageBody } from '@nestjs/websockets';
 import { Character } from '@Users/domain/model/character.model';
-import { Player } from '@Users/domain/model/player.model';
+import { Player } from 'src/common_model/player.model';
 import { UsersService } from '@Users/users.service';
 
 @Controller('players')
