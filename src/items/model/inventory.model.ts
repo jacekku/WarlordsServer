@@ -1,3 +1,4 @@
+import { ConfigurableLogger } from '@Logging/logging.service';
 import { Prop } from '@nestjs/mongoose';
 import { WsException } from '@nestjs/websockets';
 import { Equiped } from './equipment/equiped.model';
@@ -6,6 +7,7 @@ import { ItemDefinition } from './item-definition.model';
 import { Item } from './item.model';
 
 export class Inventory {
+  private readonly logger = new ConfigurableLogger(Inventory.name);
   @Prop()
   public equiped: Equiped;
   @Prop()

@@ -4,6 +4,7 @@ export const userPersistanceServiceMock = {
   registerCharacter: (character) => character,
   registerPlayer: (player) => player,
   getPlayer: (playerName) => ({ name: playerName }),
+  savePlayer: (player) => {},
 } as any;
 
 export const characterMock = {
