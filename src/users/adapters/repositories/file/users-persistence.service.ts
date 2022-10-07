@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IUsersPersistence } from '../../../domain/ports/users-persistence-interface.service';
+import { IUsersPersistence } from '../../../domain/ports/repositories/usersRepo.port';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { Player } from 'src/common_model/player.model';

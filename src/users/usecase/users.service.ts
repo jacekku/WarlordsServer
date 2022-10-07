@@ -13,10 +13,13 @@ import { Utilities } from '@Terrain/utilities/utilities.service';
 import { Character } from 'src/common_model/character.model';
 import { Player } from 'src/common_model/player.model';
 import * as _ from 'lodash';
-import { IUsersPersistence } from '@Users/domain/ports/users-persistence-interface.service';
+import { IUsersPersistence } from '@Users/domain/ports/repositories/usersRepo.port';
+import { GetPlayer } from '@Users/domain/ports/driving/getPlayer.port';
 
 @Injectable()
-export class UsersServiceUseCase implements BeforeApplicationShutdown {
+export class UsersServiceUseCase
+  implements BeforeApplicationShutdown, GetPlayer
+{
   private readonly logger = new ConfigurableLogger(UsersServiceUseCase.name);
 
   constructor(
@@ -24,17 +27,13 @@ export class UsersServiceUseCase implements BeforeApplicationShutdown {
     private readonly usersPersistenceService: IUsersPersistence,
     private readonly stateService: StateService,
     private readonly configService: ConfigService,
+    @Inject(GetPlayer) private readonly getPlayerUseCase: GetPlayer,
   ) {
     stateService.players = [];
   }
-
   async getPlayer(playerName: string): Promise<Player> {
-    return this.usersPersistenceService.getPlayer(
-      playerName,
-      this.stateService.terrain.mapId,
-    );
+    return this.getPlayerUseCase.getPlayer(playerName);
   }
-
   async registerPlayer(newPlayer: Player): Promise<Player> {
     const position = this.stateService.terrain.getAvailableSpot();
     const newlySpawnedPlayer = new Player(

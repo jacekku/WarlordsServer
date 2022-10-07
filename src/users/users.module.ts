@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { StateModule } from '@State/state.module';
-import { IUsersPersistence } from '@Users/domain/ports/users-persistence-interface.service';
+import { IUsersPersistence } from '@Users/domain/ports/repositories/usersRepo.port';
 import {
   CharacterSchema,
   PlayerSchema,
@@ -13,6 +13,8 @@ import { InMemoryUserRepository } from '@Users/adapters/repositories/inmemory/in
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommandUsersController } from '@Users/adapters/api/commandUser.controller';
 import { QueryUsersController } from '@Users/adapters/api/queryUser.controller';
+import { GetPlayer } from '@Users/domain/ports/driving/getPlayer.port';
+import { GetPlayerUseCase } from '@Users/usecase/query/getPlayer.usecase';
 
 @Module({
   imports: [
@@ -30,6 +32,7 @@ import { QueryUsersController } from '@Users/adapters/api/queryUser.controller';
       provide: IUsersPersistence,
       useClass: InMemoryUserRepository,
     },
+    { provide: GetPlayer, useClass: GetPlayerUseCase },
   ],
 })
 export class UsersModule {}

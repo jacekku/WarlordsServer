@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Character } from '@Users/domain/model/character.model';
 import { Player } from '@Users/domain/model/player.model';
-import { IUsersPersistence } from '@Users/domain/ports/users-persistence-interface.service';
+import { IUsersPersistence } from '@Users/domain/ports/repositories/usersRepo.port';
 import { Model } from 'mongoose';
 import { CharacterDocument, PlayerDocument } from './schema/user.schema';
 
