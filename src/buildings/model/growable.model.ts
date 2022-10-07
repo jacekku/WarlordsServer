@@ -1,5 +1,5 @@
+import { BuildingDefinition } from '@Buildings/model/building-definition.model';
 import { Prop } from '@nestjs/mongoose';
-import { BuildingDefinition } from './building-definition.model';
 
 export class Growable {
   @Prop()

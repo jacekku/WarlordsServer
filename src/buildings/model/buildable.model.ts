@@ -1,5 +1,5 @@
+import { SourceItemDefinition } from '@Items/model/crafting/source-item-definition.model';
 import { Prop } from '@nestjs/mongoose';
-import { SourceItemDefinition } from '../../items/model/crafting/source-item-definition.model';
 
 export class Buildable {
   @Prop()
