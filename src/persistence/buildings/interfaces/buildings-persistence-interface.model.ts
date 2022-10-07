@@ -1,4 +1,4 @@
-import { Building } from 'src/buildings/model/building.model';
+import { Building } from '@Buildings/model/building.model';
 
 export interface IBuildingsPersistence {
   removeBuilding(building: Building, mapId: string): void;
