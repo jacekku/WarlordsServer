@@ -1,7 +1,7 @@
 import { BuildingDefinition } from '@Buildings/model/building-definition.model';
 import { Prop, Schema } from '@nestjs/mongoose';
 import { Utilities } from '@Terrain/utilities/utilities.service';
-import { Player } from '@Users/domain/model/player.model';
+import { Player } from 'src/common_model/player.model';
 
 @Schema()
 export class Building extends BuildingDefinition {

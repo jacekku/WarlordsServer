@@ -6,7 +6,7 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { Player } from '@Users/domain/model/player.model';
+import { Player } from 'src/common_model/player.model';
 import { ItemsService } from './items.service';
 
 import { ConfigurableLogger } from 'src/logging/logging.service';
