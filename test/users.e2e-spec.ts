@@ -7,7 +7,7 @@ import { UsersWebsocketGateway } from '@Users/adapters/api/users.gateway';
 import { TerrainServiceMock, mockTerrain } from './mocks/terrain.service.mock';
 import { characterMock } from './mocks/users.service.mock';
 import { StateService } from 'src/state/state.service';
-import { IUsersPersistence } from '@Users/domain/ports/users-persistence-interface.service';
+import { IUsersPersistence } from '@Users/domain/ports/repositories/usersRepo.port';
 import { InMemoryUserRepository } from '@Users/adapters/repositories/inmemory/inmemory.users.repository';
 import { Terrain } from '@Terrain/model/terrain.model';
 import { JwtAuthGuard } from '@Auth/jwt-auth.guard';
