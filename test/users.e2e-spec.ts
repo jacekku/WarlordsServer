@@ -33,11 +33,15 @@ describe('UsersController (e2e)', () => {
       .compile();
 
     app = moduleFixture.createNestApplication();
-    await app.init();
+    app.init();
   });
 
   beforeEach(async () => {
     app.get(StateService).players = [];
+  });
+
+  afterAll(() => {
+    app.close();
   });
 
   it('/character (POST)', async () => {

@@ -7,6 +7,15 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "moduleNameMapper": {
-    "src/(.*)": "<rootDir>/../src/$1"
+    "src/(.*)": "<rootDir>/../src/$1",
+    "@Auth/(.*)": "<rootDir>/../src/auth/$1",
+    "@Buildings/(.*)": "<rootDir>/../src/buildings/$1",
+    "@Items/(.*)": "<rootDir>/../src/items/$1",
+    "@Logging/(.*)": "<rootDir>/../src/logging/$1",
+    "@Persistence/(.*)": "<rootDir>/../src/persistence/$1",
+    "@State/(.*)": "<rootDir>/../src/state/$1",
+    "@Terrain/(.*)": "<rootDir>/../src/terrain/$1",
+    "@Timer/(.*)": "<rootDir>/../src/timer/$1",
+    "@Users/(.*)": "<rootDir>/../src/users/$1"
   }
 }

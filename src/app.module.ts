@@ -1,21 +1,21 @@
+import { JwtStrategy } from '@Auth/jwt.strategy';
+import { RolesGuard } from '@Auth/roles.guard';
+import { BuildingsModule } from '@Buildings/buildings.module';
+import { ItemsModule } from '@Items/items.module';
+import { LoggingModule } from '@Logging/logging.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD, Reflector } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
+import { StateModule } from '@State/state.module';
+import { TerrainModule } from '@Terrain/terrain.module';
+import { TimerModule } from '@Timer/timer.module';
+import { UsersModule } from '@Users/users.module';
 import { env } from 'process';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { JwtStrategy } from './auth/jwt.strategy';
-import { RolesGuard } from './auth/roles.guard';
-import { BuildingsModule } from './buildings/buildings.module';
-import { ItemsModule } from './items/items.module';
-import { LoggingModule } from './logging/logging.module';
-import { StateModule } from './state/state.module';
-import { TerrainModule } from './terrain/terrain.module';
-import { TimerModule } from './timer/timer.module';
-import { UsersModule } from './users/users.module';
+import { AppController } from 'src/app.controller';
+import { AppService } from 'src/app.service';
 
 @Module({
   imports: [
