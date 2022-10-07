@@ -1,6 +1,6 @@
+import { LoggingController } from '@Logging/logging.controller';
+import { ConfigurableLogger } from '@Logging/logging.service';
 import { Module } from '@nestjs/common';
-import { LoggingController } from './logging.controller';
-import { ConfigurableLogger } from './logging.service';
 
 @Module({
   controllers: [LoggingController],
