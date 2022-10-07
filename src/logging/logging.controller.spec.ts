@@ -1,6 +1,6 @@
+import { LoggingController } from '@Logging/logging.controller';
+import { ConfigurableLogger } from '@Logging/logging.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { LoggingController } from './logging.controller';
-import { ConfigurableLogger } from './logging.service';
 
 describe('LoggingController', () => {
   let app: TestingModule;

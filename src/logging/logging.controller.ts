@@ -1,5 +1,5 @@
+import { ConfigurableLogger } from '@Logging/logging.service';
 import { Body, Controller, Get, LogLevel, Post } from '@nestjs/common';
-import { ConfigurableLogger } from './logging.service';
 
 @Controller('logging')
 export class LoggingController {
