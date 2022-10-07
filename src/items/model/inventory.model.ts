@@ -7,7 +7,6 @@ import { ItemDefinition } from './item-definition.model';
 import { Item } from './item.model';
 
 export class Inventory {
-  private readonly logger = new ConfigurableLogger(Inventory.name);
   @Prop()
   public equiped: Equiped;
   @Prop()

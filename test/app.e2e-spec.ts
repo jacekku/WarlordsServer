@@ -5,7 +5,6 @@ import { INestApplication } from '@nestjs/common';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
-
   beforeAll(async () => {
     jest.useFakeTimers();
     const moduleFixture = await Test.createTestingModule({
@@ -15,6 +14,7 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     app.init();
   });
+
   afterAll(() => {
     app.close();
   });

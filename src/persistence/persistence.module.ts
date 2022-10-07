@@ -7,11 +7,10 @@ import { Building } from 'src/buildings/model/building.model';
 import {
   BUILDINGS_PERSISTENCE_SERVICE,
   TERRAIN_PERSISTENCE_SERVICE,
-  USERS_PERSISTENCE_SERVICE,
 } from 'src/constants';
 import { Chunk } from 'src/terrain/model/chunk.model';
 import { Terrain } from 'src/terrain/model/terrain.model';
-import { Character } from '@Users/domain/model/character.model';
+import { Character } from 'src/common_model/character.model';
 import { Player } from 'src/common_model/player.model';
 import { BuildingFileService } from './buildings/file/buildings-persistence.service';
 import { BuildingsMongoService } from './buildings/mongodb/buildings-persistence-mongodb.service';
@@ -27,15 +26,6 @@ import {
   TerrainSchema,
 } from './terrain/mongodb/schema/terrain.schema';
 import { TerrainMongoService } from './terrain/mongodb/terrain-persistence-mongodb.service';
-import { UsersFileService } from './users/file/users-persistence.service';
-import {
-  CharacterDocument,
-  CharacterSchema,
-  PlayerDocument,
-  PlayerSchema,
-} from './users/mongodb/schema/user.schema';
-import { UsersMongoService } from './users/mongodb/users-persistence-mongodb.service';
-
 const terrainPersistenceServiceProvider: Provider<any> = {
   provide: TERRAIN_PERSISTENCE_SERVICE,
   useFactory: (
@@ -51,24 +41,6 @@ const terrainPersistenceServiceProvider: Provider<any> = {
     ConfigService,
     getModelToken(Chunk.name),
     getModelToken(Terrain.name),
-  ],
-};
-
-const usersPersistenceServiceProvider: Provider<any> = {
-  provide: USERS_PERSISTENCE_SERVICE,
-  useFactory: (
-    configService: ConfigService,
-    playerModel: Model<PlayerDocument>,
-    characterModel: Model<CharacterDocument>,
-  ) => {
-    return env.PERSISTENCE_TYPE === 'mongodb'
-      ? new UsersMongoService(playerModel, characterModel)
-      : new UsersFileService(configService);
-  },
-  inject: [
-    ConfigService,
-    getModelToken(Player.name),
-    getModelToken(Character.name),
   ],
 };
 
@@ -91,18 +63,14 @@ const buildingsPersistenceServiceProvider: Provider<any> = {
       { name: Building.name, schema: BuildingSchema },
       { name: Chunk.name, schema: ChunkSchema },
       { name: Terrain.name, schema: TerrainSchema },
-      { name: Player.name, schema: PlayerSchema },
-      { name: Character.name, schema: CharacterSchema },
     ]),
   ],
   providers: [
     terrainPersistenceServiceProvider,
-    usersPersistenceServiceProvider,
     buildingsPersistenceServiceProvider,
   ],
   exports: [
     terrainPersistenceServiceProvider,
-    usersPersistenceServiceProvider,
     buildingsPersistenceServiceProvider,
   ],
 })

@@ -22,7 +22,8 @@
       "@State/*": ["src/state/*"],
       "@Terrain/*": ["src/terrain/*"],
       "@Timer/*": ["src/timer/*"],
-      "@Users/*": ["src/users/*"]
+      "@Users/*": ["src/users/*"],
+      "@Common/*": ["src/common_model/*"]
     }
   }
 }

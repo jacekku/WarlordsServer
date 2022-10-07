@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IUsersPersistence } from '../interfaces/users-persistence-interface.service';
+import { IUsersPersistence } from '../../../domain/ports/users-persistence-interface.service';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 import { Player } from 'src/common_model/player.model';
-import { Character } from '@Users/domain/model/character.model';
+import { Character } from 'src/common_model/character.model';
 
 @Injectable()
 export class UsersFileService implements IUsersPersistence {
@@ -27,6 +27,7 @@ export class UsersFileService implements IUsersPersistence {
       this.getPlayerFilePath(mapId, newPlayer.name),
       JSON.stringify(newPlayer),
     );
+    return this.getPlayer(newPlayer.name, mapId);
   }
 
   async registerCharacter(newCharacter: Character): Promise<Character> {
@@ -35,13 +36,8 @@ export class UsersFileService implements IUsersPersistence {
   getCharacters(uid: string): Promise<Character[]> {
     throw new Error('Method not implemented.');
   }
-  getCharacter(characterName: string, mapId: string) {
+  getCharacter(characterName: string, mapId: string): Promise<Character> {
     throw new Error('Method not implemented.');
-  }
-  async registerPlayer(newPlayer: Player, mapId: string): Promise<Player> {
-    this.createFolder(newPlayer, mapId);
-    this.savePlayer(newPlayer, mapId);
-    return this.getPlayer(newPlayer.name, mapId);
   }
 
   async getPlayer(playerName: string, mapId: string): Promise<Player> {
