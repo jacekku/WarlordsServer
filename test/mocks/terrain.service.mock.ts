@@ -3,8 +3,8 @@ import { Chunk } from '@Terrain/model/chunk.model';
 import { Terrain } from '@Terrain/model/terrain.model';
 
 export const mockTerrain = {
-  width: 10,
-  height: 10,
+  width: 100,
+  height: 100,
   mapId: 'mockMapId',
   getAvailableSpot() {
     return {
