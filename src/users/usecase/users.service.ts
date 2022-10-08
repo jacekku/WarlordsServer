@@ -32,7 +32,7 @@ export class UsersService implements BeforeApplicationShutdown {
 
   async registerPlayer(newPlayer: Player): Promise<Player> {
     // this is not the responsibility of user service?
-    const position = this.stateService.terrain.getAvailableSpot();
+    const position = this.getAvailableSpotFromStateService();
     // position service?
     const newlySpawnedPlayer = new Player(
       newPlayer.name,
@@ -41,20 +41,20 @@ export class UsersService implements BeforeApplicationShutdown {
     );
     return await this.usersPersistenceService.savePlayer(
       newlySpawnedPlayer,
-      this.stateService.terrain.mapId,
+      this.getMapIdFromStateService(),
     );
   }
 
   movePlayer(player: Player, move: { x: number; y: number }) {
     //validatePlayerMovement()
-    player = this.findConnectedPlayer(player);
+    player = this.findConnectedPlayerInState(player);
     player.x = move.x;
     player.y = move.y;
     return player;
   }
 
   checkIfPlayerAlreadyConnected(newPlayer: Player) {
-    if (this.findConnectedPlayer(newPlayer)) {
+    if (this.findConnectedPlayerInState(newPlayer)) {
       throw new WsException('player already connected: ' + newPlayer.name);
     }
   }
@@ -64,14 +64,14 @@ export class UsersService implements BeforeApplicationShutdown {
     if (!player || !player.name) {
       player = await this.registerPlayer(newPlayer);
     }
-    this.stateService.players.push(player);
+    this.getPlayersFromStateService().push(player);
     return;
   }
 
   async registerCharacter(character: Character): Promise<Character> {
     if (!character.characterName) throw new BadRequestException('NAME_EMPTY');
     if (!character.uid) throw new BadRequestException('UID_EMPTY');
-    if (!character.mapId) character.mapId = this.stateService.terrain.mapId;
+    if (!character.mapId) character.mapId = this.getMapIdFromStateService();
     const characterExists = await this.getCharacter(
       character.characterName,
       character.mapId,
@@ -91,20 +91,19 @@ export class UsersService implements BeforeApplicationShutdown {
       );
       return;
     }
-    this.stateService.players = this.stateService.players.filter(
-      (player) => player.name != disconnectedPlayer.name,
-    );
+
     this.usersPersistenceService.savePlayer(
       disconnectedPlayer,
-      this.stateService.terrain.mapId,
+      this.getMapIdFromStateService(),
+    );
+
+    // TODO: move this out to state event listener
+    this.stateService.players = this.getPlayersFromStateService().filter(
+      (player) => player.name != disconnectedPlayer.name,
     );
   }
 
-  getAllConnectedPlayers() {
-    return this.stateService.players;
-  }
-
-  findVisiblePlayers(player: Player) {
+  findVisiblePlayers(player: Player): _.Omit<Player, 'timers' | 'inventory'>[] {
     if (!player) return;
     return this.getPlayersInQuad(
       Utilities.calculatePlayerFrustum(
@@ -115,31 +114,46 @@ export class UsersService implements BeforeApplicationShutdown {
     ).map((player) => _.omit(player, ['timers', 'inventory']));
   }
 
-  private getPlayersInQuad(quad: Quad) {
-    return this.stateService.players.filter((player) =>
-      Quad.pointInQuad(quad, player.x, player.y),
-    );
-  }
-
-  findConnectedPlayer(playerToFind: Player) {
-    return this.stateService.findConnectedPlayer(playerToFind);
-  }
-
-  findConnectedPlayerByName(playerName: string) {
-    return this.findConnectedPlayer({ name: playerName } as Player);
+  findConnectedPlayerByName(playerName: string): Player {
+    return this.findConnectedPlayerInState({ name: playerName } as Player);
   }
 
   beforeApplicationShutdown(signal?: string) {
     this.logger.warn('received: ' + signal + ' - saving all players');
     this.logger.warn(
       'players currently connected: ' +
-        JSON.stringify(this.stateService.players.map((player) => player.name)),
+        JSON.stringify(
+          this.getPlayersFromStateService().map((player) => player.name),
+        ),
     );
-    this.stateService.players.forEach((player) =>
+    this.getPlayersFromStateService().forEach((player) =>
       this.usersPersistenceService.savePlayer(
         player,
-        this.stateService.terrain.mapId,
+        this.getMapIdFromStateService(),
       ),
     );
+  }
+
+  private getPlayersInQuad(quad: Quad): Player[] {
+    return this.getPlayersFromStateService().filter((player) =>
+      Quad.pointInQuad(quad, player.x, player.y),
+    );
+  }
+
+  // STATE QUERIES
+  private getMapIdFromStateService(): string {
+    return this.stateService.terrain.mapId;
+  }
+
+  private getAvailableSpotFromStateService(): { x: number; y: number } {
+    return this.stateService.terrain.getAvailableSpot();
+  }
+
+  private getPlayersFromStateService(): Player[] {
+    return this.stateService.players;
+  }
+
+  private findConnectedPlayerInState(playerToFind: Player): Player {
+    return this.stateService.findConnectedPlayer(playerToFind);
   }
 }

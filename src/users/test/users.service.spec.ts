@@ -60,10 +60,6 @@ describe('State Service', () => {
     expect(mockPlayer.y).toBe(1);
   });
 
-  it('should find connected player', () => {
-    userService.findConnectedPlayer(mockPlayer);
-  });
-
   it('should find connected player by name', () => {
     userService.findConnectedPlayerByName(mockPlayer.name);
   });
@@ -95,7 +91,9 @@ describe('State Service', () => {
     expect(stateService.players[2].name).toBe('newPlayer');
   });
 
-  it('should disconnect connected player', async () => {
+  // this will only save players or smth, it will not modify state
+  // move this to e2e test to test the events
+  it.skip('should disconnect connected player', async () => {
     await userService.playerConnected({ name: 'newPlayer' } as any);
     userService.playerDisconnected('newPlayer' as any);
     expect(stateService.players).toHaveLength(2);
@@ -105,8 +103,9 @@ describe('State Service', () => {
     expect(userService.playerDisconnected('notConnected')).toBe(undefined);
   });
 
-  it('should return all connected player', () => {
-    const conPlayers = userService.getAllConnectedPlayers();
-    expect(conPlayers).toHaveLength(2);
-  });
+  // removed this method
+  // it.skip('should return all connected player', () => {
+  // const conPlayers = userService.getAllConnectedPlayers();
+  // expect(conPlayers).toHaveLength(2);
+  // });
 });

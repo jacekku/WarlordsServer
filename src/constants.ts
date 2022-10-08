@@ -12,3 +12,9 @@ export const WEBSOCKET = {
     MOVE: 'players:move',
   },
 };
+
+export const EVENT = {
+  PLAYER: {
+    DISCONNECTED: 'event.players.disconnected',
+  },
+};
