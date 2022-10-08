@@ -40,7 +40,9 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
   }
 
   @SubscribeMessage(WEBSOCKET.PLAYERS.REQUEST_UPDATE)
-  getUpdatedPlayers(@MessageBody('player') player: Player): WsResponse<any> {
+  getUpdatedPlayers(
+    @MessageBody('player') player: Player,
+  ): WsResponse<Player[]> {
     const connectedPlayer = this.userService.findConnectedPlayerByName(
       player.name,
     );
@@ -81,10 +83,10 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
     if (!client.player) return;
     // emit event instead of this
     // emit to state service and remove player there
-
-    this.eventEmitter.emit(EVENT.PLAYER.DISCONNECTED, {
-      name: client.player,
-    });
+    const disconnectedPlayer = this.userService.findConnectedPlayerByName(
+      client.player,
+    );
+    this.eventEmitter.emitAsync(EVENT.PLAYER.DISCONNECTED, disconnectedPlayer);
     // do this synchronously after removing
     // but i guess we dont have to do this sync since after moving it will be updated?
     this.emitToAllPlayers(WEBSOCKET.PLAYERS.UPDATE);

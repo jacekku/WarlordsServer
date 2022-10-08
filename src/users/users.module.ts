@@ -17,6 +17,7 @@ import { GetPlayer } from '@Users/domain/ports/driving/getPlayer.port';
 import { GetPlayerUseCase } from '@Users/usecase/query/getPlayer.usecase';
 import { GetCharacters } from '@Users/domain/ports/driving/getCharacters.port';
 import { GetCharactersUseCase } from '@Users/usecase/query/getCharacters.usecase';
+import { UsersEventListener } from '@Users/adapters/api/users.events';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { GetCharactersUseCase } from '@Users/usecase/query/getCharacters.usecase
   controllers: [QueryUsersController, CommandUsersController],
   providers: [
     UsersService,
+    UsersEventListener,
     UsersWebsocketGateway,
     {
       provide: IUsersPersistence,

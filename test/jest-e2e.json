@@ -16,6 +16,7 @@
     "@State/(.*)": "<rootDir>/../src/state/$1",
     "@Terrain/(.*)": "<rootDir>/../src/terrain/$1",
     "@Timer/(.*)": "<rootDir>/../src/timer/$1",
-    "@Users/(.*)": "<rootDir>/../src/users/$1"
+    "@Users/(.*)": "<rootDir>/../src/users/$1",
+    "@Common/(.*)": "<rootDir>/../src/common_model/$1"
   }
 }

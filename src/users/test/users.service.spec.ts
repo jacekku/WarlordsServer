@@ -100,7 +100,9 @@ describe('State Service', () => {
   });
 
   it('should throw if player to disconnect not found ', () => {
-    expect(userService.playerDisconnected('notConnected')).toBe(undefined);
+    expect(
+      userService.playerDisconnected({ name: 'notConnected' } as Player),
+    ).toBe(undefined);
   });
 
   // removed this method

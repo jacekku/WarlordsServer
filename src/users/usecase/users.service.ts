@@ -83,23 +83,10 @@ export class UsersService implements BeforeApplicationShutdown {
     return this.usersPersistenceService.getCharacter(characterName, mapId);
   }
 
-  playerDisconnected(playerName: string) {
-    const disconnectedPlayer = this.findConnectedPlayerByName(playerName);
-    if (!disconnectedPlayer) {
-      this.logger.error(
-        "tried to disconnect a player but couldn't find them: " + playerName,
-      );
-      return;
-    }
-
+  playerDisconnected(player: Player) {
     this.usersPersistenceService.savePlayer(
-      disconnectedPlayer,
+      player,
       this.getMapIdFromStateService(),
-    );
-
-    // TODO: move this out to state event listener
-    this.stateService.players = this.getPlayersFromStateService().filter(
-      (player) => player.name != disconnectedPlayer.name,
     );
   }
 
