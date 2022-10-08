@@ -10,7 +10,9 @@ import {
 import { Player } from 'src/common_model/player.model';
 import { UsersService } from '@Users/usecase/users.service';
 import { Server } from 'socket.io';
-import { WEBSOCKET } from 'src/constants';
+import { EVENT, WEBSOCKET } from 'src/constants';
+import { StateService } from '@State/state.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @WebSocketGateway({
   cors: {
@@ -25,19 +27,23 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly stateService: StateService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   @SubscribeMessage(WEBSOCKET.PLAYERS.ALL)
   getAllPlayers(): WsResponse<any> {
-    return this.buildResponse(
-      WEBSOCKET.PLAYERS.ALL,
-      this.userService.getAllConnectedPlayers(),
-    );
+    //TODO: this is just reporting state, extract to state service?
+    return this.buildResponse(WEBSOCKET.PLAYERS.ALL, this.stateService.players);
   }
 
   @SubscribeMessage(WEBSOCKET.PLAYERS.REQUEST_UPDATE)
   getUpdatedPlayers(@MessageBody('player') player: Player): WsResponse<any> {
-    const connectedPlayer = this.userService.findConnectedPlayer(player);
+    const connectedPlayer = this.userService.findConnectedPlayerByName(
+      player.name,
+    );
     return this.buildResponse(
       WEBSOCKET.PLAYERS.REQUEST_UPDATE,
       this.userService.findVisiblePlayers(connectedPlayer),
@@ -73,7 +79,14 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
   handleDisconnect(client: any) {
     this.logger.log('player disconnected: ' + client.player);
     if (!client.player) return;
-    this.userService.playerDisconnected(client.player);
+    // emit event instead of this
+    // emit to state service and remove player there
+
+    this.eventEmitter.emit(EVENT.PLAYER.DISCONNECTED, {
+      name: client.player,
+    });
+    // do this synchronously after removing
+    // but i guess we dont have to do this sync since after moving it will be updated?
     this.emitToAllPlayers(WEBSOCKET.PLAYERS.UPDATE);
   }
 

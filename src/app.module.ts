@@ -6,6 +6,7 @@ import { LoggingModule } from '@Logging/logging.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD, Reflector } from '@nestjs/core';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
@@ -20,6 +21,7 @@ import { AppService } from 'src/app.service';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    EventEmitterModule.forRoot(),
     PassportModule,
     JwtModule.register({
       secret: env.JWT_SECRET,
