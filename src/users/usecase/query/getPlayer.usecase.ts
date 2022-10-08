@@ -10,7 +10,7 @@ export class GetPlayerUseCase implements GetPlayer {
     private readonly usersPersistenceService: IUsersPersistence,
     private readonly stateService: StateService,
   ) {}
-  async getPlayer(playerName: string): Promise<Player> {
+  async execute(playerName: string): Promise<Player> {
     return this.usersPersistenceService.getPlayer(
       playerName,
       this.stateService.terrain.mapId,

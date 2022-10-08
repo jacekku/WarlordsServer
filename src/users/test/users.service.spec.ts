@@ -1,12 +1,12 @@
 import { WsException } from '@nestjs/websockets';
 import { Terrain } from '@Terrain/model/terrain.model';
 import { GetPlayer } from '@Users/domain/ports/driving/getPlayer.port';
-import { UsersServiceUseCase } from '@Users/usecase/users.service';
+import { UsersService } from '@Users/usecase/users.service';
 import { Player } from 'src/common_model/player.model';
 import { mockTerrain } from 'test/mocks/terrain.service.mock';
 
 describe('State Service', () => {
-  let userService: UsersServiceUseCase;
+  let userService: UsersService;
   const mockPlayer = new Player('mock', 0, 0);
   const mockPlayer2 = new Player('another', 10, 10);
   const players = [mockPlayer, mockPlayer2];
@@ -37,12 +37,12 @@ describe('State Service', () => {
   } as any;
 
   const getPlayerUseCase = {
-    getPlayer(playerName) {
+    execute(playerName) {
       return Promise.resolve(players.find((p) => p.name == playerName));
     },
   } as GetPlayer;
   beforeAll(() => {
-    userService = new UsersServiceUseCase(
+    userService = new UsersService(
       usersFileService,
       stateService,
       configService,

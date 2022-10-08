@@ -2,7 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { TestingModule, Test } from '@nestjs/testing';
 import { StateService } from '@State/state.service';
 import { Terrain } from '@Terrain/model/terrain.model';
-import { UsersServiceUseCase } from '@Users/usecase/users.service';
+import { UsersService } from '@Users/usecase/users.service';
 import { IUsersPersistence } from '@Users/domain/ports/repositories/usersRepo.port';
 import { InMemoryUserRepository } from '@Users/adapters/repositories/inmemory/inmemory.users.repository';
 import { QueryUsersController } from '@Users/adapters/api/queryUser.controller';
@@ -14,7 +14,7 @@ describe('UsersController', () => {
     app = await Test.createTestingModule({
       controllers: [QueryUsersController],
       providers: [
-        UsersServiceUseCase,
+        UsersService,
         StateService,
         ConfigService,
         {
