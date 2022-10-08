@@ -8,13 +8,15 @@ import {
 import { Character } from '@Users/adapters/repositories/mongodb/schema/character.model';
 import { Player } from '@Users/domain/model/player.model';
 import { UsersWebsocketGateway } from '@Users/adapters/api/users.gateway';
-import { UsersServiceUseCase } from '@Users/usecase/users.service';
+import { UsersService } from '@Users/usecase/users.service';
 import { InMemoryUserRepository } from '@Users/adapters/repositories/inmemory/inmemory.users.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommandUsersController } from '@Users/adapters/api/commandUser.controller';
 import { QueryUsersController } from '@Users/adapters/api/queryUser.controller';
 import { GetPlayer } from '@Users/domain/ports/driving/getPlayer.port';
 import { GetPlayerUseCase } from '@Users/usecase/query/getPlayer.usecase';
+import { GetCharacters } from '@Users/domain/ports/driving/getCharacters.port';
+import { GetCharactersUseCase } from '@Users/usecase/query/getCharacters.usecase';
 
 @Module({
   imports: [
@@ -26,13 +28,14 @@ import { GetPlayerUseCase } from '@Users/usecase/query/getPlayer.usecase';
   ],
   controllers: [QueryUsersController, CommandUsersController],
   providers: [
-    UsersServiceUseCase,
+    UsersService,
     UsersWebsocketGateway,
     {
       provide: IUsersPersistence,
       useClass: InMemoryUserRepository,
     },
     { provide: GetPlayer, useClass: GetPlayerUseCase },
+    { provide: GetCharacters, useClass: GetCharactersUseCase },
   ],
 })
 export class UsersModule {}

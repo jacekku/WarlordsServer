@@ -8,7 +8,7 @@ import {
   MessageBody,
 } from '@nestjs/websockets';
 import { Player } from 'src/common_model/player.model';
-import { UsersServiceUseCase } from '@Users/usecase/users.service';
+import { UsersService } from '@Users/usecase/users.service';
 import { Server } from 'socket.io';
 import { WEBSOCKET } from 'src/constants';
 
@@ -25,7 +25,7 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly userService: UsersServiceUseCase) {}
+  constructor(private readonly userService: UsersService) {}
 
   @SubscribeMessage(WEBSOCKET.PLAYERS.ALL)
   getAllPlayers(): WsResponse<any> {

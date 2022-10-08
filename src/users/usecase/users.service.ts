@@ -17,10 +17,8 @@ import { IUsersPersistence } from '@Users/domain/ports/repositories/usersRepo.po
 import { GetPlayer } from '@Users/domain/ports/driving/getPlayer.port';
 
 @Injectable()
-export class UsersServiceUseCase
-  implements BeforeApplicationShutdown, GetPlayer
-{
-  private readonly logger = new ConfigurableLogger(UsersServiceUseCase.name);
+export class UsersService implements BeforeApplicationShutdown {
+  private readonly logger = new ConfigurableLogger(UsersService.name);
 
   constructor(
     @Inject(IUsersPersistence)
@@ -31,11 +29,11 @@ export class UsersServiceUseCase
   ) {
     stateService.players = [];
   }
-  async getPlayer(playerName: string): Promise<Player> {
-    return this.getPlayerUseCase.getPlayer(playerName);
-  }
+
   async registerPlayer(newPlayer: Player): Promise<Player> {
+    // this is not the responsibility of user service?
     const position = this.stateService.terrain.getAvailableSpot();
+    // position service?
     const newlySpawnedPlayer = new Player(
       newPlayer.name,
       position.x,
@@ -62,7 +60,7 @@ export class UsersServiceUseCase
   }
 
   async playerConnected(newPlayer: Player): Promise<Player> {
-    let player = await this.getPlayer(newPlayer.name);
+    let player = await this.getPlayerUseCase.execute(newPlayer.name);
     if (!player || !player.name) {
       player = await this.registerPlayer(newPlayer);
     }
@@ -129,10 +127,6 @@ export class UsersServiceUseCase
 
   findConnectedPlayerByName(playerName: string) {
     return this.findConnectedPlayer({ name: playerName } as Player);
-  }
-
-  async getCharacters(uid: string): Promise<Character[]> {
-    return this.usersPersistenceService.getCharacters(uid);
   }
 
   beforeApplicationShutdown(signal?: string) {
