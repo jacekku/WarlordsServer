@@ -24,6 +24,8 @@ import { EventBus } from '@Users/domain/ports/event/eventBus.port';
 import { EventEmitterBus } from '@Users/adapters/eventEmitter.adapter';
 import { PlayerConnected } from '@Users/domain/ports/command/playerConnected.port';
 import { PlayerConnectedUseCase } from '@Users/usecase/command/playerConnected.usecase';
+import { PlayerMove } from '@Users/domain/ports/command/playerMove.port';
+import { PlayerMoveUseCase } from '@Users/usecase/command/playerMove.usecase';
 
 @Module({
   imports: [
@@ -42,11 +44,12 @@ import { PlayerConnectedUseCase } from '@Users/usecase/command/playerConnected.u
       provide: IUsersPersistence,
       useClass: InMemoryUserRepository,
     },
+    { provide: EventBus, useClass: EventEmitterBus },
     { provide: GetPlayer, useClass: GetPlayerUseCase },
     { provide: GetCharacters, useClass: GetCharactersUseCase },
     { provide: PlayerDisconnected, useClass: PlayerDisconnectedUseCase },
     { provide: PlayerConnected, useClass: PlayerConnectedUseCase },
-    { provide: EventBus, useClass: EventEmitterBus },
+    { provide: PlayerMove, useClass: PlayerMoveUseCase },
   ],
 })
 export class UsersModule {}
