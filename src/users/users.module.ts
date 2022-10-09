@@ -18,6 +18,12 @@ import { GetPlayerUseCase } from '@Users/usecase/query/getPlayer.usecase';
 import { GetCharacters } from '@Users/domain/ports/driving/getCharacters.port';
 import { GetCharactersUseCase } from '@Users/usecase/query/getCharacters.usecase';
 import { UsersEventListener } from '@Users/adapters/api/users.events';
+import { PlayerDisconnected } from '@Users/domain/ports/command/playerDisconnected.port';
+import { PlayerDisconnectedUseCase } from '@Users/usecase/command/playerDisconnected.usecase';
+import { EventBus } from '@Users/domain/ports/event/eventBus.port';
+import { EventEmitterBus } from '@Users/adapters/eventEmitter.adapter';
+import { PlayerConnected } from '@Users/domain/ports/command/playerConnected.port';
+import { PlayerConnectedUseCase } from '@Users/usecase/command/playerConnected.usecase';
 
 @Module({
   imports: [
@@ -38,6 +44,9 @@ import { UsersEventListener } from '@Users/adapters/api/users.events';
     },
     { provide: GetPlayer, useClass: GetPlayerUseCase },
     { provide: GetCharacters, useClass: GetCharactersUseCase },
+    { provide: PlayerDisconnected, useClass: PlayerDisconnectedUseCase },
+    { provide: PlayerConnected, useClass: PlayerConnectedUseCase },
+    { provide: EventBus, useClass: EventEmitterBus },
   ],
 })
 export class UsersModule {}

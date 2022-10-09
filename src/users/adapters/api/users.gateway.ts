@@ -13,6 +13,9 @@ import { Server } from 'socket.io';
 import { EVENT, WEBSOCKET } from 'src/constants';
 import { StateService } from '@State/state.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Inject } from '@nestjs/common';
+import { PlayerDisconnected } from '@Users/domain/ports/command/playerDisconnected.port';
+import { PlayerConnected } from '@Users/domain/ports/command/playerConnected.port';
 
 @WebSocketGateway({
   cors: {
@@ -31,6 +34,8 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
     private readonly userService: UsersService,
     private readonly stateService: StateService,
     private readonly eventEmitter: EventEmitter2,
+    @Inject(PlayerDisconnected) private playerDisconnected: PlayerDisconnected,
+    @Inject(PlayerConnected) private playerConnected: PlayerConnected,
   ) {}
 
   @SubscribeMessage(WEBSOCKET.PLAYERS.ALL)
@@ -58,37 +63,34 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
     payload: { player: Player; move: { x: number; y: number }; success: any },
   ) {
     const { player, move, success } = payload;
-    this.userService.movePlayer(player, move);
+    this.eventEmitter.emitAsync(EVENT.PLAYER.MOVE, {
+      player,
+      move,
+    });
     this.emitToAllPlayers(WEBSOCKET.PLAYERS.UPDATE);
     client.emit(WEBSOCKET.SUCCESS, success);
   }
 
   @SubscribeMessage(WEBSOCKET.PLAYERS.CONNECT)
-  async playerConnected(
+  async playerConnectedHandler(
     client: any,
     payload: { player: Player; success: any },
   ) {
-    const { player, success } = payload;
-    this.userService.checkIfPlayerAlreadyConnected(player);
-    this.pushPlayerNameToSocketClient(client, player);
     this.logger.log('player connected: ' + client.player);
-    await this.userService.playerConnected(player);
+    const { player, success } = payload;
+
+    await this.playerConnected.execute(player);
+
+    this.pushPlayerNameToSocketClient(client, player);
     client.emit(WEBSOCKET.PLAYERS.CONNECT);
     client.emit(WEBSOCKET.SUCCESS, success);
     this.emitToAllPlayers(WEBSOCKET.PLAYERS.UPDATE);
   }
 
-  handleDisconnect(client: any) {
+  async handleDisconnect(client: any) {
     this.logger.log('player disconnected: ' + client.player);
     if (!client.player) return;
-    // emit event instead of this
-    // emit to state service and remove player there
-    const disconnectedPlayer = this.userService.findConnectedPlayerByName(
-      client.player,
-    );
-    this.eventEmitter.emitAsync(EVENT.PLAYER.DISCONNECTED, disconnectedPlayer);
-    // do this synchronously after removing
-    // but i guess we dont have to do this sync since after moving it will be updated?
+    this.playerDisconnected.execute(client.player);
     this.emitToAllPlayers(WEBSOCKET.PLAYERS.UPDATE);
   }
 

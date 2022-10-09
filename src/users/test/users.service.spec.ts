@@ -53,13 +53,6 @@ describe('State Service', () => {
   beforeEach(() => {
     stateService.players = [...players];
   });
-
-  it('should move player', () => {
-    userService.movePlayer(mockPlayer, { x: 1, y: 1 });
-    expect(mockPlayer.x).toBe(1);
-    expect(mockPlayer.y).toBe(1);
-  });
-
   it('should find connected player by name', () => {
     userService.findConnectedPlayerByName(mockPlayer.name);
   });

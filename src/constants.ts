@@ -16,5 +16,6 @@ export const WEBSOCKET = {
 export const EVENT = {
   PLAYER: {
     DISCONNECTED: 'event.players.disconnected',
+    MOVE: 'event.players.move',
   },
 };
