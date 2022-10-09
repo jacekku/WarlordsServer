@@ -116,4 +116,12 @@ export class StateService {
     );
     return this.terrain.chunks[chunkIndex].blocks[block.id];
   }
+
+  movePlayer(player: Player, move: { x: number; y: number }) {
+    //validatePlayerMovement()
+    player = this.findConnectedPlayer(player);
+    player.x = move.x;
+    player.y = move.y;
+    return player;
+  }
 }

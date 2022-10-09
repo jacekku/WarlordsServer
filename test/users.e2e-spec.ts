@@ -2,7 +2,7 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { AppModule } from './../src/app.module';
 import { INestApplication } from '@nestjs/common';
-import { TERRAIN_PERSISTENCE_SERVICE, WEBSOCKET } from 'src/constants';
+import { EVENT, TERRAIN_PERSISTENCE_SERVICE, WEBSOCKET } from 'src/constants';
 import { UsersWebsocketGateway } from '@Users/adapters/api/users.gateway';
 import { TerrainServiceMock, mockTerrain } from './mocks/terrain.service.mock';
 import { characterMock } from './mocks/users.service.mock';
@@ -12,17 +12,18 @@ import { Terrain } from '@Terrain/model/terrain.model';
 import { JwtAuthGuard } from '@Auth/jwt-auth.guard';
 import { WsException } from '@nestjs/websockets';
 import { UserPersistenceMock } from './mocks/user.repository.mock';
-
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Player } from '@Common/player.model';
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
   const wsClientMock = { emit: () => ({}) };
 
   const playerMock1 = { name: 'test1', x: 0, y: 0 } as any;
   const playerMock2 = { name: 'test2', x: 0, y: 0 } as any;
-
+  let eventEmitter: EventEmitter2;
   let wsGateway: {
     server: any;
-    playerConnected: (
+    playerConnectedHandler: (
       websocket: { emit: () => {} },
       command: { player: any; success: any },
     ) => any;
@@ -35,6 +36,7 @@ describe('UsersController (e2e)', () => {
       },
     ) => any;
     getUpdatedPlayers: (arg0: any) => any;
+    handleDisconnect: (client: any) => any;
   };
   let wsClientEmit;
   let wsServerEmit;
@@ -66,7 +68,7 @@ describe('UsersController (e2e)', () => {
     stateService.players = [];
     stateService.terrain = mockTerrain as Terrain;
     (app.get(IUsersPersistence) as UserPersistenceMock).TEST_CLEAR_DB();
-
+    eventEmitter = app.get(EventEmitter2);
     wsGateway = app.get(UsersWebsocketGateway);
     wsClientEmit = jest.spyOn(wsClientMock, 'emit');
     wsServerEmit = jest.spyOn(wsGateway.server, 'emit');
@@ -77,7 +79,7 @@ describe('UsersController (e2e)', () => {
   });
 
   async function connectPlayer(player: { player: any; success: any }) {
-    return wsGateway.playerConnected(wsClientMock, {
+    return wsGateway.playerConnectedHandler(wsClientMock, {
       player: player,
       success: wsClientMock,
     });
@@ -134,6 +136,13 @@ describe('UsersController (e2e)', () => {
         wsClientMock,
       );
       expect(wsServerEmit).toHaveBeenCalledWith(WEBSOCKET.PLAYERS.UPDATE);
+
+      const pos = {
+        x: stateService.players[0].x,
+        y: stateService.players[0].y,
+      };
+
+      expect(pos).toStrictEqual({ x: 1, y: 1 });
     });
 
     it('players:requestUpdate', async () => {
@@ -144,6 +153,15 @@ describe('UsersController (e2e)', () => {
         event: WEBSOCKET.PLAYERS.REQUEST_UPDATE,
         data: [playerMock1],
       });
+    });
+
+    it('players:disconnect', async () => {
+      //TODO: this is actually a state test
+      await connectPlayer(playerMock1);
+      expect(stateService.players).toHaveLength(1);
+      await wsGateway.handleDisconnect(wsClientMock);
+
+      expect(stateService.players).toHaveLength(0);
     });
   });
 

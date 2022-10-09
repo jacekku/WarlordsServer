@@ -45,14 +45,6 @@ export class UsersService implements BeforeApplicationShutdown {
     );
   }
 
-  movePlayer(player: Player, move: { x: number; y: number }) {
-    //validatePlayerMovement()
-    player = this.findConnectedPlayerInState(player);
-    player.x = move.x;
-    player.y = move.y;
-    return player;
-  }
-
   checkIfPlayerAlreadyConnected(newPlayer: Player) {
     if (this.findConnectedPlayerInState(newPlayer)) {
       throw new WsException('player already connected: ' + newPlayer.name);
