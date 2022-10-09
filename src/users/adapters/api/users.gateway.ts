@@ -16,6 +16,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Inject } from '@nestjs/common';
 import { PlayerDisconnected } from '@Users/domain/ports/command/playerDisconnected.port';
 import { PlayerConnected } from '@Users/domain/ports/command/playerConnected.port';
+import { PlayerMove } from '@Users/domain/ports/command/playerMove.port';
 
 @WebSocketGateway({
   cors: {
@@ -36,6 +37,7 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
     private readonly eventEmitter: EventEmitter2,
     @Inject(PlayerDisconnected) private playerDisconnected: PlayerDisconnected,
     @Inject(PlayerConnected) private playerConnected: PlayerConnected,
+    @Inject(PlayerMove) private playerMove: PlayerMove,
   ) {}
 
   @SubscribeMessage(WEBSOCKET.PLAYERS.ALL)
@@ -63,10 +65,9 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
     payload: { player: Player; move: { x: number; y: number }; success: any },
   ) {
     const { player, move, success } = payload;
-    this.eventEmitter.emitAsync(EVENT.PLAYER.MOVE, {
-      player,
-      move,
-    });
+
+    this.playerMove.execute(player, move);
+
     this.emitToAllPlayers(WEBSOCKET.PLAYERS.UPDATE);
     client.emit(WEBSOCKET.SUCCESS, success);
   }
