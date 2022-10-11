@@ -1,18 +1,20 @@
+import { Player } from '@Common/player.model';
+import { Inventory } from '@Common/items/inventory.model';
+import { ItemsService } from '@Items/items.service';
+import { ConfigurableLogger } from '@Logging/logging.service';
 import {
-  MessageBody,
-  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  SubscribeMessage,
+  MessageBody,
   WsResponse,
 } from '@nestjs/websockets';
+import { TimerService } from '@Timer/timer.service';
 import { Server } from 'socket.io';
-import { Player } from 'src/common_model/player.model';
-import { ItemsService } from './items.service';
-
-import { ConfigurableLogger } from 'src/logging/logging.service';
-import { Inventory } from './model/inventory.model';
-import { Item } from './model/item.model';
-import { TimerService } from 'src/timer/timer.service';
+import { Item } from '@Common/items/item.model';
+import { Inject } from '@nestjs/common';
+import { EventBus } from 'src/infrastructure/eventBus.port';
+import { EVENT } from 'src/constants';
 
 @WebSocketGateway({
   cors: {
@@ -27,6 +29,7 @@ export class ItemsWebsocketGateway {
   constructor(
     public readonly itemsService: ItemsService,
     private readonly timerService: TimerService,
+    @Inject(EventBus) private readonly eventBus: EventBus,
   ) {}
 
   @WebSocketServer()
@@ -101,14 +104,26 @@ export class ItemsWebsocketGateway {
     this.logger.debug(
       'items:craft ' + player + ' ' + JSON.stringify(itemToCraft),
     );
-    this.itemsService.validateCraftItem(player, itemToCraft);
-    const callback = () => {
-      const inventory = this.itemsService.craftItem(player, itemToCraft);
-      client.emit('items:update', inventory);
-      client.emit('success', success);
-    };
-    const timer = this.timerService.addTimer(player, 'CRAFT', callback);
-    client.emit('timer', timer);
+    // emit event dont even validate
+    this.eventBus.emitAsync(EVENT.ITEMS.CRAFT_REQUEST, {
+      player,
+      itemToCraft,
+    });
+    // this.itemsService.validateCraftItem(player, itemToCraft);
+    // const callback = () => {
+    //   const inventory = this.itemsService.craftItem(player, itemToCraft);
+    //   client.emit('items:update', inventory);
+    //   client.emit('success', success);
+    // };
+    // const timer = this.timerService.addTimer(player, 'CRAFT', callback);
+    // client.emit('timer', timer);
+  }
+
+  async itemCraftFinished(player: Player, inventory: Inventory) {
+    const client: any = await (
+      await this.server.fetchSockets()
+    ).find((s) => (s as any).player == player.name);
+    client.emit('items:update', inventory);
   }
 
   @SubscribeMessage('items:equip')

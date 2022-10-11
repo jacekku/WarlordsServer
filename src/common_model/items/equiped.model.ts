@@ -1,5 +1,5 @@
+import { Item } from '@Common/items/item.model';
 import { Prop } from '@nestjs/mongoose';
-import { Item } from '../item.model';
 
 export class Equiped {
   @Prop()

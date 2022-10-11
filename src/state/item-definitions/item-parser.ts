@@ -4,12 +4,12 @@ import * as BUILDINGS_JSON from './buildings.json';
 import { Buildable } from '@Buildings/model/buildable.model';
 import { BuildingDefinition } from '@Buildings/model/building-definition.model';
 import { Growable } from '@Buildings/model/growable.model';
-import { CraftableItem } from '@Items/model/crafting/craftable.model';
-import { CraftingFacility } from '@Items/model/crafting/crafting-facility.model';
-import { SourceItemDefinition } from '@Items/model/crafting/source-item-definition.model';
-import { EquipableItem } from '@Items/model/equipment/equipable-item.model';
-import { ItemDefinition } from '@Items/model/item-definition.model';
-import { Item } from '@Items/model/item.model';
+import { CraftingFacility } from '@Common/items/crafting-facility.model';
+import { SourceItemDefinition } from '@Common/items/source-item-definition.model';
+import { EquipableItem } from '@Common/items/equipable-item.model';
+import { CraftableItem } from '@Common/items/craftable.model';
+import { ItemDefinition } from '@Common/items/item-definition.model';
+import { Item } from '@Common/items/item.model';
 
 export class ItemParser {
   items: ItemDefinition[] = [];

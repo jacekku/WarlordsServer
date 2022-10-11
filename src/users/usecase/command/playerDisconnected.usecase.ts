@@ -1,7 +1,7 @@
 import { ConfigurableLogger } from '@Logging/logging.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { PlayerDisconnected } from '@Users/domain/ports/command/playerDisconnected.port';
-import { EventBus } from '@Users/domain/ports/event/eventBus.port';
+import { EventBus } from 'src/infrastructure/eventBus.port';
 import { UsersService } from '@Users/usecase/users.service';
 import { EVENT } from 'src/constants';
 

@@ -1,4 +1,4 @@
-import { Inventory } from '@Items/model/inventory.model';
+import { Inventory } from '@Common/items/inventory.model';
 
 export class Player {
   playerChunk: number;

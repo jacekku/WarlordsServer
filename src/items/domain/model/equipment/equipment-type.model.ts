@@ -1,0 +1,14 @@
+export enum EquipmentType {
+  CHEST = 'CHEST',
+  LEGS = 'LEGS',
+  PAULDRONS = 'PAULDRONS',
+  HEAD = 'HEAD',
+  GAUNTLETS = 'GAUNTLETS',
+  CAPE = 'CAPE',
+  SHIRT = 'SHIRT',
+  BOOTS = 'BOOTS',
+  MAINHAND = 'MAINHAND',
+  OFFHAND = 'OFFHAND',
+  TRINKET = 'TRINKET',
+  RING = 'RING',
+}

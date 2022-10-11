@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EventBus } from '@Users/domain/ports/event/eventBus.port';
+import { EventBus } from 'src/infrastructure/eventBus.port';
 
 @Injectable()
 export class EventEmitterBus implements EventBus {

@@ -1,6 +1,6 @@
+import { EquipableItem } from '@Common/items/equipable-item.model';
+import { CraftableItem } from '@Items/domain/model/crafting/craftable.model';
 import { Prop } from '@nestjs/mongoose';
-import { CraftableItem } from './crafting/craftable.model';
-import { EquipableItem } from './equipment/equipable-item.model';
 
 export class ItemDefinition {
   @Prop()

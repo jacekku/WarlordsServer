@@ -1,10 +1,10 @@
+import { Equiped } from '@Common/items/equiped.model';
+import { EquipmentMap } from '@Common/items/equipment.map';
+import { ItemDefinition } from '@Common/items/item-definition.model';
+import { Item } from '@Common/items/item.model';
 import { ConfigurableLogger } from '@Logging/logging.service';
 import { Prop } from '@nestjs/mongoose';
 import { WsException } from '@nestjs/websockets';
-import { Equiped } from './equipment/equiped.model';
-import { EquipmentMap } from './equipment/equipment.map';
-import { ItemDefinition } from './item-definition.model';
-import { Item } from './item.model';
 
 export class Inventory {
   @Prop()
