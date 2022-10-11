@@ -10,9 +10,8 @@ import {
 import { Player } from 'src/common_model/player.model';
 import { UsersService } from '@Users/usecase/users.service';
 import { Server } from 'socket.io';
-import { EVENT, WEBSOCKET } from 'src/constants';
+import { WEBSOCKET } from 'src/constants';
 import { StateService } from '@State/state.service';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Inject } from '@nestjs/common';
 import { PlayerDisconnected } from '@Users/domain/ports/command/playerDisconnected.port';
 import { PlayerConnected } from '@Users/domain/ports/command/playerConnected.port';
@@ -34,7 +33,6 @@ export class UsersWebsocketGateway implements OnGatewayDisconnect {
   constructor(
     private readonly userService: UsersService,
     private readonly stateService: StateService,
-    private readonly eventEmitter: EventEmitter2,
     @Inject(PlayerDisconnected) private playerDisconnected: PlayerDisconnected,
     @Inject(PlayerConnected) private playerConnected: PlayerConnected,
     @Inject(PlayerMove) private playerMove: PlayerMove,

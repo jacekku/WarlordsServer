@@ -1,5 +1,5 @@
-import { CraftingFacility } from './crafting-facility.model';
-import { SourceItemDefinition } from './source-item-definition.model';
+import { CraftingFacility } from '@Common/items/crafting-facility.model';
+import { SourceItemDefinition } from '@Common/items/source-item-definition.model';
 
 export class CraftableItem {
   result: string;

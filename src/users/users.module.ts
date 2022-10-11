@@ -20,8 +20,8 @@ import { GetCharactersUseCase } from '@Users/usecase/query/getCharacters.usecase
 import { UsersEventListener } from '@Users/adapters/api/users.events';
 import { PlayerDisconnected } from '@Users/domain/ports/command/playerDisconnected.port';
 import { PlayerDisconnectedUseCase } from '@Users/usecase/command/playerDisconnected.usecase';
-import { EventBus } from '@Users/domain/ports/event/eventBus.port';
-import { EventEmitterBus } from '@Users/adapters/eventEmitter.adapter';
+import { EventBus } from 'src/infrastructure/eventBus.port';
+import { EventEmitterBus } from 'src/infrastructure/eventEmitter.adapter';
 import { PlayerConnected } from '@Users/domain/ports/command/playerConnected.port';
 import { PlayerConnectedUseCase } from '@Users/usecase/command/playerConnected.usecase';
 import { PlayerMove } from '@Users/domain/ports/command/playerMove.port';

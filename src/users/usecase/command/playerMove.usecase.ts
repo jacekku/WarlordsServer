@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { Player } from '@Users/domain/model/player.model';
 import { PlayerMove } from '@Users/domain/ports/command/playerMove.port';
-import { EventBus } from '@Users/domain/ports/event/eventBus.port';
+import { EventBus } from 'src/infrastructure/eventBus.port';
 import { EVENT } from 'src/constants';
 
 export class PlayerMoveUseCase implements PlayerMove {

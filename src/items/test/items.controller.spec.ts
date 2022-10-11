@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StateService } from 'src/state/state.service';
-import { ItemsController } from '../items.controller';
+import { ItemsController } from '../adapters/api/items.controller';
 import { ItemsService } from '../items.service';
 
 describe('ItemsController', () => {

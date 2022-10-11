@@ -18,4 +18,9 @@ export const EVENT = {
     DISCONNECTED: 'event.players.disconnected',
     MOVE: 'event.players.move',
   },
+  ITEMS: {
+    CRAFT_REQUEST: 'event.items.craft_request',
+    CRAFT_VALIDATED: 'event.items.craft_validated',
+    CRAFT_FINISHED: 'event.items.craft_finished',
+  },
 };

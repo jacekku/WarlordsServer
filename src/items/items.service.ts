@@ -1,15 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Equiped } from '@Common/items/equiped.model';
+import { SourceItemDefinition } from '@Common/items/source-item-definition.model';
+import { Player } from '@Common/player.model';
+import { Inventory } from '@Common/items/inventory.model';
+import { ItemsActionMapper } from '@Items/items-action.mapper';
+import { ConfigurableLogger } from '@Logging/logging.service';
+import { Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
-import { ConfigurableLogger } from 'src/logging/logging.service';
-import { StateService } from 'src/state/state.service';
-import { Block } from 'src/terrain/model/block.model';
-import { Player } from 'src/common_model/player.model';
-import { ItemsActionMapper } from './items-action.mapper';
-import { SourceItemDefinition } from './model/crafting/source-item-definition.model';
-import { Equiped } from './model/equipment/equiped.model';
-import { Inventory } from './model/inventory.model';
-import { ItemDefinition } from './model/item-definition.model';
-import { Item } from './model/item.model';
+import { StateService } from '@State/state.service';
+import { Block } from '@Terrain/model/block.model';
+import { ItemDefinition } from '@Common/items/item-definition.model';
+import { Item } from '@Common/items/item.model';
 
 @Injectable()
 export class ItemsService {

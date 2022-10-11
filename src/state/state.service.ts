@@ -1,8 +1,8 @@
 import { BuildingDefinition } from '@Buildings/model/building-definition.model';
 import { Building } from '@Buildings/model/building.model';
-import { CraftingFacility } from '@Items/model/crafting/crafting-facility.model';
-import { Inventory } from '@Items/model/inventory.model';
-import { ItemDefinition } from '@Items/model/item-definition.model';
+import { CraftingFacility } from '@Common/items/crafting-facility.model';
+import { Inventory } from '@Common/items/inventory.model';
+import { ItemDefinition } from '@Common/items/item-definition.model';
 import { Injectable } from '@nestjs/common';
 import { ItemParser } from '@State/item-definitions/item-parser';
 import { Block } from '@Terrain/model/block.model';

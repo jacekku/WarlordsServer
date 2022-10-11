@@ -1,5 +1,5 @@
-import { Equiped } from './equiped.model';
-import { EquipmentType } from './equipment-type.model';
+import { Equiped } from '@Common/items/equiped.model';
+import { EquipmentType } from '@Common/items/equipment-type.model';
 
 export class EquipmentMap {
   public static itemToEquipment(itemType: EquipmentType, equiped: Equiped) {

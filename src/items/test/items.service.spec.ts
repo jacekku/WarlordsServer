@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WsException } from '@nestjs/websockets';
 import { StateService } from 'src/state/state.service';
 import { Player } from 'src/common_model/player.model';
-import { ItemsService } from '../items.service';
-import { Inventory } from '../model/inventory.model';
+import { Inventory } from '@Common/items/inventory.model';
+import { ItemsService } from '@Items/items.service';
 
 describe('Items Service', () => {
   let itemsService: ItemsService;
