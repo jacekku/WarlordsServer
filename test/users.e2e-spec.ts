@@ -13,7 +13,7 @@ import { JwtAuthGuard } from '@Auth/jwt-auth.guard';
 import { WsException } from '@nestjs/websockets';
 import { UserPersistenceMock } from './mocks/user.repository.mock';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Player } from '@Common/player.model';
+
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
   const wsClientMock = { emit: () => ({}) };
@@ -24,15 +24,15 @@ describe('UsersController (e2e)', () => {
   let wsGateway: {
     server: any;
     playerConnectedHandler: (
-      websocket: { emit: () => {} },
+      websocket: { emit: unknown },
       command: { player: any; success: any },
     ) => any;
     movePlayer: (
-      websocket: { emit: () => {} },
+      websocket: { emit: unknown },
       command: {
         player: any;
         move: { x: number; y: number };
-        success: { emit: () => {} };
+        success: { emit: unknown };
       },
     ) => any;
     getUpdatedPlayers: (arg0: any) => any;
