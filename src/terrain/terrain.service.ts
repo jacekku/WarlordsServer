@@ -64,19 +64,18 @@ export class TerrainService implements OnModuleInit {
     );
   }
 
-  reloadMapFromId(mapId: string) {
-    this.terrainPersistentStorage
-      .getMap(mapId)
-      .then((map) => {
-        this.loadMap(map);
-        this.logger.log('map loaded: ' + map.mapId);
-      })
-      .catch((err) => {
-        this.logger.error({
-          message: `cannot load map from storage ${mapId}`,
-          err: err.toString(),
-        });
+  async reloadMapFromId(mapId: string) {
+    try {
+      let map = await this.terrainPersistentStorage.getMap(mapId);
+      this.loadMap(map);
+      this.logger.log('map loaded: ' + map.mapId);
+    } catch (err) {
+      this.logger.error({
+        message: `cannot load map from storage ${mapId}`,
+        err: err.toString(),
       });
+      return false;
+    }
 
     return true;
   }

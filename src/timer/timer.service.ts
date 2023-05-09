@@ -56,8 +56,9 @@ export class TimerService implements OnApplicationBootstrap {
       }
     });
     this.websocketServer
-      .fetchSockets()
-      .then(this.sendUpdatesToPlayers.bind(this));
+      ?.fetchSockets()
+      .then(this.sendUpdatesToPlayers.bind(this))
+      .catch((e) => this.logger.error(e));
   }
 
   sendUpdatesToPlayers(clients: any[]) {

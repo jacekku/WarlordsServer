@@ -14,7 +14,7 @@ export class TerrainMongoService implements ITerrainPersistence {
 
   saveMap(terrain: Terrain): void {
     new this.terrainModel(terrain).save();
-    if (!terrain.chunks) return;
+    if (!terrain || !terrain.chunks) return;
     terrain.chunks.forEach((chunk) => this.saveChunk(terrain.mapId, chunk));
   }
 

@@ -26,6 +26,7 @@ function validateRoles(
 ): boolean | Promise<boolean> | Observable<boolean> {
   if (roles.includes('admin')) {
     const admins = process.env.ADMINS.split(',');
+    console.log(`is admin: ${admins.includes(user_id)}`);
     return admins.includes(user_id);
   }
   return true;

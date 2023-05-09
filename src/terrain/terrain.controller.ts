@@ -44,7 +44,7 @@ export class TerrainController {
   @Post('reload/:mapId')
   @Roles('admin')
   reloadMapFromId(@Param('mapId') mapId: string) {
-    this.terrainService.reloadMapFromId(mapId);
+    return this.terrainService.reloadMapFromId(mapId);
   }
 
   @Get('chunk/:chunkId')

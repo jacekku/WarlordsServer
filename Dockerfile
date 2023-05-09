@@ -26,6 +26,8 @@ ENV NODE_ENV production
 USER node
 WORKDIR /warlords
 
+COPY --from=builder /warlords/*.json /warlords/
 COPY --from=builder /warlords/dist/ /warlords/dist/
+COPY --from=builder /warlords/node_modules /warlords/node_modules
 
-CMD ["node", "dist/server.js"]
+CMD ["node", "dist/main"]

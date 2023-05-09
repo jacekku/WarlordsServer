@@ -3,7 +3,7 @@ import { Roles } from '@Auth/roles.decorator';
 import { UseGuards, Controller, Get } from '@nestjs/common';
 import { StateService } from '@State/state.service';
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('state')
 export class StateController {
   constructor(private stateService: StateService) {}
