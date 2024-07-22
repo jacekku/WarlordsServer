@@ -1,9 +1,9 @@
 import { ConfigurableLogger } from '@Logging/logging.service';
 import {
+  BadRequestException,
+  Inject,
   Injectable,
   OnModuleInit,
-  Inject,
-  BadRequestException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ITerrainPersistence } from '@Persistence/terrain/interfaces/terrain-persistence-interface.service';
@@ -25,14 +25,20 @@ export class TerrainService implements OnModuleInit {
     private readonly stateService: StateService,
     private readonly configService: ConfigService,
   ) {}
-  onModuleInit() {
-    this.loadDefaultMap();
+  async onModuleInit() {
+    await this.loadDefaultMap();
   }
 
-  loadDefaultMap() {
+  async loadDefaultMap() {
     const mapId = this.configService.get<string>('DEFAULT_TERRAIN');
+    const generate = this.configService.get<boolean>('GENERATE_IF_EMPTY');
     if (mapId && mapId !== 'none') {
       this.reloadMapFromId(mapId);
+    } else if (generate) {
+      this.terrain = this.generateMap(200, 200, 10);
+      this.logger.warn('map generated because empty: ' + this.terrain.mapId);
+      await this.saveMap(this.terrain);
+      await this.loadMap(this.terrain);
     } else {
       this.logger.warn('no map loaded; no DEFAULT_TERRAIN specified in .env');
     }
@@ -81,7 +87,7 @@ export class TerrainService implements OnModuleInit {
   }
 
   async saveMap(terrain: Terrain): Promise<Terrain> {
-    this.terrainPersistentStorage.saveMap(terrain);
+    await this.terrainPersistentStorage.saveMap(terrain);
     return await this.terrainPersistentStorage.getMap(terrain.mapId);
   }
 

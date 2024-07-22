@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
+import * as fs from 'fs';
 import { Chunk } from 'src/terrain/model/chunk.model';
 import { Terrain } from 'src/terrain/model/terrain.model';
 import { ITerrainPersistence } from '../interfaces/terrain-persistence-interface.service';
@@ -14,7 +14,7 @@ export class TerrainFileService implements ITerrainPersistence {
     'SAVE_FOLDER',
   )}/mapId/terrain`;
 
-  saveMap(terrain: Terrain): void {
+  async saveMap(terrain: Terrain): Promise<void> {
     if (!fs.existsSync(this.getTerrainPath(terrain.mapId))) {
       fs.mkdirSync(this.getTerrainPath(terrain.mapId), { recursive: true });
     }

@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { IoAdapter } from '@nestjs/platform-socket.io';
-import * as fs from 'fs';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   let app;
@@ -12,12 +11,7 @@ async function bootstrap() {
       },
     });
   } else {
-    const httpsOptions = {
-      key: fs.readFileSync('/usr/warlords/privkey.pem'),
-      cert: fs.readFileSync('/usr/warlords/fullchain.pem'),
-    };
     app = await NestFactory.create(AppModule, {
-      httpsOptions,
       cors: {
         origin: process.env.CORS_ORIGIN.split(','),
       },

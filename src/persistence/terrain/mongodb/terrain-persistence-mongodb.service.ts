@@ -12,10 +12,12 @@ export class TerrainMongoService implements ITerrainPersistence {
     private terrainModel: Model<TerrainDocument>,
   ) {}
 
-  saveMap(terrain: Terrain): void {
+  async saveMap(terrain: Terrain): Promise<void> {
     new this.terrainModel(terrain).save();
     if (!terrain || !terrain.chunks) return;
-    terrain.chunks.forEach((chunk) => this.saveChunk(terrain.mapId, chunk));
+    await Promise.all(
+      terrain.chunks.map((chunk) => this.saveChunk(terrain.mapId, chunk)),
+    );
   }
 
   async getMap(mapId: string): Promise<Terrain> {
@@ -37,8 +39,8 @@ export class TerrainMongoService implements ITerrainPersistence {
       .exec();
   }
 
-  saveChunk(mapId: string, chunk: Chunk): void {
+  async saveChunk(mapId: string, chunk: Chunk): Promise<void> {
     chunk.mapId = mapId;
-    new this.chunkModel(chunk).save();
+    await new this.chunkModel(chunk).save();
   }
 }

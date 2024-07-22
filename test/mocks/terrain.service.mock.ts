@@ -15,7 +15,7 @@ export const mockTerrain = {
 } as Terrain;
 
 export class TerrainServiceMock implements ITerrainPersistence {
-  saveMap(terrain: Terrain): void {
+  saveMap(terrain: Terrain): Promise<void> {
     throw new Error('Method not implemented.');
   }
   getMap(mapId: string): Promise<Terrain> {
