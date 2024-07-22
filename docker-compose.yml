@@ -16,11 +16,11 @@ services:
       - 9229:9229
     environment:
       SAVE_FOLDER: '/usr/warlords/saves'
-      DEFAULT_TERRAIN: f01434ff5
+      DEFAULT_TERRAIN: e5e745c54
       FRUSTUM_SIZE: 13
       ENVIRONMENT: DEV
       CORS_ORIGIN: https://warlordsonline.net,http://localhost:5501,http://localhost:5500
-      JWT_SECRET_URL: "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com"
+      JWT_SECRET_URL: 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com'
       PERSISTENCE_TYPE: file
       MONGO_HOST: mongodb #name of container with mongodb
       MONGO_PORT: 27017
@@ -29,6 +29,9 @@ services:
   mongodb:
     container_name: mongodb
     image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=pass
     ports:
       - 27017:27017
     networks:

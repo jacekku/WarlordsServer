@@ -5,7 +5,7 @@ import { ItemsModule } from '@Items/items.module';
 import { LoggingModule } from '@Logging/logging.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD, Reflector } from '@nestjs/core';
+import { APP_GUARD } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -27,9 +27,11 @@ import { AppService } from 'src/app.service';
       secret: env.JWT_SECRET,
     }),
     MongooseModule.forRoot(
-      `mongodb://${env.MONGO_HOST}${
-        env.MONGO_PORT ? `:${env.MONGO_PORT}` : ''
-      }/${env.MONGO_DB_NAME}`,
+      env.MONGO_DB_URL
+        ? env.MONGO_DB_URL
+        : `mongodb://${env.MONGO_HOST}${
+            env.MONGO_PORT ? `:${env.MONGO_PORT}` : ''
+          }/${env.MONGO_DB_NAME}`,
     ),
 
     TerrainModule,
